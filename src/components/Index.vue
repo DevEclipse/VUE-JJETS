@@ -1,69 +1,9 @@
 <template>
   <div>
-    <v-side-nav id="signUp">
-      <v-container>
-        <h5> Sign Up </h5>
-        <div class="input-field">
-          <v-text-input v-model="signUp.username"/>
-          <label>Username</label>
-        </div>
-        <div class="input-field">
-          <v-text-input v-model="signUp.email" type="email"/>
-          <label>Email</label>
-        </div>
-        <div class="input-field">
-          <v-text-input v-model="signUp.password" type="password"/>
-          <label>Password</label>
-        </div>
-        <div class="input-field">
-          <v-text-input v-model="confirmPassword" type="password"/>
-          <label>Confirm Password</label>
-        </div>
-
-        <div class="input-field">
-          <button class="btn large" @click="signUpUser" style="display: block;"> Sign Up </button>
-        </div>
-      </v-container>
-    </v-side-nav>
-    <v-side-nav id="signIn">
-      <v-container>
-        <h5> Sign In </h5>
-        <div class="input-field">
-          <v-text-input v-model="signIn.email" type="email"/>
-          <label>Email</label>
-        </div>
-        <div class="input-field">
-          <v-text-input v-model="signIn.password" type="password"/>
-          <label>Password</label>
-        </div>
-        <v-switch checked
-                  on="Remember"
-                  off="Dont Remember"
-                  v-model="signIn.remember"
-        ></v-switch>
-
-        <div class="input-field">
-          <button class="btn large" @click="signInUser" style="display: block;"> Sign In </button>
-        </div>
-      </v-container>
-    </v-side-nav>
-    <header>
-      <nav>
-        <div class="nav-wrapper">
-          <v-btn-link v-if="!$store.state.uid"  v-side-nav:signUp="{edge: 'right'}" large style="display: block">Sign Up</v-btn-link>
-
-          <v-btn-link v-if="!$store.state.uid" v-side-nav:signIn="{edge: 'right'}" large style="display: block">Sign In</v-btn-link>
-
-          <button v-if="$store.state.uid" @click="$root.signOut" class="btn">Log Out </button>
-          <button v-if="$store.state.uid" @click="$root.toDashboard" class="btn">Dashboard </button>
-        </div>
-      </nav>
-    </header>
-    <main>
-      <div class="teal lighten-3" style="height: 100vh;">
-        <h1> JJETS POS</h1>
-      </div>
-    </main>
+      <user-side-nav></user-side-nav>
+      <main>
+        <router-view></router-view>
+      </main>
   </div>
 </template>
 

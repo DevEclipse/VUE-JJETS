@@ -9,6 +9,10 @@ import transactions from './modules/transactions'
 import getters from './getters'
 
 export default {
+  state: {
+    refs: null,
+  },
+  getters,
   modules: {
     stores,
     items,
@@ -18,7 +22,11 @@ export default {
     customers,
     transactions,
   },
-  mutations: VuexFire.mutations,
-  getters,
+  mutations: Object.assign({},VuexFire.mutations,{
+    ['SET_REFS'](state,payload) {
+        state.refs = payload;
+    }
+  })
+
 }
 

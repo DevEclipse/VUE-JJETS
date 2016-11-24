@@ -1,6 +1,4 @@
-import VuexFire from 'vuexfire'
-
-import * as types from '../types'
+import types from '../types'
 
 const state = {
   users: null,
@@ -8,28 +6,29 @@ const state = {
   current_user: null,
 };
 
-const getters = {}
+const getters = {};
 
-const mutations = {
-      [types.ADD_USER](state,user) {
+const mutations = {};
 
-      },
-      [types.DELETE_USER](state,user) {
-
-      },
-      [types.UPDATE_USER](state,user) {
-
-      },
-      [types.GET_USER](state,user) {
-
-      },
-      [types.CURRENT_USER](state,user) {
-
-      },
-    }
+const actions = {
+  addUser({rootState},user) {
+    if(!user) return;
+    rootState.refs.users.push(user);
+  },
+  deleteUser({rootState},user) {
+    if(!user) return;
+    rootState.refs.users.child(user['.key']).remove();
+  },
+  updateUser({rootState},user) {
+    if(!user) return;
+    rootState.refs.users.child(user['.key']).update(user);
+  }
+};
+//called by this.$store.dispatch('addUser')
 export default {
   state,
   getters,
-  mutations
+  mutations,
+  actions
 }
 

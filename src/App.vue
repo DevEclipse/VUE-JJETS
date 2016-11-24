@@ -1,7 +1,19 @@
 <template>
-  <div>
-      <router-view></router-view>
+  <div id="app" v-md-theme="'default'">
+    <ul>
+      <li v-for="user in $store.state.users">
+        {{user}}
+      </li>
+    </ul>
+    <md-toolbar>
+      <div class="md-title">JJETS</div>
+
+    </md-toolbar>
+
+
+    <router-view></router-view>
   </div>
+
 </template>
 
 <script>
