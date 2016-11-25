@@ -3,14 +3,14 @@ const routes = [
   { path: '/',
     component: require('./components/Index.vue'),
   },
-  { path: '/employees'
 
-  },
   { path: '/manager/:manager',
     component: require('./components/Manager.vue'),
+    name: 'manager',
     children: [
       { path: 'stores',
         component: require('./components/Stores.vue'),
+        name: 'managerStores',
       },
       { path: ':store',
         component: require('./components/Store.vue'),
@@ -31,6 +31,7 @@ const routes = [
 
   { path: '/employee/:employee',
     component: require('./components/Employee.vue'),
+    name: 'employee',
     children: [
       { path: 'transactions',
         component: require('./components/Transactions.vue'),
@@ -49,9 +50,18 @@ const routes = [
     name: 'user',
     children: [
       { path: '',
-        component: require('./components/Home.vue'),
+        component: require('./components/News.vue'),
+        name: 'news',
+      },
+      { path: 'info',
+        component: require('./components/Info.vue'),
+        name: 'info',
       },
     ],
+  },
+    { path: '/customers/:customer',
+    component: require('./components/Employee.vue'),
+    name: 'customer',
   },
   { path: '/stores',
     component: require('./components/Stores.vue'),

@@ -4,29 +4,23 @@ const state = {
   current_employee: null,
 };
 
-const getters = {
-  getEmployee(state,getters) {
-    return _.find(state.employees,['user',state.route.params.employee])
-  },
-  getCurrentEmployee(state,getters) {
-    return state.current_employee;
-  }
-};
+const getters = {};
 
 const mutations = {};
 
 const actions = {
-  addManager({rootState},employee) {
+  addEmployee({rootState},employee) {
     if(!employee) return;
-    rootState.refs.employees.push(employee);
+    console.log(rootState.refs.bemployees)
+    rootState.refs.bemployees.child(employee).set({assigned_store: 'unemployed_store'});
   },
-  deleteManager({rootState},employee) {
+  deleteEmployee({rootState},employee) {
     if(!employee) return;
-    rootState.refs.employees.child(employee['.key']).remove();
+    rootState.refs.bemployees.child(employee['.key']).remove();
   },
-  updateManager({rootState},employee) {
+  updateEmployee({rootState},employee) {
     if(!employee) return;
-    rootState.refs.employees.child(employee['.key']).update(employee);
+    rootState.refs.bemployees.child(employee['.key']).update(employee);
   }
 };
 //called by this.$store.dispatch('addUser')

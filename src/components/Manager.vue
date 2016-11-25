@@ -1,16 +1,7 @@
 <template>
-    <div>
-      <router-view :user="currentUser"
-                   :store="currentStore"
-                   :items="managerStoreItems"
-                   :stores="chunkedBy3Stores"
-                   :manager="currentUser"
-                   @addStore="addStore"
-                   @addItem="addItem"
-                   @updateItem="updateItem"
-                   @deleteItem="deleteItem"
-      ></router-view>
-    </div>
+  <div>
+    
+  </div>
 </template>
 
 <script>
@@ -19,10 +10,7 @@
     name: 'manager',
     computed: {
       ...mapGetters([
-        'currentUser',
-        'chunkedBy3Stores',
-        'currentStore',
-        'managerStoreItems',
+        'currentManager',
       ])
     },
 

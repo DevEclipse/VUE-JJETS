@@ -1,7 +1,7 @@
 <template>
 
-  <div class="valign-wrapper red lighten-2" style="height: 100vh;">
-    <div class="valign center-block white-text" style="font-size: 20vh;font-weight: bold">
+  <div style="height: 100vh;">
+    <div style="font-size: 20vh;font-weight: bold; ">
       404 Not Found Redirect in {{ seconds }}
     </div>
   </div>
@@ -20,7 +20,7 @@
         countdown() {
           if(this.seconds--) return;
           clearInterval(this.timer);
-          if(this.$root.authenticated) {
+          if(this.$store.authenticated) {
               this.$root.toDashboard();
           }
           this.$router.push('/');

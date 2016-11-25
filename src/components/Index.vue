@@ -29,6 +29,7 @@
         <md-input type="password" v-model="credentials.password" required></md-input>
       </md-input-container>
 
+
       <md-input-container style="margin: 20px;" md-has-password :class="{'md-input-invalid': !validation.confirmPassword}">
         <label>Confirm Password</label>
         <md-input type="password" v-model="confirmPassword" required></md-input>
@@ -62,14 +63,17 @@
 
       <h2 class="md-title" style="flex: auto">JJETS</h2>
 
-      <md-button class="md-icon-button" style="display: block" @click="toggleSignUpNavnav">
+      <md-button v-if="!$store.state.uid" class="md-icon-button"  @click="toggleSignUpNavnav">
         <md-icon>accessibility</md-icon>
+        <md-tooltip md-direction="bottom">Sign Up</md-tooltip>
       </md-button>
-      <md-button class="md-icon-button" style="display: block" @click="toggleSignInNavnav">
+      <md-button  v-if="!$store.state.uid" class="md-icon-button"  @click="toggleSignInNavnav">
         <md-icon>face</md-icon>
+        <md-tooltip md-direction="bottom">Sign In</md-tooltip>
       </md-button>
-      <md-button v-if="!$store.state.uid" class="md-icon-button" style="display: block" @click="$root.toDashboard">
+      <md-button v-if="$store.state.uid" class="md-icon-button"  @click="$root.toDashboard">
         <md-icon>dashboard</md-icon>
+        <md-tooltip md-direction="bottom">Dashboard</md-tooltip>
       </md-button>
     </md-toolbar>
       </nav>
@@ -127,13 +131,8 @@
       },
       signUp() {
         if(!(this.validation.username && this.validation.email && this.validation.confirmPassword)) return;
-
+          console.log(this.credentials);
           this.$root.signUpUser(this.credentials);
-          this.confirmPassword =
-            this.credentials.name =
-              this.credentials.password =
-                this.credentials.username =
-                  this.credentials.email = '';
           this.toggleSignUpNavnav();
 
       },

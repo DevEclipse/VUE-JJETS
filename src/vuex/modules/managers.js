@@ -13,15 +13,15 @@ const mutations = {};
 const actions = {
   addManager({rootState},manager) {
     if(!manager) return;
-    rootState.refs.managers.push(manager);
+    rootState.refs.bmanagers.child(manager).set({void_code: manager, stores: []});
   },
   deleteManager({rootState},manager) {
     if(!manager) return;
-    rootState.refs.managers.child(manager['.key']).remove();
+    rootState.refs.bmanagers.child(manager['.key']).remove();
   },
   updateManager({rootState},manager) {
     if(!manager) return;
-    rootState.refs.managers.child(manager['.key']).update(manager);
+    rootState.refs.bmanagers.child(manager['.key']).update(manager);
   }
 };
 //called by this.$store.dispatch('addUser')

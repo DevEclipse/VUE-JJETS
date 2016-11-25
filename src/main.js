@@ -51,7 +51,8 @@ const app = new Vue({
   },
   methods: {
     toDashboard() {
-      this.$router.push(`user/${this.$store.getters.getAuthUser}`)
+      let user = this.$store.getters.getAuthUser;
+      this.$router.push({ name: 'user', params: { username: user.username }})
     },
     signUpUser(credentials) {
       let errors = [];
@@ -67,6 +68,7 @@ const app = new Vue({
           uid: uid,
         };
         self.$store.dispatch('addUser',userCredentials);
+        //credentials.username = credentials.password = credentials.email = credentials.name = '';
       });
     },
     signInUser(credentials) {
@@ -79,13 +81,22 @@ const app = new Vue({
             alert(error.message);
         })
     },
+    signOut() {
+      let self = this;
+      firebase.auth().signOut().then(function() {
+        self.$store.commit('SET_UID',null);
+        self.$router.push('/')
+      }, function(error) {
+        alert(error.message);
+      });
+    },
   }
 }).$mount('#app');
 
 firebase.auth().onAuthStateChanged(function(user) {
   if(!user) return;
-  console.log(user.uid);
-  app.$store.commit('SET_AUTH',user.uid);
+  if(!app.$store.state.uid)
+  app.$store.commit('SET_UID',user.uid);
 });
 
 // const methods = {
@@ -163,14 +174,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 //     //End Update Methods
 
 
-//     signOut() {
-//       let self = this;
-//       fb.auth().signOut().then(function() {
-//         Materialize.toast('You are now signed out redirecting in 3 seconds', 3000, 'rounded',() => {self.$router.push(`/`)});
-//         self.$router.push('/401')
-//       }, function(error) {
-//         // An error happened.
-//       });
-//     },
+
 //   },
 // };

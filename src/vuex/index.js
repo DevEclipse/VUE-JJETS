@@ -18,16 +18,19 @@ export default {
     bemployees: null,
     bcustomers: null,
     btransactions: null,
-    auth: null,
+    uid: null,
+  },
+  getters: {
+    getAuthUser(state) {
+      return state.auth = _.find(state.busers,['uid',state.uid])
+    }
   },
   mutations:  {
     ['SET_REFS'](state,payload){
       state.refs = payload;
     },
-    ['SET_AUTH'](state,uid) {
-      let found = _.find(state.busers,['uid',uid]);
-      console.log(state.busers.length,uid);
-      state.auth = uid;
+    ['SET_UID'](state,uid) {
+      state.uid = uid;
     },
     ...VuexFire.mutations
   },
