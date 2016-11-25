@@ -15,18 +15,26 @@ const routes = [
         name: 'managerStores',
       },
       {
-        path: ':store',
+        path: 'store/:store',
         component: require('./components/Store.vue'),
+        name: 'managerStore',
         children: [
           {
             path: 'transactions',
             component: require('./components/Transactions.vue'),
+            name: 'managerTransactions',
+          },
+          {
+            path: 'transactions/:transaction',
+            component: require('./components/Transaction.vue'),
+            name: 'managerTransaction',
           },
         ]
       },
       {
         path: 'items',
         component: require('./components/Items.vue'),
+        name: 'managerItems',
       },
       {
         path: 'transactions',

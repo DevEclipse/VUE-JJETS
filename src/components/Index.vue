@@ -1,68 +1,78 @@
 <template>
   <div>
-    <!--<md-sidenav class="md-right" ref="signUpNav">-->
-    <!--  <md-toolbar>-->
-    <!--    <div class="md-toolbar-container">-->
-    <!--      <h3 class="md-title">Sign Up</h3>-->
-    <!--    </div>-->
-    <!--  </md-toolbar>-->
+    <md-sidenav class="md-right" ref="signUpNav">
+      <md-toolbar>
+        <div class="md-toolbar-container">
+          <h3 class="md-title">Sign Up</h3>
+        </div>
+      </md-toolbar>
 
-    <!--  <md-input-container style="margin: 20px;" :class="{'md-input-invalid': !validation.username}">-->
-    <!--    <label>Username</label>-->
-    <!--    <md-input v-model.lazy.trim="credentials.username" required></md-input>-->
-    <!--    <span v-if="!validation.username" class="md-error">Username is already used</span>-->
-    <!--  </md-input-container>-->
+      <md-input-container style="margin: 20px;" :class="{'md-input-invalid': !validation.username}">
+        <label>Username</label>
+        <md-input v-model.lazy.trim="credentials.username" required></md-input>
+        <span v-if="!validation.username" class="md-error">Username is already used</span>
+      </md-input-container>
 
-    <!--  <md-input-container style="margin: 20px;" :class="{'md-input-invalid': !validation.email}">-->
-    <!--    <label>Email</label>-->
-    <!--    <md-input v-model.lazy.trim="credentials.email" type="email" required></md-input>-->
-    <!--    <span v-if="!validation.email" class="md-error">Email is already used</span>-->
-    <!--  </md-input-container>-->
+      <md-input-container style="margin: 20px;" :class="{'md-input-invalid': !validation.email}">
+        <label>Email</label>
+        <md-input v-model.lazy.trim="credentials.email" type="email" required></md-input>
+        <span v-if="!validation.email" class="md-error">Email is already used</span>
+      </md-input-container>
 
-    <!--  <md-input-container style="margin: 20px;">-->
-    <!--    <label>Name</label>-->
-    <!--    <md-input v-model.lazy.trim="credentials.name" required></md-input>-->
-    <!--  </md-input-container>-->
+      <md-input-container style="margin: 20px;">
+        <label>Name</label>
+        <md-input v-model.lazy.trim="credentials.name" required></md-input>
+      </md-input-container>
 
-    <!--  <md-input-container style="margin: 20px;" md-has-password>-->
-    <!--    <label>Password</label>-->
-    <!--    <md-input type="password" v-model="credentials.password" required></md-input>-->
-    <!--  </md-input-container>-->
+      <md-input-container style="margin: 20px;" md-has-password>
+        <label>Password</label>
+        <md-input type="password" v-model="credentials.password" required></md-input>
+      </md-input-container>
 
 
-    <!--  <md-input-container style="margin: 20px;" md-has-password :class="{'md-input-invalid': !validation.confirmPassword}">-->
-    <!--    <label>Confirm Password</label>-->
-    <!--    <md-input type="password" v-model="confirmPassword" required></md-input>-->
-    <!--    <span v-if="!validation.confirmPassword" class="md-error">Password not matched</span>-->
-    <!--  </md-input-container>-->
+      <md-input-container style="margin: 20px;" md-has-password :class="{'md-input-invalid': !validation.confirmPassword}">
+        <label>Confirm Password</label>
+        <md-input type="password" v-model="confirmPassword" required></md-input>
+        <span v-if="!validation.confirmPassword" class="md-error">Password not matched</span>
+      </md-input-container>
 
-    <!--  <md-button class="md-raised md-accent" @click="signUp">Sign Up</md-button>-->
-    <!--</md-sidenav>-->
-    <!--<md-sidenav class="md-right" ref="signInNav">-->
-    <!--  <md-toolbar>-->
-    <!--    <div class="md-toolbar-container">-->
-    <!--      <h3 class="md-title">Sign In</h3>-->
-    <!--    </div>-->
-    <!--  </md-toolbar>-->
+      <md-button class="md-raised md-accent" @click="signUp">Sign Up</md-button>
+    </md-sidenav>
+    <md-sidenav class="md-right" ref="signInNav">
+      <md-toolbar>
+        <div class="md-toolbar-container">
+          <h3 class="md-title">Sign In</h3>
+        </div>
+      </md-toolbar>
 
-    <!--  <md-input-container style="margin: 20px;">-->
-    <!--    <label>Email</label>-->
-    <!--    <md-input v-model.lazy.trim="credentials.email" type="email" required></md-input>-->
-    <!--  </md-input-container>-->
+      <md-input-container style="margin: 20px;">
+        <label>Email</label>
+        <md-input v-model.lazy.trim="credentials.email" type="email" required></md-input>
+      </md-input-container>
 
-    <!--  <md-input-container style="margin: 20px;" md-has-password>-->
-    <!--    <label>Password</label>-->
-    <!--    <md-input type="password" v-model="credentials.password" required></md-input>-->
-    <!--  </md-input-container>-->
+      <md-input-container style="margin: 20px;" md-has-password>
+        <label>Password</label>
+        <md-input type="password" v-model="credentials.password" required></md-input>
+      </md-input-container>
 
-    <!--  <md-button class="md-raised md-accent" @click="signIn">Sign In</md-button>-->
-    <!--</md-sidenav>-->
+      <md-button class="md-raised md-accent" @click="signIn">Sign In</md-button>
+    </md-sidenav>
 
 
 <md-toolbar class="md-dense">
 
   <h2 class="md-title" style="flex: auto">JJETS</h2>
-  <div v-if="$store.state.uid">
+  <div v-if="!$store.state.uid">
+    <md-button class="md-icon-button md-raised" @click="toggleSignInNavnav">
+      <md-icon>accessibility</md-icon>
+      <md-tooltip md-direction="bottom">Sign In</md-tooltip>
+    </md-button>
+    <md-button class="md-icon-button md-raised" @click="toggleSignUpNavnav">
+      <md-icon>face</md-icon>
+      <md-tooltip md-direction="bottom">Sign Up</md-tooltip>
+    </md-button>
+  </div>
+  <div v-else>
         <md-button class="md-icon-button md-raised" @click="$root.toDashboard">
         <md-icon>dashboard</md-icon>
         <md-tooltip md-direction="left">Dashboard</md-tooltip>
