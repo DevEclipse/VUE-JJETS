@@ -1,28 +1,33 @@
-import types from '../types'
+import VuexFire from 'vuexfire'
 
 const state = {
-  users: null,
-  user: null,
-  current_user: null,
+  currentUser: null,
 };
 
-const getters = {};
+const getters = {
+  getCurrentUser(state,getters,rootState) {
+    if(!state.route.params.username) return state.currentUser;
+    return state.currentUser = _.find(rootState.busers,['username',state.route.params.username])
+  },
+};
 
 const mutations = {};
 
 const actions = {
   addUser({rootState},user) {
     if(!user) return;
-    rootState.refs.users.push(user);
+    rootState.refs.busers.push(user);
   },
   deleteUser({rootState},user) {
     if(!user) return;
-    rootState.refs.users.child(user['.key']).remove();
+    rootState.refs.busers.child(user['.key']).remove();
   },
   updateUser({rootState},user) {
     if(!user) return;
-    rootState.refs.users.child(user['.key']).update(user);
-  }
+    rootState.refs.busers.child(user['.key']).update(user);
+  },
+
+
 };
 //called by this.$store.dispatch('addUser')
 export default {
@@ -31,4 +36,3 @@ export default {
   mutations,
   actions
 }
-

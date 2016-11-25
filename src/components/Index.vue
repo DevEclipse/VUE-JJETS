@@ -1,9 +1,97 @@
 <template>
   <div>
-      <user-side-nav></user-side-nav>
-      <main>
-        <router-view></router-view>
-      </main>
+    <md-sidenav class="md-right" ref="signUpNav">
+      <md-toolbar>
+        <div class="md-toolbar-container">
+          <h3 class="md-title">Sign Up</h3>
+        </div>
+      </md-toolbar>
+
+      <md-input-container style="margin: 20px;" :class="{'md-input-invalid': !validation.username}">
+        <label>Username</label>
+        <md-input v-model.lazy.trim="credentials.username" required></md-input>
+        <span v-if="!validation.username" class="md-error">Username is already used</span>
+      </md-input-container>
+
+      <md-input-container style="margin: 20px;" :class="{'md-input-invalid': !validation.email}">
+        <label>Email</label>
+        <md-input v-model.lazy.trim="credentials.email" type="email" required></md-input>
+        <span v-if="!validation.email" class="md-error">Email is already used</span>
+      </md-input-container>
+
+      <md-input-container style="margin: 20px;">
+        <label>Name</label>
+        <md-input v-model.lazy.trim="credentials.name" required></md-input>
+      </md-input-container>
+
+      <md-input-container style="margin: 20px;" md-has-password>
+        <label>Password</label>
+        <md-input type="password" v-model="credentials.password" required></md-input>
+      </md-input-container>
+
+      <md-input-container style="margin: 20px;" md-has-password :class="{'md-input-invalid': !validation.confirmPassword}">
+        <label>Confirm Password</label>
+        <md-input type="password" v-model="confirmPassword" required></md-input>
+        <span v-if="!validation.confirmPassword" class="md-error">Password not matched</span>
+      </md-input-container>
+
+      <md-button class="md-raised md-accent" @click="signUp">Sign Up</md-button>
+    </md-sidenav>
+    <md-sidenav class="md-right" ref="signInNav">
+      <md-toolbar>
+        <div class="md-toolbar-container">
+          <h3 class="md-title">Sign In</h3>
+        </div>
+      </md-toolbar>
+
+      <md-input-container style="margin: 20px;">
+        <label>Email</label>
+        <md-input v-model.lazy.trim="credentials.email" type="email" required></md-input>
+      </md-input-container>
+
+      <md-input-container style="margin: 20px;" md-has-password>
+        <label>Password</label>
+        <md-input type="password" v-model="credentials.password" required></md-input>
+      </md-input-container>
+
+      <md-button class="md-raised md-accent" @click="signIn">Sign In</md-button>
+    </md-sidenav>
+    <header>
+      <nav>
+    <md-toolbar class="md-dense">
+
+      <h2 class="md-title" style="flex: auto">JJETS</h2>
+
+      <md-button class="md-icon-button" style="display: block" @click="toggleSignUpNavnav">
+        <md-icon>accessibility</md-icon>
+      </md-button>
+      <md-button class="md-icon-button" style="display: block" @click="toggleSignInNavnav">
+        <md-icon>face</md-icon>
+      </md-button>
+      <md-button v-if="!$store.state.uid" class="md-icon-button" style="display: block" @click="$root.toDashboard">
+        <md-icon>dashboard</md-icon>
+      </md-button>
+    </md-toolbar>
+      </nav>
+    </header>
+    <main>
+      <div class="md-display-2">
+        <md-tabs md-fixed>
+          <md-tab md-label="Systems" md-icon="ondemand_video">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>
+          </md-tab>
+
+          <md-tab md-label="Features" md-icon="music_note">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>
+          </md-tab>
+
+          <md-tab md-label="About Us" md-icon="books">
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas.</p>
+          </md-tab>
+        </md-tabs>
+      </div>
+    </main>
   </div>
 </template>
 
@@ -11,53 +99,47 @@
   export default {
     data() {
       return {
-        confirmPassword: '',
-        signUp: {
+        credentials: {
           username: '',
+          name: '',
           email: '',
           password: '',
         },
-        signIn: {
-          email: '',
-          password: '',
-          remember: false,
-        }
+        confirmPassword: '',
+        validationMessage: '',
       }
     },
+    computed: {
+      validation() {
+        return {
+          username: _.find(this.$store.state.busers,['username',this.credentials.username]) == null ,
+          email: _.find(this.$store.state.busers,['email',this.credentials.email]) == null,
+          confirmPassword: this.credentials.password == this.confirmPassword
+        }
+      },
+    },
     methods: {
-      matchPassword() {
-        return this.signUp.password == this.confirmPassword;
+      toggleSignUpNavnav() {
+        this.$refs.signUpNav.toggle();
       },
-      userExist() {
-        let temp = this.signUp.username;
-        return this.$store.state.users.find(function(user) { return user.username == temp});
+      toggleSignInNavnav() {
+        this.$refs.signInNav.toggle();
       },
-      emailExist() {
-        let temp = this.signUp.email;
-        return this.$store.state.users.find(function(user) { return user.email == temp});
-      },
-      signUpUser() {
-        if (this.userExist()) {
-          Materialize.toast('Username is already existing please pick another one',3000,'rounded')
-          return;
-        }
-        if (this.emailExist()) {
-          Materialize.toast('Email is already existing please pick another one',3000,'rounded')
-          return;
-        }
-        if (!this.matchPassword()) {
-          Materialize.toast("Password Not Matched",3000,'rounded');
-          this.confirmPassword = '';
-          this.signUp.password = '';
-          return;
-        }
-        this.$root.signUpUser(this.signUp);
+      signUp() {
+        if(!(this.validation.username && this.validation.email && this.validation.confirmPassword)) return;
 
+          this.$root.signUpUser(this.credentials);
+          this.confirmPassword =
+            this.credentials.name =
+              this.credentials.password =
+                this.credentials.username =
+                  this.credentials.email = '';
+          this.toggleSignUpNavnav();
 
       },
-      signInUser() {
-        this.$root.signInUser(this.signIn);
-
+      signIn() {
+        if(!(this.credentials.email != '')) return;
+        this.$root.signInUser(this.credentials);
       }
     }
   }

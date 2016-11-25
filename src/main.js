@@ -20,7 +20,7 @@ Vue.use(VueMaterial)
 
 Vue.material.theme.register('default', {
   primary: 'blue',
-  accent: 'teal'
+  accent: 'teal',
 })
 
 const store = new Vuex.Store(VuexStore);
@@ -29,9 +29,65 @@ const router = new VueRouter({
   mode: 'history',
   routes,
 });
-Vue.component('user-side-nav',require('./components/UserSideNav.vue'));
 
 sync(store, router);
+
+const app = new Vue({
+  router,
+  store,
+  firebase: {
+    busers: db.ref('users'),
+    bitems: db.ref('items'),
+    bstores: db.ref('stores'),
+    bmanagers: db.ref('managers'),
+    bemployees: db.ref('employees'),
+    bcustomers: db.ref('customers'),
+    btransactions: db.ref('transactions'),
+  },
+  render: h => h(App),
+  beforeCreate() {
+    let self = this;
+    this.$store.commit('SET_REFS',this.$firebaseRefs);
+  },
+  methods: {
+    toDashboard() {
+      this.$router.push(`user/${this.$store.getters.getAuthUser}`)
+    },
+    signUpUser(credentials) {
+      let errors = [];
+      let self = this;
+      firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password).then(function(user) {
+        let {displayName,email,photoURL,uid} = user;
+        let userCredentials = {
+          username: credentials.username,
+          password: credentials.password,
+          email: email,
+          name: displayName,
+          image_url: photoURL,
+          uid: uid,
+        };
+        self.$store.dispatch('addUser',userCredentials);
+      });
+    },
+    signInUser(credentials) {
+      let self = this;
+      firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
+        .then(function(){
+          self.toDashboard();
+        })
+        .catch(function(error){
+            alert(error.message);
+        })
+    },
+  }
+}).$mount('#app');
+
+firebase.auth().onAuthStateChanged(function(user) {
+  if(!user) return;
+  console.log(user.uid);
+  app.$store.commit('SET_AUTH',user.uid);
+});
+
 // const methods = {
 //   methods: {
 //     updateRoutes() {
@@ -105,51 +161,8 @@ sync(store, router);
 //       this.$firebaseRefs.users.child(user.username.toLowerCase()).update(user);
 //     },
 //     //End Update Methods
-//     signUpUser(credentials) {
-//       let errors = [];
-//       let self = this;
-//       fb.auth().createUserWithEmailAndPassword(credentials.email, credentials.password).then(function(user) {
-//         let {displayName,email,photoURL,uid} = user;
-//         let userCredentials = {
-//           username: credentials.username,
-//           password: credentials.password,
-//           email: email,
-//           name: displayName,
-//           image_url: photoURL,
-//           uid: uid,
-//         };
-//         if(errors.length < 1) {
-//           self.addUser(userCredentials);
-//           self.toDashboard();
-//           Materialize.toast('You are now signed in redirecting to your home page', 3000, 'rounded',() => {self.$router.push(`/user/${credentials.username}`)});
-//         }
-//       })
-//         .catch(function(error) {
-//           // Handle Errors here.
-//           var errorCode = error.code;
-//           var errorMessage = error.message;
-//           if (errorCode == 'auth/weak-password') {
-//             Materialize.toast('The password is too weak.', 3000, 'rounded');
-//           } else {
-//             Materialize.toast(errorMessage, 3000, 'rounded');
-//           }
-//         });
-//
-//     },
-//     signInUser(credentials) {
-//       let self = this;
-//       fb.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
-//         .then(function(user,info,data) {
-//           self.toDashboard();
-//         })
-//         .catch(function(error) {
-//           // Handle Errors here.
-//           var errorMessage = error.message;
-//           // ...
-//           Materialize.toast(errorMessage, 3000, 'rounded');
-//
-//         })
-//     },
+
+
 //     signOut() {
 //       let self = this;
 //       fb.auth().signOut().then(function() {
@@ -161,30 +174,3 @@ sync(store, router);
 //     },
 //   },
 // };
-const app = new Vue({
-  router,
-  store,
-  firebase: {
-    users: db.ref('users'),
-    items: db.ref('items'),
-    stores: db.ref('stores'),
-    managers: db.ref('managers'),
-    employees: db.ref('employees'),
-    customers: db.ref('customers'),
-    transactions: db.ref('transactions'),
-  },
-  render: h => h(App),
-  created() {
-    this.$store.commit('SET_REFS',this.$firebaseRefs);
-    this.$store.dispatch('deleteUser',{['.key']: '-KXIgd1C7L_F5UVZ-oAM'});
-  }
-}).$mount('#app');
-
-
-firebase.auth().onAuthStateChanged(function(user) {
-
-  if(!user) return;
-
-
-});
-console.log(app,store);

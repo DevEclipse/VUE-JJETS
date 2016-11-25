@@ -3,10 +3,10 @@ const routes = [
   { path: '/',
     component: require('./components/Index.vue'),
   },
-  { path: 'employees'
+  { path: '/employees'
 
   },
-  { path: 'manager/:manager',
+  { path: '/manager/:manager',
     component: require('./components/Manager.vue'),
     children: [
       { path: 'stores',
@@ -29,7 +29,7 @@ const routes = [
     ]
   },
 
-  { path: 'employee/:employee',
+  { path: '/employee/:employee',
     component: require('./components/Employee.vue'),
     children: [
       { path: 'transactions',
@@ -44,11 +44,11 @@ const routes = [
     ]
   },
 
-  { path: '/user/:user',
+  { path: '/user/:username',
     component: require('./components/User.vue'),
     name: 'user',
     children: [
-      { path: 'profiles',
+      { path: '',
         component: require('./components/Home.vue'),
       },
     ],

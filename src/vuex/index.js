@@ -11,8 +11,26 @@ import getters from './getters'
 export default {
   state: {
     refs: null,
+    busers: null,
+    bitems: null,
+    bstores: null,
+    bmanagers: null,
+    bemployees: null,
+    bcustomers: null,
+    btransactions: null,
+    auth: null,
   },
-  getters,
+  mutations:  {
+    ['SET_REFS'](state,payload){
+      state.refs = payload;
+    },
+    ['SET_AUTH'](state,uid) {
+      let found = _.find(state.busers,['uid',uid]);
+      console.log(state.busers.length,uid);
+      state.auth = uid;
+    },
+    ...VuexFire.mutations
+  },
   modules: {
     stores,
     items,
@@ -22,11 +40,5 @@ export default {
     customers,
     transactions,
   },
-  mutations: Object.assign({},VuexFire.mutations,{
-    ['SET_REFS'](state,payload) {
-        state.refs = payload;
-    }
-  })
-
 }
 
