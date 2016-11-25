@@ -1,77 +1,75 @@
 <template>
-    <section>
-        <div>
-             <md-button v-if="!current_user.profiles.manager" @click="addProfile('manager')">Add A Manager Profile</md-button>
-             
-<md-card v-else width="300" height="300">
-  <md-card-media>
-    <img src="http://www.expressandstar.com/wpmvc/wp/wp-content/uploads/2012/11/25465760.jpg" alt="People">
-  </md-card-media>
+  <div>
+    <md-tabs md-fixed  style="display: flex;">
+  <md-tab md-label="Info" md-icon="ondemand_video">
+  
+  </md-tab>
 
-  <md-card-header>
-    <div class="md-title">Manager Profile</div>
-    <div class="md-subhead">You manage multiple stores</div>
-  </md-card-header>
+  <md-tab md-label="Profiles" md-icon="music_note" >
 
-  <md-card-actions>
-    <router-link :to="{name: 'manager', params: {manager: current_user.username}}">Go to your Manager Profile</router-link>
-  </md-card-actions>
+  <md-card>
+  <md-card-area md-inset>
+    <md-card-media md-ratio="16:9">
+      <img src="http://placehold.it/1920x1080" alt="Manager">
+        </md-card-media>
 
-  <md-card-content>
-    Blabla
-  </md-card-content>
-</md-card>
-             <md-button v-if="!current_user.profiles.employee" @click="addProfile('employee')">Add An Employee Profile</md-button>
-             
-             <md-card v-else width="300" height="300">
-  <md-card-media>
-    <img src="http://www.trackmyfone.com/blog/wp-content/uploads/2015/10/empower-employee-TMF.jpg" alt="People">
-  </md-card-media>
+          <md-card-header>
+            <h2 class="md-title">Manager : {{current_user.username}}</h2>
+              <div class="md-subhead">
 
-  <md-card-header>
-    <div class="md-title">Employee Profile</div>
-    <div class="md-subhead">You manage a store</div>
-  </md-card-header>
+                <span>Manager</span>
+              </div>
+    </md-card-header>
+  </md-card-area>
+  </md-card>
+    <md-card>
+  <md-card-area md-inset>
+    <md-card-media md-ratio="16:9">
+      <img src="http://placehold.it/1920x1080" alt="Employee">
+        </md-card-media>
 
-  <md-card-actions>
-    <router-link :to="{ name: 'employee', params: { employee: current_user.username }}">Go to your Employee Profile</router-link>
-  </md-card-actions>
+          <md-card-header>
+            <h2 class="md-title">Employee : {{current_user.username}}</h2>
+              <div class="md-subhead">
 
-  <md-card-content>
-    Blabla
-  </md-card-content>
-</md-card>
-             <md-button v-if="!current_user.profiles.customer" @click="addProfile('customer')">Add A Customer Profile</md-button>
-             <md-card v-else width="300" height="300">
-  <md-card-media>
-    <img src="http://blog.directcapital.com/wp-content/uploads/2014/05/Get-your-customer-what-they-want.jpg" alt="People">
-  </md-card-media>
+                <span>Employee</span>
+              </div>
+    </md-card-header>
+  </md-card-area>
+  </md-card>
+    <md-card>
+  <md-card-area md-inset>
+    <md-card-media md-ratio="16:9">
+      <img src="http://placehold.it/1920x1080" alt="Customer">
+        </md-card-media>
 
-  <md-card-header>
-    <div class="md-title">Customer Profile</div>
-    <div class="md-subhead">You buy from stores</div>
-  </md-card-header>
-    
-  <md-card-actions>
-    <router-link :to="{ name: 'customer', params: { customer: current_user.username }}">Go to your Customer Profile</router-link>
-  </md-card-actions>
+          <md-card-header>
+            <h2 class="md-title">Customer : {{current_user.username}}</h2>
+              <div class="md-subhead">
 
-  <md-card-content>
-    Blabla
-  </md-card-content>
-</md-card>
-        </div>
-    </section>
+                <span>Customer</span>
+              </div>
+    </md-card-header>
+  </md-card-area>
+  </md-card>
+
+  </md-tab>
+  
+</md-tabs>
+  </div>
 </template>
 
 <script>
-    export default {
-        props: ['current_user'],
-        methods: {
-            addProfile(profile) {
-                console.log(profile)
-                this.$store.dispatch('addProfile',{user: this.current_user,profile})
-            }
-        }
+  export default {
+    props: ['current_user'],
+    methods: {
+      addProfile(profile) {
+        console.log(profile)
+        this.$store.dispatch('addProfile', {
+          user: this.current_user,
+          profile
+        })
+      }
     }
+  }
 </script>

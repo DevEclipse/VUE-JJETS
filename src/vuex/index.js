@@ -21,15 +21,15 @@ export default {
     uid: null,
   },
   getters: {
-    getAuthUser(state) {
-      return state.auth = _.find(state.busers,['uid',state.uid])
+    authUser(state) {
+      return state.auth = _.find(state.busers, ['uid', state.uid])
     }
   },
-  mutations:  {
-    ['SET_REFS'](state,payload){
+  mutations: {
+    ['SET_REFS'](state, payload) {
       state.refs = payload;
     },
-    ['SET_UID'](state,uid) {
+    ['SET_UID'](state, uid) {
       state.uid = uid;
     },
     ...VuexFire.mutations
@@ -44,4 +44,3 @@ export default {
     transactions,
   },
 }
-

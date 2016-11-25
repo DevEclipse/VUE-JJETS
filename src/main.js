@@ -6,7 +6,10 @@ import VueRouter from 'vue-router';
 import VuexFire from 'vuexfire'
 import App from './App.vue';
 import VuexStore from './vuex';
-import { sync } from 'vuex-router-sync';
+import {
+  sync
+}
+from 'vuex-router-sync';
 import routes from './routes';
 import firebase from 'firebase';
 import db from './firebase_config';
@@ -47,18 +50,28 @@ const app = new Vue({
   render: h => h(App),
   beforeCreate() {
     let self = this;
-    this.$store.commit('SET_REFS',this.$firebaseRefs);
+    this.$store.commit('SET_REFS', this.$firebaseRefs);
   },
   methods: {
     toDashboard() {
-      let user = this.$store.getters.getAuthUser;
-      this.$router.push({ name: 'user', params: { username: user.username }})
+      let user = this.$store.getters.authUser;
+      console.log(user);
+      this.$router.push({
+        name: 'user',
+        params: {
+          username: user.username
+        }
+      })
     },
     signUpUser(credentials) {
-      let errors = [];
       let self = this;
-      firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password).then(function(user) {
-        let {displayName,email,photoURL,uid} = user;
+      firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password).then(function (user) {
+        let {
+          displayName,
+          email,
+          photoURL,
+          uid
+        } = user;
         let userCredentials = {
           username: credentials.username,
           password: credentials.password,
@@ -67,36 +80,36 @@ const app = new Vue({
           image_url: photoURL,
           uid: uid,
         };
-        self.$store.dispatch('addUser',userCredentials);
-        //credentials.username = credentials.password = credentials.email = credentials.name = '';
+        self.$store.dispatch('addUser', userCredentials);
+        self.toDashboard();
       });
     },
     signInUser(credentials) {
       let self = this;
       firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
-        .then(function(){
+        .then(function () {
           self.toDashboard();
         })
-        .catch(function(error){
-            alert(error.message);
+        .catch(function (error) {
+          alert(error.message);
         })
     },
     signOut() {
       let self = this;
-      firebase.auth().signOut().then(function() {
-        self.$store.commit('SET_UID',null);
+      firebase.auth().signOut().then(function () {
+        self.$store.commit('SET_UID', null);
         self.$router.push('/')
-      }, function(error) {
+      }, function (error) {
         alert(error.message);
       });
     },
   }
 }).$mount('#app');
 
-firebase.auth().onAuthStateChanged(function(user) {
-  if(!user) return;
-  if(!app.$store.state.uid)
-  app.$store.commit('SET_UID',user.uid);
+firebase.auth().onAuthStateChanged(function (user) {
+  if (!user) return;
+  if (!app.$store.state.uid)
+    app.$store.commit('SET_UID', user.uid);
 });
 
 // const methods = {

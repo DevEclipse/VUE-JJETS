@@ -1,8 +1,4 @@
-const state = {
-  employee: null,
-  employees: null,
-  current_employee: null,
-};
+const state = {};
 
 const getters = {};
 

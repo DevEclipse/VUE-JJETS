@@ -1,11 +1,24 @@
 <template>
   <div>
-    
+    <div v-if="!currentManager" style="height: 100vh; font-size: 20vh;">
+        <div style="height: 100%;">
+          Loading...
+        </div>
+    </div>
+    <md-toolbar>
+      
+    </md-toolbar>
+    <div v-if="currentManager">
+      <router-view :stores="currentManagerStores" :items="currentManagerItems"></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import {
+    mapGetters
+  }
+  from 'vuex'
   export default {
     name: 'manager',
     computed: {
@@ -15,12 +28,12 @@
     },
 
     methods: {
-        addStore(store) {
-            store.manager = this.currentUser.username;
-            this.$root.addStore(store);
-        },
-      addItem(newStoreItem,newItem) {
-        this.$root.addStoreItem(newStoreItem,newItem);
+      addStore(store) {
+        store.manager = this.currentUser.username;
+        this.$root.addStore(store);
+      },
+      addItem(newStoreItem, newItem) {
+        this.$root.addStoreItem(newStoreItem, newItem);
       },
       updateItem(item) {
 

@@ -28,7 +28,6 @@
         </div>
       </v-container>
     </v-side-nav>
-
     <vue-transactions :transactions="transactions"></vue-transactions>
   </div>
 </template>
