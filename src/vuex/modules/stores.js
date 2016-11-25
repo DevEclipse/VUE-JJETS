@@ -1,28 +1,33 @@
 const state = {};
 
-const getters = {};
+const getters = {
+  currentStore(state,getters,rootState) {
+    if(!rootState.route) return null;
+    return _.find(rootState.bstores,['name',rootState.route.params.store]);
+  }
+};
 
 const mutations = {};
 
 const actions = {
   addStore({rootState},store) {
     if(!store) return;
-    let key = rootState.refs.stores.push(store).key;
-    rootState.refs.managers.child(store.manager).child('stores').update({[key]: true});
+    let key = rootState.refs.bstores.push(store).key;
+    rootState.refs.bmanagers.child(store.manager).child('stores').update({[key]: true});
   },
   addStoreItem({rootState},item) {
     if(!item) return;
-    let key = rootState.refs.stores.push(item).key;
+    rootState.refs.bstores.child(item.store).child('items').set(item);
   },
   deleteStore({rootState},store) {
     if(!store) return;
-    rootState.refs.stores.child(store['.key']).remove();
-    rootState.refs.managers.child(store.manager).child('stores').child(store['.key']).remove();
+    rootState.refs.bstores.child(store['.key']).remove();
+    rootState.refs.bmanagers.child(store.manager).child('stores').child(store['.key']).remove();
   },
   updateStore({rootState},store) {
     if(!store) return;
-    rootState.refs.stores.child(store['.key']).update(store);
-  }
+    rootState.refs.bstores.child(store['.key']).update(store);
+  },
 };
 //called by this.$store.dispatch('addUser')
 export default {

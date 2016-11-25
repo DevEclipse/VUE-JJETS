@@ -58,7 +58,7 @@
             </md-card-area>
           </md-card>
         </div>
-          <div class="col-xs">
+        <div style="display: inline-block; width: 33%;">
         <md-button v-if="!current_user.profiles.customer" @click="addProfile('customer')"> Add Customer Profile </md-button>
         <md-card v-else>
             <md-card-area md-inset>

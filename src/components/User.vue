@@ -1,9 +1,9 @@
 <template>
   <div>
-
+    <loading v-if="!currentUser"/>
     <div v-if="currentUser">
 
-      <header>
+      <header >
 
 
         <md-toolbar>
@@ -24,15 +24,14 @@
           <router-link class="md-button" to="/news">News</router-link>
         </md-toolbar>
       </header>
-
+      <!--<img :src="`https://www.barcodesinc.com/generator/image.php?code=${barcode}&style=197&type=C128B&width=150&height=50&xres=1&font=4`"-->
+           <!--alt="the barcode printer: free barcode generator" border="0">-->
       <main>
-        <router-view :current_user="currentUser"></router-view>
+        <user-info :current_user="currentUser"/>
       </main>
     </div>
 
-    <div v-if="!currentUser" style="height: 100vh; font-size: 20vh;">
-        Loading
-    </div>
+
 
   </div>
 </template>
@@ -47,6 +46,25 @@
         'authUser'
       ])
     },
+    data() {
+      return {
+          barcode: '',
+      }
+    },
+    methods: {
+      generateBarcode() {
+        let barcode = '';
+        for(let i = 1;i < 13; i++) {
+          barcode += _.random(9).toString();
+        }
+        this.barcode = barcode;
+        console.log(this.barcode);
+
+      }
+    },
+    mounted() {
+      this.generateBarcode();
+    }
 
   }
 </script>

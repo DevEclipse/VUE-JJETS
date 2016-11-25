@@ -1,10 +1,7 @@
 <template>
   <div>
-    <div v-if="!currentManager" style="height: 100vh; font-size: 20vh;">
-      <div style="height: 100%;">
-        Loading...
-      </div>
-    </div>
+    <loading v-if="!currentManager"></loading>
+    <div v-if="currentManager">
     <md-toolbar>
       <h2 class="md-title" style="flex: auto">
         Manager : {{currentManager['.key']}}
@@ -23,8 +20,10 @@
         Items
       </router-link>
     </md-toolbar>
-    <div v-if="currentManager">
-      <router-view :stores="currentManagerStores" :manager="currentManager" :items="currentManagerItems"></router-view>
+
+      <transition enter-active-class="animated fadeInLeft" leave-active-class="animated fadeOutRight">
+        <router-view :stores="currentManagerStores" :manager="currentManager" :items="currentManagerItems"></router-view>
+      </transition>
     </div>
   </div>
 </template>

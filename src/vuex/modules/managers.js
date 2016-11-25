@@ -1,6 +1,4 @@
-const state = {
-  manager: null,
-};
+const state = {};
 
 const getters = {
   currentManager(state, getters, rootState) {
@@ -12,9 +10,6 @@ const getters = {
   currentManagerItems(state, getters, rootState) {
     return _.filter(rootState.bitems, ['create_by', getters.currentManager['.key']]);
   },
-  managerStores(state, getters, rootState) {
-    return _.filter(rootState.bstores, ['manager', state.manager['.key']]);
-  }
 };
 
 const mutations = {
@@ -45,12 +40,6 @@ const actions = {
     if (!manager) return;
     rootState.refs.bmanagers.child(manager['.key']).update(manager);
   },
-  setManager({
-    commit,
-    rootState
-  }, manager) {
-    commit('SET_MANAGER', _.find(rootState.bmanagers, ['.key', manager['.key']]));
-  }
 };
 //called by this.$store.dispatch('addUser')
 export default {

@@ -21,11 +21,13 @@ Vue.use(VueRouter);
 Vue.use(VuexFire);
 Vue.use(VueMaterial)
 
+
 Vue.material.theme.register('default', {
   primary: 'blue',
   accent: 'teal',
 })
-
+Vue.component('loading',require('./components/Loading.vue'));
+Vue.component('user-info',require('./components/Info.vue'));
 const store = new Vuex.Store(VuexStore);
 
 const router = new VueRouter({
@@ -51,6 +53,7 @@ const app = new Vue({
   beforeCreate() {
     let self = this;
     this.$store.commit('SET_REFS', this.$firebaseRefs);
+
   },
   methods: {
     toDashboard() {

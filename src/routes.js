@@ -70,13 +70,6 @@ const routes = [
     path: '/user/:username',
     component: require('./components/User.vue'),
     name: 'user',
-    children: [
-      {
-        path: '',
-        component: require('./components/Info.vue'),
-      },
-
-    ],
   },
   {
     path: '/customers/:customer',
