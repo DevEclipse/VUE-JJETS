@@ -1,4 +1,4 @@
-import VuexFire from 'vuexfire'
+import firebase from 'firebase'
 
 const state = {};
 
@@ -21,6 +21,8 @@ const actions = {
       ['customer']: false
     }
     user['profiles'] = profiles;
+    user['created_date'] = firebase.database.ServerValue.TIMESTAMP;
+    user['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
     rootState.refs.busers.child(user.username).set(user);
   },
   addProfile({
@@ -32,15 +34,15 @@ const actions = {
   }) {
     if (!user) return;
     switch (profile) {
-    case 'manager':
-      dispatch('addManager', user.username);
-      break;
-    case 'employee':
-      dispatch('addEmployee', user.username);
-      break;
-    case 'customer':
-      dispatch('addCustomer', user.username);
-      break;
+      case 'manager':
+        dispatch('addManager', user.username);
+        break;
+      case 'employee':
+        dispatch('addEmployee', user.username);
+        break;
+      case 'customer':
+        dispatch('addCustomer', user.username);
+        break;
     }
     rootState.refs.busers.child(user['.key']).child('profiles').update({
       [profile]: true
@@ -56,6 +58,7 @@ const actions = {
     rootState
   }, user) {
     if (!user) return;
+    user['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
     rootState.refs.busers.child(user['.key']).update(user);
   },
 

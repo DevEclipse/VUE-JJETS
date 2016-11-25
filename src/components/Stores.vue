@@ -47,10 +47,16 @@
         <md-textarea v-model="newStore.description" maxlength="70"></md-textarea>
       </md-input-container>
 
+      <multi-select :options="dataTagKeys" v-model="newStore.tags" :multiple="true"
+                    :searchable="true" @tag="addTag"
+                    :taggable="true">
+        <span slot="noResult">
+        Oops! No Tags Create one!
+        </span>
+      </multi-select>
+
       <md-button class="md-raised md-accent" @click="addStore">Add Store</md-button>
     </md-sidenav>
-
-
 
     <div v-if="stores">
       <div class="md-display-4" align="center" v-if="stores.length < 1">
@@ -78,9 +84,26 @@
                   Go to Store
                 </router-link>
               </md-card-actions>
-
+            <md-card-content>
+              <h2 class="md-title">Created At: </h2>
+              <div class="md-subhead">
+                {{store.created_date | date}}
+              </div>
+              <h2 class="md-title">Updated At: </h2>
+              <div class="md-subhead">
+                {{store.updated_date | date}}
+              </div>
+            </md-card-content>
               <md-card-content>
                 <h3 class="md-subheading">Status : {{store.status || 'No Status'}}</h3>
+              </md-card-content>
+              <md-card-content>
+                  <div v-if="store.tags">
+                    Tags: <span v-for="tag in store.tags"> <router-link :to="{name: 'tag',params: {tag}}"> {{tag}} </router-link>  </span>
+                  </div>
+                  <div v-else>
+                    No Tags
+                  </div>
               </md-card-content>
             </md-card>
         </div>
@@ -99,7 +122,8 @@
         return _.chunk(this.stores,3);
       },
       ...mapGetters([
-        'authUser'
+        'authUser',
+        'dataTagKeys'
       ])
     },
     props: ['manager', 'stores'],
@@ -112,21 +136,29 @@
           image_url: '',
           description: '',
           status: 'New',
-          tags: ['store'],
+          tags: ['store','new'],
           manager: this.manager['.key'],
         },
-        newItem: {
-          barcode: '',
-        }
       }
     },
     methods: {
       addStore() {
         this.$store.dispatch('addStore',this.newStore);
+        _.forEach(this.newStore.tags,tag => {
+            this.$store.dispatch('addTag', {
+                name: tag,
+                category: 'stores',
+                category_value: `${this.newStore.manager}_${this.newStore.name}`,
+                tagger: this.newStore.manager
+            });
+        });
       },
       toggleAddStoreNav() {
         this.$refs.addStoreNav.toggle();
-      }
+      },
+      addTag (newTag) {
+        this.newStore.tags.push(newTag)
+      },
 
     }
   }

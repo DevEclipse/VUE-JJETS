@@ -1,3 +1,5 @@
+import firebase from 'firebase'
+
 const state = {};
 
 const getters = {};
@@ -7,7 +9,11 @@ const mutations = {};
 const actions = {
   addCustomer({rootState},customer) {
     if(!customer) return;
-    rootState.refs.bcustomers.child(customer).set({balance: 0});
+    rootState.refs.bcustomers.child(customer).set({
+      balance: 0,
+      created_date: firebase.database.ServerValue.TIMESTAMP,
+      updated_date: firebase.database.ServerValue.TIMESTAMP
+    });
   },
   deleteCustomer({rootState},customer) {
     if(!customer) return;
@@ -15,6 +21,7 @@ const actions = {
   },
   updateCustomer({rootState},customer) {
     if(!customer) return;
+    customer['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
     rootState.refs.bcustomers.child(customer['.key']).update(customer);
   }
 };

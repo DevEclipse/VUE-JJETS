@@ -1,3 +1,4 @@
+import firebase from 'firebase'
 const state = {};
 
 const getters = {
@@ -10,14 +11,25 @@ const getters = {
 const mutations = {};
 
 const actions = {
-  addStore({rootState},store) {
+  addStore({rootState,getters},store) {
     if(!store) return;
-    let key = rootState.refs.bstores.push(store).key;
+    let key = `${store.manager}_${store.name}`;
+    store['created_date'] = firebase.database.ServerValue.TIMESTAMP;
+    store['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
+    rootState.refs.bstores.child(key).set(store);
     rootState.refs.bmanagers.child(store.manager).child('stores').update({[key]: true});
   },
-  addStoreItem({rootState},item) {
+  addStoreItem({rootState},storeItem) {
+    if(!storeItem) return;
+    storeItem['created_date'] = firebase.database.ServerValue.TIMESTAMP;
+    storeItem['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
+    rootState.refs.bstores.child(storeItem.store).child('items').set(storeItem);
+    rootState.refs.bstores.child(storeItem.store).update({updated_date: firebase.database.ServerValue.TIMESTAMP});
+  },
+  updateStoreItem({rootState},storeItem) {
     if(!item) return;
-    rootState.refs.bstores.child(item.store).child('items').set(item);
+    storeItem['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
+    rootState.refs.bstores.child(storeItem['.key']).update(storeItem);
   },
   deleteStore({rootState},store) {
     if(!store) return;
@@ -26,6 +38,7 @@ const actions = {
   },
   updateStore({rootState},store) {
     if(!store) return;
+    store['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
     rootState.refs.bstores.child(store['.key']).update(store);
   },
 };

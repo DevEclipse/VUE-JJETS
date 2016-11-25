@@ -85,6 +85,16 @@ const routes = [
     component: require('./components/Items.vue'),
   },
   {
+    path: '/tags',
+    component: require('./components/Tags.vue'),
+    name: 'tags'
+  },
+  {
+    path: '/tags/:tag',
+    component: require('./components/Tag.vue'),
+    name: 'tag'
+  },
+  {
     path: '/401',
     component: require('./components/Vue401.vue')
   },

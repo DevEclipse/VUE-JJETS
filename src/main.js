@@ -15,16 +15,20 @@ import firebase from 'firebase';
 import db from './firebase_config';
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.css'
-
+import MultiSelect from 'vue-multiselect'
 Vue.use(Vuex);
 Vue.use(VueRouter);
 Vue.use(VuexFire);
 Vue.use(VueMaterial)
 
+Vue.component('multi-select',MultiSelect);
 
 Vue.material.theme.register('default', {
   primary: 'blue',
   accent: 'teal',
+})
+Vue.filter('date', function (value) {
+  return new Date(value).toDateString();
 })
 Vue.component('loading',require('./components/Loading.vue'));
 Vue.component('user-info',require('./components/Info.vue'));
@@ -48,6 +52,7 @@ const app = new Vue({
     bemployees: db.ref('employees'),
     bcustomers: db.ref('customers'),
     btransactions: db.ref('transactions'),
+    btags: db.ref('tags'),
   },
   render: h => h(App),
   beforeCreate() {

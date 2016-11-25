@@ -24,7 +24,14 @@
                 <img src="http://placehold.it/1920x1080" alt="Manager">
               </md-card-media>
               <md-card-content>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non, voluptas eius illo quas, saepe voluptate pariatur in deleniti minus sint. Excepturi.
+                <h2 class="md-title">Created At: </h2>
+                <div class="md-subhead">
+                  {{current_user.created_date | date}}
+                </div>
+                <h2 class="md-title">Updated At: </h2>
+                <div class="md-subhead">
+                  {{current_user.updated_date | date}}
+                </div>
               </md-card-content>
               <md-card-actions>
                 <router-link class="md-button" :to="{name: 'manager', params: {manager: current_user.username}}">Go To Manager Profile</router-link>
@@ -50,7 +57,14 @@
                 <img src="http://placehold.it/1920x1080" alt="Employee">
               </md-card-media>
               <md-card-content>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non, voluptas eius illo quas, saepe voluptate pariatur in deleniti minus sint. Excepturi.
+                <h2 class="md-title">Created At: </h2>
+                <div class="md-subhead">
+                  {{current_user.created_date | date}}
+                </div>
+                <h2 class="md-title">Updated At: </h2>
+                <div class="md-subhead">
+                  {{current_user.updated_date | date}}
+                </div>
               </md-card-content>
               <md-card-actions>
                 <router-link class="md-button" :to="{name: 'employee', params: {employee: current_user.username}}">Go To Employee Profile</router-link>
@@ -75,7 +89,14 @@
                 <img src="http://placehold.it/1920x1080" alt="Customer">
               </md-card-media>
               <md-card-content>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non, voluptas eius illo quas, saepe voluptate pariatur in deleniti minus sint. Excepturi.
+                <h2 class="md-title">Created At: </h2>
+                <div class="md-subhead">
+                  {{current_user.created_date | date}}
+                </div>
+                <h2 class="md-title">Updated At: </h2>
+                <div class="md-subhead">
+                  {{current_user.updated_date | date}}
+                </div>
               </md-card-content>
               <md-card-actions>
                 <router-link class="md-button" :to="{name: 'customer', params: {customer: current_user.username}}">Go To Customer Profile</router-link>

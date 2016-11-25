@@ -1,3 +1,5 @@
+import firebase from 'firebase'
+
 const state = {};
 
 const getters = {
@@ -25,7 +27,9 @@ const actions = {
     if (!manager) return;
     rootState.refs.bmanagers.child(manager).set({
       void_code: manager,
-      stores: []
+      stores: [],
+      created_date: firebase.database.ServerValue.TIMESTAMP,
+      updated_date: firebase.database.ServerValue.TIMESTAMP
     });
   },
   deleteManager({
@@ -38,6 +42,7 @@ const actions = {
     rootState
   }, manager) {
     if (!manager) return;
+    manager['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
     rootState.refs.bmanagers.child(manager['.key']).update(manager);
   },
 };
