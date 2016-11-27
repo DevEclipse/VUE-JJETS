@@ -9,7 +9,7 @@
 
           <md-input-container style="margin: 20px;">
             <label>Retail Price</label>
-            <md-input type="number" max="1" step="10.01" v-model.number="storeItem.retail_price" required></md-input>
+            <md-input type="number" step="10.01" v-model.number="storeItem.retail_price" required></md-input>
           </md-input-container>
 
           <md-input-container style="margin: 20px;">
@@ -33,19 +33,19 @@
               <div class="md-title" style="flex: 1">
                 {{item.name}}
               </div>
-              <md-button class="md-icon-button" @click="toggleEditStoreItemNav(item)">
+              <md-button class="md-fab md-mini" @click="toggleEditStoreItemNav(item)">
                 <md-icon>edit</md-icon>
               </md-button>
 
-              <md-button class="md-icon-button" @click="deleteStoreItem(item)">
+              <md-button class="md-fab md-mini md-warn" @click="deleteStoreItem(item)">
                 <md-icon>delete</md-icon>
               </md-button>
             </md-toolbar>
 
             <md-card-media>
-              <img :src="item.image_url || 'http://placehold.it/1920x1080'"
+              <img :src="item.image_url || 'http://placehold.it/200x200'"
                    alt="People"
-                   onerror="this.onerror=null;this.src='http://placehold.it/1920x1080';">
+                   onerror="this.onerror=null;this.src='http://placehold.it/200x200';">
             </md-card-media>
             <md-card-media-actions>
 
@@ -114,19 +114,21 @@
     },
     data() {
       return {
-
+        storeItem: {},
       }
     },
     methods: {
-      editStoreItem(storeItem) {
-        this.$store.dispatch('updateStoreItem',storeItem);
+      editStoreItem() {
+        let {retail_price,quantity,item,store,created_date,updated_date} = this.storeItem;
+        this.$store.dispatch('updateStoreItem',{retail_price,quantity,item,store,created_date,updated_date});
       },
       deleteStoreItem(storeItem) {
         this.$store.dispatch('deleteStoreItem',storeItem);
       },
       toggleEditStoreItemNav(storeItem) {
         this.$refs.editStoreItemNav.toggle();
-        this.$set(this.$data,'editStoreItem',storeItem);
+
+        this.$set(this.$data,'storeItem',storeItem);
       },
     },
   }

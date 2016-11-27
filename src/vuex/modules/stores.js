@@ -39,9 +39,10 @@ const actions = {
     rootState.refs.bitems.child(storeItem['.key']).child('stores').child(storeItem.store).remove();
   },
   updateStoreItem({rootState},storeItem) {
-    if(!item) return;
+    if(!storeItem) return;
+    console.log(storeItem);
     storeItem['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
-    rootState.refs.bstores.child(storeItem['.key']).child('items').update(storeItem);
+    rootState.refs.bstores.child(storeItem.store).child('items').child(storeItem.item).update(storeItem);
   },
   deleteStore({rootState},store) {
     if(!store) return;

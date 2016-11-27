@@ -5,8 +5,10 @@
       <md-button class="md-icon-button" @click="toggleUserNav">
         <md-icon>menu</md-icon>
       </md-button>
-      <h2 class="md-title">{{currentUser.username}}</h2>
-
+      <h2 class="md-title" style="flex: 1">{{currentUser.username}}</h2>
+      <md-button class="md-icon-button md-raised" @click="$root.signOut">
+          <md-icon>cancel</md-icon>
+      </md-button>
 
     </md-toolbar>
 
@@ -92,6 +94,7 @@
               </md-list>
             </md-list-expand>
           </md-list-item>
+
         </md-list>
       </md-toolbar>
     </md-sidenav>

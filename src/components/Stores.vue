@@ -69,14 +69,19 @@
                 <div class="md-title">Store : {{store.name}}</div>
                 <div class="md-subhead">Manager : {{store.manager}}</div>
               </md-card-header>
-              <router-link :to="{name: 'store', params: {store: store['.key']}}" class="md-fab md-button md-mini">
-                <md-icon>edit</md-icon>
-              </router-link>
-
-              <md-button class="md-fab md-mini md-warn">
-                <md-icon>delete</md-icon>
-              </md-button>
-
+              <div v-if="currentManager['.key'] == authUser.username">
+                <router-link :to="{name: 'store', params: {store: store['.key']}}" class="md-fab md-button md-mini">
+                  <md-icon>edit</md-icon>
+                </router-link>
+                <md-button class="md-fab md-mini md-warn">
+                  <md-icon>delete</md-icon>
+                </md-button>
+              </div>
+              <div v-else>
+                <md-button class="md-fab md-mini">
+                  <md-icon>apply</md-icon>
+                </md-button>
+              </div>
             </md-toolbar>
 
 
