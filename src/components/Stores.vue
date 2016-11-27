@@ -1,19 +1,9 @@
 <template>
   <div>
 
-    <loading v-if="!stores"></loading>
-
-    <div class="md-display-2" align="center" style="padding-bottom: 30px;">
-      Stores
-      <div v-if="manager['.key'] == authUser.username">
-        <md-button class="md-fab" @click="toggleAddStoreNav">
-          <md-icon>add</md-icon>
-          <md-tooltip md-direction="left">Add Store</md-tooltip>
-        </md-button>
-      </div>
-    </div>
-
-    <md-sidenav class="md-right" ref="addStoreNav">
+    <loading v-if="!currentManager" message="Loading... Stores"></loading>
+<div v-else>
+    <md-sidenav  class="md-right md-fixed" ref="addStoreNav">
       <md-toolbar>
         <div class="md-toolbar-container">
           <h3 class="md-title" style="flex: 1">Manager:{{newStore.manager}}</h3>
@@ -47,7 +37,7 @@
         <md-textarea v-model="newStore.description" maxlength="70"></md-textarea>
       </md-input-container>
 
-      <multi-select :options="dataTagKeys" v-model="newStore.tags" :multiple="true"
+      <multi-select :options="dataTagKeys" v-model="newStore.tags" :selected="newStore.tags" :multiple="true"
                     :searchable="true" @tag="addTag"
                     :taggable="true">
         <span slot="noResult">
@@ -58,58 +48,83 @@
       <md-button class="md-raised md-accent" @click="addStore">Add Store</md-button>
     </md-sidenav>
 
-    <div v-if="stores">
-      <div class="md-display-4" align="center" v-if="stores.length < 1">
+    <div v-if="currentManagerStores">
+
+        <md-toolbar>
+          <h2 class="md-title" style="flex: 1">{{currentManager['.key']}} | Stores </h2>
+          <md-button v-if="currentManager['.key'] == authUser.username" style="z-index: 10;" class="md-fab md-mini" @click="toggleAddStoreNav">
+            <md-icon>add</md-icon>
+            <md-tooltip md-direction="left">Add Store</md-tooltip>
+          </md-button>
+        </md-toolbar>
+      <div class="md-display-4" align="center" v-if="currentManagerStores.length < 1">
         No Stores Available
       </div>
       <div v-else class="row" v-for="store3 in chunkedStores">
+
         <div v-for="store in store3" class="col-xs">
           <md-card md-with-hover style="margin: 10px;">
-              <md-card-header style="background: #2196F3;color: white;">
+            <md-toolbar>
+              <md-card-header style="flex: 1">
                 <div class="md-title">Store : {{store.name}}</div>
                 <div class="md-subhead">Manager : {{store.manager}}</div>
               </md-card-header>
+              <router-link :to="{name: 'store', params: {store: store['.key']}}" class="md-fab md-button md-mini">
+                <md-icon>edit</md-icon>
+              </router-link>
 
-              <md-card-media>
-                <img :src="store.image_url || 'http://placehold.it/1920x1080'" alt="People">
-              </md-card-media>
+              <md-button class="md-fab md-mini md-warn">
+                <md-icon>delete</md-icon>
+              </md-button>
+
+            </md-toolbar>
+
+
+
+            <md-card-media>
+              <img :src="store.image_url || 'http://placehold.it/1920x1080'"
+                   alt="People"
+                   onerror="this.onerror=null;this.src='http://placehold.it/1920x1080';">
+            </md-card-media>
+
+            <md-card-expand>
+              <md-card-media-actions>
+                <div class="md-subheading">
+                  Total Items: <div class="md-title" align="center"> {{ store.items | toArray | count }}</div>
+                </div>
+                <div class="md-subheading">
+                  Total Employees: <div class="md-title" align="center"> {{ store.employees | toArray | count }}</div>
+                </div>
+                <div class="md-subheading">
+                  Total Transactions: <div class="md-title" align="center"> {{ store.transactions | toArray | count }}</div>
+                </div>
+              </md-card-media-actions>
+              <md-card-actions>
+                <md-card-header>More Info</md-card-header>
+                <span style="flex: 1"></span>
+                <md-button class="md-icon-button" md-expand-trigger>
+                  <md-icon>keyboard_arrow_down</md-icon>
+                </md-button>
+              </md-card-actions>
 
               <md-card-content>
-                <p> {{store.description || 'No Description' }}</p>
+                <div class="md-title">Description:</div>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio itaque ea, nostrum odio. Dolores, sed accusantium quasi non, voluptas eius illo quas, saepe voluptate pariatur in deleniti minus sint. Excepturi.
               </md-card-content>
-
-              <md-card-actions>
-                <router-link class="md-button"
-                             :to="{name: 'managerStore', params: {store: store.name}}">
-                  Go to Store
-                </router-link>
-              </md-card-actions>
+            </md-card-expand>
             <md-card-content>
-              <h2 class="md-title">Created At: </h2>
-              <div class="md-subhead">
-                {{store.created_date | date}}
+              <div v-if="store.tags">
+                Tags: <span v-for="tag in store.tags"> <router-link :to="{name: 'tag',params: {tag}}"> {{tag}} </router-link>  </span>
               </div>
-              <h2 class="md-title">Updated At: </h2>
-              <div class="md-subhead">
-                {{store.updated_date | date}}
+              <div v-else>
+                No Tags
               </div>
             </md-card-content>
-              <md-card-content>
-                <h3 class="md-subheading">Status : {{store.status || 'No Status'}}</h3>
-              </md-card-content>
-              <md-card-content>
-                  <div v-if="store.tags">
-                    Tags: <span v-for="tag in store.tags"> <router-link :to="{name: 'tag',params: {tag}}"> {{tag}} </router-link>  </span>
-                  </div>
-                  <div v-else>
-                    No Tags
-                  </div>
-              </md-card-content>
-            </md-card>
+          </md-card>
         </div>
       </div>
     </div>
-
+</div>
   </div>
 </template>
 
@@ -119,14 +134,15 @@
     name: 'stores',
     computed: {
       chunkedStores() {
-        return _.chunk(this.stores,3);
+        return _.chunk(this.currentManagerStores,3);
       },
       ...mapGetters([
         'authUser',
-        'dataTagKeys'
+        'dataTagKeys',
+        'currentManager',
+        'currentManagerStores',
       ])
     },
-    props: ['manager', 'stores'],
     data() {
       return {
         newStore: {
@@ -137,12 +153,13 @@
           description: '',
           status: 'New',
           tags: ['store','new'],
-          manager: this.manager['.key'],
+          manager: '',
         },
       }
     },
     methods: {
       addStore() {
+        this.newStore.manager = this.currentManager['.key'];
         this.$store.dispatch('addStore',this.newStore);
         _.forEach(this.newStore.tags,tag => {
             this.$store.dispatch('addTag', {

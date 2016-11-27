@@ -1,8 +1,10 @@
 <template>
 
-  <div style="height: 100vh;">
-    <div style="font-size: 20vh;font-weight: bold; ">
-      404 Not Found Redirect in {{ seconds }}
+  <div class="row center-xs middle-xs md-display-4" style="font-weight:bold; height: 100vh; width: 101vw; background: #2196F3; color:white;">
+    <div class="col-xs-6">
+      <div class="box">
+        404 Not Found {{seconds}}
+      </div>
     </div>
   </div>
 

@@ -23,7 +23,7 @@ const actions = {
     user['profiles'] = profiles;
     user['created_date'] = firebase.database.ServerValue.TIMESTAMP;
     user['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
-    rootState.refs.busers.child(user.username).set(user);
+    rootState.refs.busers.child(user.username.replace(/\s/g, "")).set(user);
   },
   addProfile({
     rootState,

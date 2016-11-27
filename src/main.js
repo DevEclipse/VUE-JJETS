@@ -27,11 +27,24 @@ Vue.material.theme.register('default', {
   primary: 'blue',
   accent: 'teal',
 })
-Vue.filter('date', function (value) {
+Vue.filter('date', value => {
   return new Date(value).toDateString();
 })
+Vue.filter('toArray',value => {
+  return _.map(value, function(value, index) {
+    return [value]
+  });
+});
+Vue.filter('count',value => {
+  return value ? value.length : 0;
+});
+
+Vue.directive('snackbar',(bind,update) => {
+
+});
+
 Vue.component('loading',require('./components/Loading.vue'));
-Vue.component('user-info',require('./components/Info.vue'));
+Vue.component('vue-nav',require('./components/Nav.vue'));
 const store = new Vuex.Store(VuexStore);
 
 const router = new VueRouter({

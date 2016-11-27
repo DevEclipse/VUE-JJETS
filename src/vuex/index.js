@@ -6,7 +6,7 @@ import managers from './modules/managers'
 import employees from './modules/employees'
 import customers from './modules/customers'
 import transactions from './modules/transactions'
-import getters from './getters'
+
 
 export default {
   state: {

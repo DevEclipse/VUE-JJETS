@@ -3,14 +3,15 @@ import firebase from 'firebase'
 const state = {};
 
 const getters = {
-  currentManager(state, getters, rootState) {
-    return _.find(rootState.bmanagers, ['.key', rootState.route.params.manager])
+  currentManager(state,getters,rootState) {
+    if(!rootState.route.params.username) return;
+    return _.find(rootState.bmanagers,['.key',rootState.route.params.username])
   },
   currentManagerStores(state, getters, rootState) {
     return _.filter(rootState.bstores, ['manager', getters.currentManager['.key']]);
   },
   currentManagerItems(state, getters, rootState) {
-    return _.filter(rootState.bitems, ['create_by', getters.currentManager['.key']]);
+    return _.filter(rootState.bitems, ['created_by', getters.currentManager['.key']]);
   },
 };
 
