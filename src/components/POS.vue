@@ -1,65 +1,75 @@
 <template>
   <div>
-    Hehe
-    <div v-if="employeeStore">
-    <nav class="nav-wrapper teal">
-    <v-container v-if="transaction">
-      Total: {{ transaction.total }}
-      Amount: {{ transaction.amount }}
-      Change: {{ transaction.total - transaction.amount }}
-      <!--Tax: {{ newTransaction.total * bstore.tax_rate || 0 }}-->
-      <!--Discount: {{ newTransaction.total * bstore.discount_rate  || 0}}-->
-      <!--Discounted Total: {{ newTransaction.total - (newTransaction.total * bstore.discount_rate || 0) }}-->
-    </v-container>
-    </nav>
-    <v-row v-if="transaction">
-      <v-grid s12 m2 l6>
-        <h5> Store Items </h5>
-        <v-collection v-if="$store.getters.managerStoreItems.items">
-          <v-collection-item v-for="item in $store.getters.managerStoreItems.items">
-             <span> Name: </span> {{item.name}}
-             <span> Retail Price:</span> {{item.retail_price}}
-             <span> On Stock: </span> {{item.quantity}}
-             <span> Store Owner: </span> {{item.store}}
-            <span slot="secondary" @click="addThisItem(item)"><v-icon>send</v-icon></span>
-          </v-collection-item>
-        </v-collection>
-      </v-grid>
-    </v-row>
-  </div>
+
+    <loading v-if="!currentEmployee" message="Loading... Employee"/>
+
+    <div v-else>
+      <md-toolbar>
+        <div class="md-title" style="flex: 1">
+          Point of Sales : {{currentEmployee['.key']}}
+        </div>
+        <md-button class="md-fab md-mini">
+          <md-icon>add</md-icon>
+        </md-button>
+      </md-toolbar>
+      <div class="row">
+        <div class="col-xs">
+          <md-list class="md-dense">
+
+            <md-list-item v-for="item in items">
+              <md-avatar>
+                <img :src="item.image_url || 'http://placehold.it/200x200'" alt="People">
+              </md-avatar>
+
+              <span>{{item.item}}</span>
+              <span>{{item.retail_price}}</span>
+              <span>{{item.quantity}}</span>
+              <md-button class="md-icon-button md-list-action">
+                <md-icon class="md-primary">send</md-icon>
+              </md-button>
+            </md-list-item>
+
+          </md-list>
+        </div>
+      <div class="col-xs-6" v-if="!transaction">
+        <transaction :transaction="transaction"></transaction>
+      </div>
+      <div v-else>
+        <vue-section-display message="No Transaction"/>
+      </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
+  import Transaction from './Transaction.vue'
   export default {
-    props: ['transaction'],
     computed: {
       ...mapGetters([
         'currentEmployee',
-        'employeeStore'
+        'currentTransaction',
       ])
     },
+    components: {
+      Transaction
+    },
     data() {
-      return{
-        newTransactionItem: {
-          name: '',
-          retail_price: '',
-          quantity: '',
-          status: '',
-          subtotal: 0,
-        },
-        nav: {
-          edge: 'right',
-        },
-      }
-    },
-    methods: {
-      addThisItem(item) {
-         // this.newTransactionItem.name = item.name;
-         // this.$root.addTransactionItem(this.transaction['.key'],this.newTransactionItem,this.store['.key'],item.quantity)
-      },
-    },
-
+        return {
+            transaction: null,
+              ['.key']: 'transaction0',
+              amount: 0,
+              total: 0,
+              change: 0,
+              tax: 0,
+              discount: 0,
+              employee: '',
+              store: '',
+              customer: '',
+              items: [],
+        }
+    }
   }
 </script>

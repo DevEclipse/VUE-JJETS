@@ -14,7 +14,5 @@
 </script>
 
 <style>
-
     @import url('//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css');
-    @import url('//cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css');
 </style>

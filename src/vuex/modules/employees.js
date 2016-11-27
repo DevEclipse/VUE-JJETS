@@ -2,7 +2,14 @@ import firebase from 'firebase'
 
 const state = {};
 
-const getters = {};
+const getters = {
+  currentEmployee(state,getters,rootState) {
+    return _.find(rootState.bemployees,['.key',rootState.route.params.username]);
+  },
+  currentEmployeeManagerStores(state,getters,rootState) {
+    return _.filter(rootState.bstores,['manager',getters.currentEmployee.manager]);
+  },
+};
 
 const mutations = {};
 
@@ -10,10 +17,13 @@ const actions = {
   addEmployee({rootState},employee) {
     if(!employee) return;
     rootState.refs.bemployees.child(employee).set({
-      assigned_store: 'unemployed_store',
+      manager: employee,
       created_date: firebase.database.ServerValue.TIMESTAMP,
       updated_date: firebase.database.ServerValue.TIMESTAMP
     });
+  },
+  applyToStore({rootState},employee) {
+    if(!employee) return;
   },
   deleteEmployee({rootState},employee) {
     if(!employee) return;

@@ -1,32 +1,16 @@
 <template>
   <div>
-
+  <loading v-if="!transactions" message="Loading... Transactions"/>
+  <div v-else-if="transactions.length > 1">
+asd
   </div>
-
+  <vue-section-display v-else message="No Transactions Available"/>
+  </div>
 </template>
 
 <script>
   export default {
-    name: 'vue-transactions',
+    name: 'transactions',
     props: ['transactions'],
-    data() {
-      return {
-        selectedData: [],
-        sort: {},
-        page: {}
-      }
-    },
-    methods: {
-      onSelect(data) {
-        this.selectedData = data;
-        this.$forceUpdate();
-      },
-      onSort(sort) {
-        this.sort = sort;
-      },
-      onPagination(page) {
-        this.page = page;
-      }
-    }
   }
 </script>

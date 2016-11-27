@@ -23,7 +23,7 @@ const actions = {
     user['profiles'] = profiles;
     user['created_date'] = firebase.database.ServerValue.TIMESTAMP;
     user['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
-    rootState.refs.busers.child(user.username.replace(/\s/g, "")).set(user);
+    rootState.refs.busers.child(user.username.replace(/\s/g, "").toLowerCase()).set(user);
   },
   addProfile({
     rootState,
@@ -45,7 +45,7 @@ const actions = {
         break;
     }
     rootState.refs.busers.child(user['.key']).child('profiles').update({
-      [profile]: true
+      [profile]: user.username
     });
   },
   deleteUser({

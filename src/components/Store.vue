@@ -6,23 +6,19 @@
     <div v-else>
       <md-toolbar>
         <div class="md-title" style="flex: 1;">
-         Store | {{currentStore.name}}
+          Store | {{currentStore.name}}
         </div>
-        <router-link :to="{name: 'manager', params: {manager: currentStore.manager}}" class="md-button">
-          Manager
-        </router-link>
-        <router-link :to="{name: 'storeInfo'}" class="md-button">
-          Info
-        </router-link>
-        <router-link :to="{name: 'storeItems'}" class="md-button">
-          Items
-        </router-link>
-        <router-link :to="{name: 'storeTransactions'}" class="md-button">
-          Transactions
-        </router-link>
-        <router-link :to="{name: 'storeEmployees'}" class="md-button">
-          Employees
-        </router-link>
+        <div v-if="authUser.profiles.manager == currentStore.manager">
+          <router-link :to="{name: 'managerStoreInfo'}" class="md-button">
+            Info
+          </router-link>
+          <router-link :to="{name: 'managerStoreItems'}" class="md-button">
+            Items
+          </router-link>
+          <router-link :to="{name: 'managerStoreTransactions'}" class="md-button">
+            Transactions
+          </router-link>
+        </div>
       </md-toolbar>
       <transition enter-active-class="animated fadeInLeft" leave-active-class="animated fadeOutRight">
         <router-view></router-view>

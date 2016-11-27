@@ -6,15 +6,14 @@ import VueRouter from 'vue-router';
 import VuexFire from 'vuexfire'
 import App from './App.vue';
 import VuexStore from './vuex';
-import {
-  sync
-}
-from 'vuex-router-sync';
+import {sync} from 'vuex-router-sync';
 import routes from './routes';
 import firebase from 'firebase';
 import db from './firebase_config';
-import VueMaterial from 'vue-material'
-import 'vue-material/dist/vue-material.css'
+import VueMaterial from 'vue-material';
+import 'vue-material/dist/vue-material.css';
+import 'flexboxgrid/dist/flexboxgrid.css';
+import 'animate.css/animate.css';
 import MultiSelect from 'vue-multiselect'
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -38,11 +37,7 @@ Vue.filter('toArray',value => {
 Vue.filter('count',value => {
   return value ? value.length : 0;
 });
-
-Vue.directive('snackbar',(bind,update) => {
-
-});
-
+Vue.component('vue-section-display',require('./components/SectionDisplay.vue'));
 Vue.component('loading',require('./components/Loading.vue'));
 Vue.component('vue-nav',require('./components/Nav.vue'));
 const store = new Vuex.Store(VuexStore);
@@ -75,14 +70,15 @@ const app = new Vue({
   },
   methods: {
     toDashboard() {
-      let user = this.$store.getters.authUser;
-      console.log(user);
-      this.$router.push({
-        name: 'user',
-        params: {
-          username: user.username
-        }
-      })
+      this.$store.dispatch('setAuth',this.$store.state.uid);
+      //let user = this.$store.getters.authUser;
+      //if(!user) return;
+      //this.$router.push({
+      //  name: 'user',
+      //  params: {
+      //    username: user.username
+      //  }
+      //})
     },
     signUpUser(credentials) {
       let self = this;
@@ -111,9 +107,6 @@ const app = new Vue({
         .then(function () {
           self.toDashboard();
         })
-        .catch(function (error) {
-          alert(error.message);
-        })
     },
     signOut() {
       let self = this;
@@ -130,7 +123,7 @@ const app = new Vue({
 firebase.auth().onAuthStateChanged(function (user) {
   if (!user) return;
   if (!app.$store.state.uid)
-    app.$store.commit('SET_UID', user.uid);
+    app.$store.dispatch('setAuth', user.uid);
 });
 
 // const methods = {

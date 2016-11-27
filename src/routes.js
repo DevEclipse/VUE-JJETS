@@ -24,39 +24,44 @@ const routes = [
         name: 'manager',
         children: [
           {
+            path: '',
+            component: require('./components/ManagerInfo.vue'),
+            name: 'managerInfo',
+          },
+          {
             path: 'stores',
             component: require('./components/Stores.vue'),
             name: 'managerStores',
           },
           {
+            path: 'employees',
+            component: require('./components/Employees.vue'),
+            name: 'managerEmployees',
+          },
+          {
             path: 'store/:store',
             component: require('./components/Store.vue'),
-            name: 'store',
+            name: 'managerStore',
             children: [
               {
                 path: '',
                 component: require('./components/StoreInfo.vue'),
-                name: 'storeInfo',
+                name: 'managerStoreInfo',
               },
               {
                 path: 'items',
                 component: require('./components/StoreItems.vue'),
-                name: 'storeItems',
-              },
-              {
-                path: 'employees',
-                component: require('./components/Employees.vue'),
-                name: 'storeEmployees',
+                name: 'managerStoreItems',
               },
               {
                 path: 'transactions',
-                component: require('./components/StoreItems.vue'),
-                name: 'storeTransactions',
+                component: require('./components/Transactions.vue'),
+                name: 'managerStoreTransactions',
               },
               {
                 path: 'transaction/:transaction',
                 component: require('./components/Transaction.vue'),
-                name: 'storeTransaction',
+                name: 'managerStoreTransaction',
               },
             ]
           },
@@ -82,16 +87,24 @@ const routes = [
         name: 'employee',
         children: [
           {
+            path: '',
+            component: require('./components/EmployeeInfo.vue'),
+            name: 'employeeInfo',
+          },
+          {
             path: 'transactions',
             component: require('./components/Transactions.vue'),
+            name: 'employeeTransactions',
           },
           {
             path: 'pos/:transaction',
             component: require('./components/POS.vue'),
+            name: 'posTransaction',
           },
           {
-            path: 'store',
-            component: require('./components/Store.vue'),
+            path: 'pos',
+            component: require('./components/POS.vue'),
+            name: 'pos',
           },
         ]
       },
@@ -101,6 +114,16 @@ const routes = [
   {
     path: '/stores',
     component: require('./components/Stores.vue'),
+  },
+  {
+    path: '/managers',
+    component: require('./components/Managers.vue'),
+    name: 'managers',
+  },
+  {
+    path: '/store/:store',
+    component: require('./components/Store.vue'),
+    name: ''
   },
   {
     path: '/items',

@@ -2,6 +2,7 @@
   <div>
 
     <loading v-if="!currentManager" message="Loading... Stores"></loading>
+
 <div v-else>
     <md-sidenav  class="md-right md-fixed" ref="addStoreNav">
       <md-toolbar>
@@ -51,15 +52,18 @@
     <div v-if="currentManagerStores">
 
         <md-toolbar>
+
           <h2 class="md-title" style="flex: 1">{{currentManager['.key']}} | Stores </h2>
+
           <md-button v-if="currentManager['.key'] == authUser.username" style="z-index: 10;" class="md-fab md-mini" @click="toggleAddStoreNav">
             <md-icon>add</md-icon>
             <md-tooltip md-direction="left">Add Store</md-tooltip>
           </md-button>
+
         </md-toolbar>
-      <div class="md-display-4" align="center" v-if="currentManagerStores.length < 1">
-        No Stores Available
-      </div>
+
+      <vue-section-display v-if="currentManagerStores.length < 1" message="No Stores Available"/>
+
       <div v-else class="row" v-for="store3 in chunkedStores">
 
         <div v-for="store in store3" class="col-xs">
@@ -70,21 +74,14 @@
                 <div class="md-subhead">Manager : {{store.manager}}</div>
               </md-card-header>
               <div v-if="currentManager['.key'] == authUser.username">
-                <router-link :to="{name: 'store', params: {store: store['.key']}}" class="md-fab md-button md-mini">
+                <router-link :to="{name: 'managerStore', params: {store: store['.key']}}" class="md-fab md-button md-mini">
                   <md-icon>edit</md-icon>
                 </router-link>
-                <md-button class="md-fab md-mini md-warn">
+                <md-button class="md-fab md-mini md-warn" @click="deleteStore(store)">
                   <md-icon>delete</md-icon>
                 </md-button>
               </div>
-              <div v-else>
-                <md-button class="md-fab md-mini">
-                  <md-icon>apply</md-icon>
-                </md-button>
-              </div>
             </md-toolbar>
-
-
 
             <md-card-media>
               <img :src="store.image_url || 'http://placehold.it/1920x1080'"
@@ -97,9 +94,7 @@
                 <div class="md-subheading">
                   Total Items: <div class="md-title" align="center"> {{ store.items | toArray | count }}</div>
                 </div>
-                <div class="md-subheading">
-                  Total Employees: <div class="md-title" align="center"> {{ store.employees | toArray | count }}</div>
-                </div>
+
                 <div class="md-subheading">
                   Total Transactions: <div class="md-title" align="center"> {{ store.transactions | toArray | count }}</div>
                 </div>
@@ -141,6 +136,11 @@
       chunkedStores() {
         return _.chunk(this.currentManagerStores,3);
       },
+      isManagerEmployee() {
+        return _.find(this.currentManager.employees,(value,index) => {
+            return index == this.authUser.username;
+        });
+      },
       ...mapGetters([
         'authUser',
         'dataTagKeys',
@@ -159,6 +159,7 @@
           status: 'New',
           tags: ['store','new'],
           manager: '',
+          employees: [],
         },
       }
     },
@@ -177,6 +178,9 @@
       },
       toggleAddStoreNav() {
         this.$refs.addStoreNav.toggle();
+      },
+      deleteStore(store) {
+        this.$store.dispatch('deleteStore',store);
       },
       addTag (newTag) {
         this.newStore.tags.push(newTag)

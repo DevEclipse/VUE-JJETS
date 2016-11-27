@@ -19,14 +19,11 @@ export default {
     bcustomers: null,
     btransactions: null,
     btags: null,
-    uid: null,
+    auth: null,
   },
   getters: {
     authUser(state) {
-      return state.auth = _.find(state.busers, ['uid', state.uid])
-    },
-    dataTags(state) {
-      return state.btags;
+      return state.auth;
     },
     dataTagKeys(state) {
       let keys = [];
@@ -44,8 +41,8 @@ export default {
     ['SET_REFS'](state, payload) {
       state.refs = payload;
     },
-    ['SET_UID'](state, uid) {
-      state.uid = uid;
+    ['SET_AUTH'](state, auth) {
+      state.auth = auth;
     },
 
     ...VuexFire.mutations
@@ -55,6 +52,16 @@ export default {
       state.refs.btags.child(name).child('categories').child(category).update({[category_value]: true});
       state.refs.btags.child(name).child('taggers').update({[tagger]: true});
     },
+    async fetchUser({state},uid) {
+     let users = await state.busers;
+     return await _.find(users, ['uid', uid]);
+    },
+    async setAuth({state,commit,dispatch},uid) {
+      console.log(uid);
+      let auth = await dispatch('fetchUser',uid);
+      console.log(auth);
+      commit('SET_AUTH', auth);
+    }
   },
   modules: {
     stores,

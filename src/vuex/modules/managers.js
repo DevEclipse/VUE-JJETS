@@ -13,35 +13,43 @@ const getters = {
   currentManagerItems(state, getters, rootState) {
     return _.filter(rootState.bitems, ['created_by', getters.currentManager['.key']]);
   },
+  authManager(state,getters,rootState) {
+    return _.find(rootState.bmanagers,['.key',rootState.auth.username])
+  },
+  authManagerStores(state, getters, rootState) {
+    return _.filter(rootState.bstores, ['manager', getters.authManager['.key']]);
+  },
+  authManagerItems(state, getters, rootState) {
+    return _.filter(rootState.bitems, ['created_by', getters.authManager['.key']]);
+  },
 };
 
-const mutations = {
-  SET_MANAGER(state, manager) {
-    state.manager = manager;
-  }
-};
+const mutations = {};
 
 const actions = {
-  addManager({
-    rootState
-  }, manager) {
+  addManager({rootState}, manager) {
     if (!manager) return;
     rootState.refs.bmanagers.child(manager).set({
       void_code: manager,
-      stores: [],
+      employees: {[manager]: true},
       created_date: firebase.database.ServerValue.TIMESTAMP,
       updated_date: firebase.database.ServerValue.TIMESTAMP
     });
   },
-  deleteManager({
-    rootState
-  }, manager) {
+  addStoreToManager({rootState},store) {
+    rootState.refs.bmanagers.child(store.manager).child('stores').update({[store['.key']]: true});
+  },
+  deleteStoreFromManager({rootState},store) {
+    rootState.refs.bmanagers.child(store.manager).child('stores').child(store['.key']).remove();
+  },
+  addManagerEmployee({rootState},employee) {
+    rootState.refs.bmanagers.child(employee.manager).child('employees').update({[employee['.key']]: true});
+  },
+  deleteManager({rootState}, manager) {
     if (!manager) return;
     rootState.refs.bmanagers.child(manager['.key']).remove();
   },
-  updateManager({
-    rootState
-  }, manager) {
+  updateManager({rootState}, manager) {
     if (!manager) return;
     manager['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
     rootState.refs.bmanagers.child(manager['.key']).update(manager);
