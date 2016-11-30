@@ -2,152 +2,61 @@ const routes = [
   {
     path: '/',
     component: require('./components/Index.vue'),
+    name: 'index',
   },
-
   {
-    path: '/news',
-    component: require('./components/News.vue'),
+    path: '/items',
+    component: require('./components/Items.vue'),
+    name: 'items',
+  },
+  {
+    path: '/item/:item',
+    component: require('./components/Item.vue'),
+    name: 'item',
+  },
+  {
+    path: '/stores',
+    component: require('./components/stores.vue'),
+    name: 'stores',
+  },
+  {
+    path: '/store/:store',
+    component: require('./components/Store.vue'),
+    name: 'store',
+    children: [
+      {
+        path: 'items',
+        component: require('./components/StoreItems.vue'),
+        name: 'storeItems',
+      },
+      {
+        path: 'transactions',
+        component: require('./components/StoreItems.vue'),
+        name: 'storeTransactions',
+      }
+
+    ]
   },
   {
     path: '/user/:username',
     component: require('./components/User.vue'),
     name: 'user',
-    children: [
-      {
-        path: '',
-        component: {template: `<div> Hello </div>`},
-        name: 'home'
-      },
-      {
-        path: 'manager',
-        component: require('./components/Manager.vue'),
-        name: 'manager',
-        children: [
-          {
-            path: '',
-            component: require('./components/ManagerInfo.vue'),
-            name: 'managerInfo',
-          },
-          {
-            path: 'stores',
-            component: require('./components/Stores.vue'),
-            name: 'managerStores',
-          },
-          {
-            path: 'employees',
-            component: require('./components/Employees.vue'),
-            name: 'managerEmployees',
-          },
-          {
-            path: 'store/:store',
-            component: require('./components/Store.vue'),
-            name: 'managerStore',
-            children: [
-              {
-                path: '',
-                component: require('./components/StoreInfo.vue'),
-                name: 'managerStoreInfo',
-              },
-              {
-                path: 'items',
-                component: require('./components/StoreItems.vue'),
-                name: 'managerStoreItems',
-              },
-              {
-                path: 'transactions',
-                component: require('./components/Transactions.vue'),
-                name: 'managerStoreTransactions',
-              },
-              {
-                path: 'transaction/:transaction',
-                component: require('./components/Transaction.vue'),
-                name: 'managerStoreTransaction',
-              },
-            ]
-          },
-          {
-            path: 'items',
-            component: require('./components/Items.vue'),
-            name: 'managerItems',
-          },
-          {
-            path: 'transactions',
-            component: require('./components/Transactions.vue'),
-          },
-        ]
-      },
-      {
-        path: 'customer',
-        component: require('./components/Employee.vue'),
-        name: 'customer',
-      },
-      {
-        path: 'employee',
-        component: require('./components/Employee.vue'),
-        name: 'employee',
-        children: [
-          {
-            path: '',
-            component: require('./components/EmployeeInfo.vue'),
-            name: 'employeeInfo',
-          },
-          {
-            path: 'transactions',
-            component: require('./components/Transactions.vue'),
-            name: 'employeeTransactions',
-          },
-          {
-            path: 'pos/:transaction',
-            component: require('./components/POS.vue'),
-            name: 'posTransaction',
-          },
-          {
-            path: 'pos',
-            component: require('./components/POS.vue'),
-            name: 'pos',
-          },
-        ]
-      },
-    ]
-  },
-
-  {
-    path: '/stores',
-    component: require('./components/Stores.vue'),
   },
   {
-    path: '/managers',
-    component: require('./components/Managers.vue'),
-    name: 'managers',
+    path: '/manager/:manager',
+    component: require('./components/Manager.vue'),
+    name: 'manager',
   },
   {
-    path: '/store/:store',
-    component: require('./components/Store.vue'),
-    name: ''
+    path: 'employee/:employee',
+    component: require('./components/Manager.vue'),
+    name: 'employee',
   },
   {
-    path: '/items',
-    component: require('./components/Items.vue'),
+    path: 'customer/:customer',
+    component: require('./components/Manager.vue'),
+    name: 'customer',
   },
-  {
-    path: '/tags',
-    component: require('./components/Tags.vue'),
-    name: 'tags'
-  },
-  {
-    path: '/tags/:tag',
-    component: require('./components/Tag.vue'),
-    name: 'tag'
-  },
-  {
-    path: '/401',
-    component: require('./components/Vue401.vue')
-  },
-  {
-    path: '/*',
-    component: require('./components/Vue404.vue'),
-  },
-
 ];
 
 export default routes

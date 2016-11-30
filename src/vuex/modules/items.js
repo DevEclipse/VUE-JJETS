@@ -2,32 +2,34 @@ import firebase from 'firebase'
 
 const state = {};
 
-const getters = {};
+const getters = {
+
+};
 
 const mutations = {};
 
 const actions = {
-  addItem({rootState},item) {
+  addItem({getters},item) {
     if(!item) return;
-    item['created_date'] = firebase.database.ServerValue.TIMESTAMP;
-    item['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
-    rootState.refs.bitems.child(item.name.replace(/\s/g, "")).set(item);
+    item['created_date'] = item['updated_date'] = getters.serverTime;
+    getters.refItems.child(item.name.replace(/\s/g, "").toLowerCase()).set(item);
   },
-  deleteItem({rootState},item) {
+  deleteItem({getters},item) {
     if(!item) return;
-    rootState.refs.bitems.child(item['.key']).remove();
+    getters.refItems.child(item['.key']).remove();
   },
-  updateItem({rootState},item) {
+  updateItem({getters},item) {
     if(!item) return;
-    item['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
-    rootState.refs.bitems.child(item['.key']).update(item);
+    item['updated_date'] = getters.serverTime;
+    getters.refItems.child(item['.key']).update(item);
   },
-  addStoreToItem({rootState},storeItem) {
+  addStoreToItem({getters},storeItem) {
     if(!storeItem) return;
-    rootState.refs.bitems.child(storeItem.item).child('stores').update({[storeItem.store]: true});
+    getters.refItems.child(storeItem.item).child('stores').update({[storeItem.store]: true});
   },
-  deleteStoreFromItem({rootState},storeItem) {
-    rootState.refs.bitems.child(storeItem['.key']).child('stores').child(storeItem.store).remove();
+  deleteStoreFromItem({getters},storeItem) {
+    if(!storeItem) return;
+    getters.refItems.child(storeItem['.key']).child('stores').child(storeItem.store).remove();
   },
 };
 //called by this.$store.dispatch('addUser')

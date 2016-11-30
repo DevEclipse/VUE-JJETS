@@ -1,8 +1,8 @@
 
 const state = {};
 const getters = {
-  currentTransaction(state,getters,rootState) {
-    return _.find(rootState.btransactions,['.key',rootState.route.params.transaction]);
+  currentTransaction(state,getters) {
+    return _.find(getters.allTransactions,['.key',getters.routeParams.transaction]);
   }
 };
 const mutations = {};

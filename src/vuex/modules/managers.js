@@ -1,58 +1,72 @@
 import firebase from 'firebase'
 
-const state = {};
-
-const getters = {
-  currentManager(state,getters,rootState) {
-    if(!rootState.route.params.username) return;
-    return _.find(rootState.bmanagers,['.key',rootState.route.params.username])
-  },
-  currentManagerStores(state, getters, rootState) {
-    return _.filter(rootState.bstores, ['manager', getters.currentManager['.key']]);
-  },
-  currentManagerItems(state, getters, rootState) {
-    return _.filter(rootState.bitems, ['created_by', getters.currentManager['.key']]);
-  },
-  authManager(state,getters,rootState) {
-    return _.find(rootState.bmanagers,['.key',rootState.auth.username])
-  },
-  authManagerStores(state, getters, rootState) {
-    return _.filter(rootState.bstores, ['manager', getters.authManager['.key']]);
-  },
-  authManagerItems(state, getters, rootState) {
-    return _.filter(rootState.bitems, ['created_by', getters.authManager['.key']]);
-  },
+const state = {
+  manager: null,
 };
 
-const mutations = {};
+const getters = {
+  currentManager(state,getters) {
+    return _.find(getters.allManagers,['.key',getters.routeParams.manager])
+  },
+  currentManagerStores(state, getters) {
+    return _.filter(getters.allStores, ['manager', getters.currentManager['.key']]);
+  },
+  currentManagerItems(state, getters) {
+    return _.filter(getters.allItems, ['created_by', getters.currentManager['.key']]);
+  },
+  getManager(state,getters) {
+    if(!state.manager) return;
+    return _.find(getters.allManagers,['.key',state.manager['.key']])
+  },
+  managerStores(state, getters, rootState) {
+    return _.filter(getters.allStores, ['manager', getters.getManager['.key']]);
+  },
+  managerItems(state, getters, rootState) {
+    return _.filter(getters.allItems, ['created_by', getters.getManager['.key']]);
+  },
+
+};
+
+const mutations = {
+  ['SET_MANAGER'](state,manager) {
+    state.manager = manager;
+  }
+};
 
 const actions = {
-  addManager({rootState}, manager) {
+  addManager({getters}, manager) {
     if (!manager) return;
-    rootState.refs.bmanagers.child(manager).set({
+    getters.refManagers.child(manager).set({
       void_code: manager,
       employees: {[manager]: true},
-      created_date: firebase.database.ServerValue.TIMESTAMP,
-      updated_date: firebase.database.ServerValue.TIMESTAMP
+      created_date: getters.serverTime,
+      updated_date: getters.serverTime
     });
   },
-  addStoreToManager({rootState},store) {
-    rootState.refs.bmanagers.child(store.manager).child('stores').update({[store['.key']]: true});
+  addStoreToManager({getters},store) {
+    getters.refManagers.child(store.manager).child('stores').update({[store['.key']]: true});
   },
-  deleteStoreFromManager({rootState},store) {
-    rootState.refs.bmanagers.child(store.manager).child('stores').child(store['.key']).remove();
+  deleteStoreFromManager({getters},store) {
+    getters.refManagers.child(store.manager).child('stores').child(store['.key']).remove();
   },
-  addManagerEmployee({rootState},employee) {
-    rootState.refs.bmanagers.child(employee.manager).child('employees').update({[employee['.key']]: true});
+  addEmployeeToManager({getters},employee) {
+    getters.refManagers.child(employee.manager).child('employees').update({[employee['.key']]: true});
   },
-  deleteManager({rootState}, manager) {
+  deleteManager({getters}, manager) {
     if (!manager) return;
-    rootState.refs.bmanagers.child(manager['.key']).remove();
+    getters.refManagers.child(manager['.key']).remove();
   },
-  updateManager({rootState}, manager) {
+  updateManager({getters}, manager) {
     if (!manager) return;
-    manager['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
-    rootState.refs.bmanagers.child(manager['.key']).update(manager);
+    manager['updated_date'] = getters.serverTime
+    getters.refManagers.child(manager['.key']).update(manager);
+  },
+
+  async setManager({getters,commit},manager) {
+    let result = await getters.allManagers;
+    let found = await _.find(result,['.key',manager]);
+    console.log(found);
+    commit('SET_MANAGER',found);
   },
 };
 //called by this.$store.dispatch('addUser')

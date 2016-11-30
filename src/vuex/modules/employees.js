@@ -3,36 +3,37 @@ import firebase from 'firebase'
 const state = {};
 
 const getters = {
-  currentEmployee(state,getters,rootState) {
-    return _.find(rootState.bemployees,['.key',rootState.route.params.username]);
+
+  currentEmployee(state,getters) {
+    return _.find(getters.allEmployees,['.key',getters.currentUser.username]);
   },
   currentEmployeeManagerStores(state,getters,rootState) {
-    return _.filter(rootState.bstores,['manager',getters.currentEmployee.manager]);
+    return _.filter(getters.allStores,['manager',getters.currentEmployee.manager]);
   },
 };
 
 const mutations = {};
 
 const actions = {
-  addEmployee({rootState},employee) {
+  addEmployee({getters},employee) {
     if(!employee) return;
-    rootState.refs.bemployees.child(employee).set({
+    getters.refEmployees.child(employee).set({
       manager: employee,
-      created_date: firebase.database.ServerValue.TIMESTAMP,
-      updated_date: firebase.database.ServerValue.TIMESTAMP
+      created_date: getters.serverTime,
+      updated_date: getters.serverTime
     });
   },
-  applyToStore({rootState},employee) {
+  applyToStore({getters},employee) {
     if(!employee) return;
   },
-  deleteEmployee({rootState},employee) {
+  deleteEmployee({getters},employee) {
     if(!employee) return;
-    rootState.refs.bemployees.child(employee['.key']).remove();
+    getters.refEmployees.child(employee['.key']).remove();
   },
-  updateEmployee({rootState},employee) {
+  updateEmployee({getters},employee) {
     if(!employee) return;
-    employee['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
-    rootState.refs.bemployees.child(employee['.key']).update(employee);
+    employee['updated_date'] = getters.serverTime;
+    getters.refEmployees.child(employee['.key']).update(employee);
   }
 };
 //called by this.$store.dispatch('addUser')

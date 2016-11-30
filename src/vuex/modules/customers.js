@@ -1,5 +1,3 @@
-import firebase from 'firebase'
-
 const state = {};
 
 const getters = {};
@@ -7,22 +5,22 @@ const getters = {};
 const mutations = {};
 
 const actions = {
-  addCustomer({rootState},customer) {
+  addCustomer({getters},customer) {
     if(!customer) return;
-    rootState.refs.bcustomers.child(customer).set({
+    getters.refCustomers.child(customer).set({
       balance: 0,
-      created_date: firebase.database.ServerValue.TIMESTAMP,
-      updated_date: firebase.database.ServerValue.TIMESTAMP
+      created_date: getters.serverTime,
+      updated_date: getters.serverTime
     });
   },
-  deleteCustomer({rootState},customer) {
+  deleteCustomer({getters},customer) {
     if(!customer) return;
-    rootState.refs.bcustomers.child(customer['.key']).remove();
+    getters.refCustomers.child(customer['.key']).remove();
   },
-  updateCustomer({rootState},customer) {
+  updateCustomer({getters},customer) {
     if(!customer) return;
-    customer['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
-    rootState.refs.bcustomers.child(customer['.key']).update(customer);
+    customer['updated_date'] = getters.serverTime;
+    getters.refCustomers.child(customer['.key']).update(customer);
   }
 };
 //called by this.$store.dispatch('addUser')

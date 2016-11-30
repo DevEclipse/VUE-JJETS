@@ -3,35 +3,27 @@ import firebase from 'firebase'
 const state = {};
 
 const getters = {
-  currentUser(state, getters, rootState) {
-    return _.find(rootState.busers, ['username', rootState.route.params.username])
-  }
+
+  currentUser(state, getters) {
+    return _.find(getters.allUsers, ['username', getters.routeParams.username])
+  },
 };
 
 const mutations = {};
 
 const actions = {
-  addUser({
-    rootState
-  }, user) {
+  addUser({getters}, user) {
     if (!user) return;
-    let profiles = {
+    user['profiles'] = {
       ['manager']: false,
       ['employee']: false,
       ['customer']: false
-    }
-    user['profiles'] = profiles;
-    user['created_date'] = firebase.database.ServerValue.TIMESTAMP;
-    user['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
-    rootState.refs.busers.child(user.username.replace(/\s/g, "").toLowerCase()).set(user);
+    };
+    user['created_date'] = user['updated_date'] = getters.serverTime;
+    getters.refUsers.child(user.username.replace(/\s/g, "").toLowerCase()).set(user);
   },
-  addProfile({
-    rootState,
-    dispatch
-  }, {
-    user,
-    profile
-  }) {
+  addProfile({getters, dispatch}, {user, profile}) {
+    console.log(user,profile)
     if (!user) return;
     switch (profile) {
       case 'manager':
@@ -44,29 +36,25 @@ const actions = {
         dispatch('addCustomer', user.username);
         break;
     }
-    rootState.refs.busers.child(user['.key']).child('profiles').update({
+    getters.refUsers.child(user['.key']).child('profiles').update({
       [profile]: user.username
     });
   },
-  deleteUser({
-    rootState
-  }, user) {
+  deleteUser({getters}, user) {
     if (!user) return;
-    rootState.refs.busers.child(user['.key']).remove();
+    getters.refUsers.child(user['.key']).remove();
   },
-  updateUser({
-    rootState
-  }, user) {
+  updateUser({getters}, user) {
     if (!user) return;
-    user['updated_date'] = firebase.database.ServerValue.TIMESTAMP;
-    rootState.refs.busers.child(user['.key']).update(user);
+    user['updated_date'] = getters.serverTime;
+    getters.refUsers.child(user['.key']).update(user);
   },
-
 };
+
 //called by this.$store.dispatch('addUser')
 export default {
   state,
   getters,
   mutations,
-  actions
+  actions,
 }

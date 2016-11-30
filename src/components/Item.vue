@@ -1,66 +1,62 @@
 <template>
-  <div>
-    <md-card md-with-hover style="margin-bottom: 10px;">
-
-      <md-toolbar>
-
-        <div class="md-title" style="flex: 1">
-          {{item.name}}
+  <md-sidenav class="md-right" ref="addStoreItemDrawer">
+    <md-toolbar>
+      <div class="md-title">
+        Add Item
+        <div class="md-subhead">
+          Created By | {{item.created_by = authUser.profiles.manager | capitalize}}
         </div>
-        <md-button class="md-fab md-mini"  @click="addStoreItem(item)">
-          <md-icon>add</md-icon>
-        </md-button>
-      </md-toolbar>
+      </div>
 
-      <md-card-media>
-        <img :src="item.image_url || `http://loremflickr.com/g/320/240/paris,girl/all`"
-             alt="People"
-             onerror="this.onerror=null;this.src=`http://loremflickr.com/g/320/240/paris,girl/all`;">
-      </md-card-media>
-      <md-card-media-actions>
-
-        <div class="md-subheading">
-          Stores
-          <div class="md-title" align="center">
-            0
-          </div>
-        </div>
-
-
-        <div class="md-subheading">
+    </md-toolbar>
+    <div style="margin: 10px;">
+      <md-input-container >
+        <label>
+          <md-icon>store</md-icon>
+          Item Name
+        </label>
+        <md-input v-model="item.name"></md-input>
+      </md-input-container>
+      <md-input-container >
+        <label>
+          <md-icon>timeline</md-icon>
           Cost Price
-          <div class="md-title" align="center">
-            {{item.cost_price}}
-          </div>
-        </div>
+        </label>
+        <md-input v-model="item.cost_price" type="number" step="10.00" min="0"></md-input>
+      </md-input-container>
+      <md-input-container >
+        <label>
+          <md-icon>store</md-icon>
+          Image Url
+        </label>
+        <md-input v-model="item.image_url"></md-input>
+      </md-input-container>
+      <md-input-container >
+        <label>
+          <md-icon>store</md-icon>
+          Description
+        </label>
+        <md-textarea v-model="item.description"></md-textarea>
+      </md-input-container>
+      <md-button class="md-raised md-primary" style="width: 95%;" @click="addItem(item)">
+        Create
+      </md-button>
 
-      </md-card-media-actions>
-
-      <md-card-expand>
-        <md-card-actions>
-          <md-card-header>More Info</md-card-header>
-          <span style="flex: 1"></span>
-          <md-button class="md-icon-button" md-expand-trigger>
-            <md-icon>keyboard_arrow_down</md-icon>
-          </md-button>
-        </md-card-actions>
-
-        <md-card-content>
-          <div class="md-subheading">Description:</div>
-          <p>{{item.description || 'No Description'}}</p>
-        </md-card-content>
-      </md-card-expand>
-    </md-card>
-  </div>
+    </div>
+  </md-sidenav>
 </template>
 
 <script>
   export default {
     name: 'item',
-    props: ['item'],
-    methods: {
-      addStoreItem(item) {
-          this.$emit('addStoreItem',item);
+    data() {
+      return {
+        storeItem: {
+          item: '',
+          retail_price: '',
+          quantity: '',
+          store: '',
+        }
       }
     }
   }
