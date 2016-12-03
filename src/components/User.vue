@@ -1,51 +1,130 @@
 <template>
-  <div v-if="!currentUser">
-    Loading... User
-  </div>
+    <display v-if="!currentUser" message="Loading... User"/>
   <div v-else style="margin: 50px;">
-    <div class="row middle-xs center-xs">
-      <div class="col-xs">
-        <md-card v-if="currentUser.profiles.manager">
+    <div class="currentUser.username == authUser.username">
+
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-md-4">
+        <md-card style="margin: 1rem;">
           <md-card-header>
-            <div class="md-title">{{currentUser.profiles.manager | capitalize}}</div>
-            <div class="md-subhead">Manager</div>
+            <div class="md-display-1" style="flex: 1;">
+              {{currentUser.username | capitalize}}
+              <md-button class="md-fab md-mini md-fab-top-right">
+                <md-icon>edit</md-icon>
+              </md-button>
+            </div>
+
+            <div class="md-subhead">
+              <span style="color: teal" v-if="currentUser.status == 'Online'">
+                {{currentUser.status}}
+              </span>
+              <span v-else>
+              {{currentUser.status}}
+              </span>
+            </div>
           </md-card-header>
-          <md-card-media md-ratio="16:9">
-            <img src="//placehold.it/600x600"/>
+          <md-card-media>
+            <img :src="currentUser.image_url || '//placehold.it/1920x1080'"/>
           </md-card-media>
           <md-card-content>
-            <div class="row center-xs" style="margin: 30px;">
-              <div class="col-xs md-display-1">
-                Stats
-              </div>
-            </div>
-            <div class="row middle-xs center-xs">
-              <div class="col-xs md-title">
-                Total Stores
-              </div>
-              <div class="col-xs md-title">
-                Total Items
-              </div>
-              <div class="col-xs md-title">
-                Total Employees
-              </div>
-            </div>
-            <div class="row middle-xs center-xs">
-              <div class="col-xs">
-                0
-              </div>
-              <div class="col-xs">
-                0
-              </div>
-              <div class="col-xs">
-                0
-              </div>
+            <div class="md-title">
+
             </div>
           </md-card-content>
         </md-card>
-        <div v-else class="row middle-xs center-xs md-display-4">
-          No Manager Profile
-        </div>
+      </div>
+      <div class="col-xs-12 col-md">
+
+        <md-card style="margin: 1rem;" md-with-hover>
+          <md-card-header>
+            <md-card-header-text>
+              <div class="md-title">Manager Profile</div>
+              <div class="md-subhead">{{currentUser.profiles.manager ? 'Available' : 'Not Available' }}</div>
+              <div v-if="authUser">
+                <md-button v-if="!authUser.profiles.manager" @click="addProfile({user: authUser,profile: 'manager'})"
+                           class="md-fab md-fab-top-right md-mini">
+                  <md-icon>add</md-icon>
+                </md-button>
+              </div>
+              <router-link :to="{name: 'manager', params: {manager: currentUser.profiles.manager}}"
+                           v-if="currentUser.profiles.manager" class="md-button md-fab md-primary md-fab-top-right md-mini">
+                <md-icon >info</md-icon>
+                <md-tooltip>More Info</md-tooltip>
+              </router-link>
+            </md-card-header-text>
+          </md-card-header>
+          <md-card-media>
+            <img :src="'//placehold.it/1920x1080'"/>
+          </md-card-media>
+          <md-card-content>
+            <div class="md-title">Description:</div>
+            <p class="md-body-1">
+              User with this profile has the permission to access on managing his own stores,
+              and publish on the website without hassle.
+              Every store is handled by a single manager with the help of employees.
+              The manager can also create their own item and publish it in public to be inherited by other managers to their stores.
+            </p>
+          </md-card-content>
+        </md-card>
+        <md-card style="margin: 1rem;" md-with-hover>
+          <md-card-header>
+            <md-card-header-text>
+              <div class="md-title">Employee Profile</div>
+              <div class="md-subhead">{{currentUser.profiles.employee ? 'Available' : 'Not Available' }}</div>
+              <div v-if="authUser">
+                <md-button v-if="!authUser.profiles.employee" @click="addProfile({user: authUser,profile: 'employee'})"
+                           class="md-fab md-fab-top-right md-mini">
+                  <md-icon>add</md-icon>
+                </md-button>
+              </div>
+              <router-link :to="{name: 'employee', params: {employee: currentUser.profiles.employee}}"
+                           v-if="currentUser.profiles.employee" class="md-button md-fab md-primary md-fab-top-right md-mini">
+                <md-icon >info</md-icon>
+                <md-tooltip>More Info</md-tooltip>
+              </router-link>
+            </md-card-header-text>
+          </md-card-header>
+          <md-card-media>
+            <img :src="'//placehold.it/1920x1080'"/>
+          </md-card-media>
+          <md-card-content>
+            <div class="md-title">Description:</div>
+            <p class="md-body-1">
+              User with this profile has the permission to access stores of their manager,
+              but only for creating and validating transactions.
+            </p>
+          </md-card-content>
+        </md-card>
+
+        <md-card style="margin: 1rem;" md-with-hover>
+          <md-card-header>
+            <md-card-header-text>
+              <div class="md-title">Customer Profile</div>
+              <div class="md-subhead">{{currentUser.profiles.customer ? 'Available' : 'Not Available' }}</div>
+              <div v-if="authUser">
+                <md-button v-if="!authUser.profiles.customer" @click="addProfile({user: authUser,profile: 'customer'})"
+                           class="md-fab md-fab-top-right md-mini">
+                  <md-icon>add</md-icon>
+                </md-button>
+              </div>
+              <router-link :to="{name: 'customer', params: {customer: currentUser.profiles.customer}}"
+                           v-if="currentUser.profiles.customer" class="md-button md-fab md-primary md-fab-top-right md-mini">
+                <md-icon >info</md-icon>
+                <md-tooltip>More Info</md-tooltip>
+              </router-link>
+            </md-card-header-text>
+          </md-card-header>
+          <md-card-media>
+            <img :src="'//placehold.it/1920x1080'"/>
+          </md-card-media>
+          <md-card-content>
+            <div class="md-title">Description:</div>
+            <p class="md-body-1">
+              User with this profile has the permission to buy from the stores and items created by managers.
+            </p>
+          </md-card-content>
+        </md-card>
       </div>
     </div>
   </div>
@@ -61,5 +140,10 @@
         'authUser',
       ])
     },
+    methods: {
+      ...mapActions([
+        'addProfile',
+      ])
+    }
   }
 </script>

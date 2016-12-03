@@ -8,7 +8,7 @@ const getters = {
     return state.uid;
   },
   authUser(state,getters) {
-    return state.auth = _.find(getters.allUsers,['uid',getters.authUID]);
+    return state.auth =  _.find(getters.allUsers,['uid',getters.authUID]);;
   },
   authManager(state,getters,rootState) {
     return _.find(getters.allManagers,['.key',getters.authUser.username])
@@ -40,9 +40,15 @@ const actions = {
   setAuth({commit,getters}) {
     commit('SET_AUTH',_.find(getters.allUsers,['uid',getters.authUID]));
   },
-  setUID({commit,dispatch},uid) {
+  setUID({commit},uid) {
     commit('SET_UID',uid);
   },
+  setAuthUserStatus({getters},status) {
+    let user = getters.authUser;
+    if(user) {
+      getters.refUsers.child(user['.key']).update(status);
+    }
+  }
 };
 
 //called by this.$store.dispatch('addUser')

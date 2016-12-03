@@ -3,7 +3,10 @@ import firebase from 'firebase'
 const state = {};
 
 const getters = {
-
+  currentItem(state,getters) {
+    if(!getters.allItems) return;
+    return _.find(getters.allItems,['.key',getters.routeParams.item]);
+  },
 };
 
 const mutations = {};

@@ -18,6 +18,7 @@ import MultiSelect from 'vue-multiselect'
 import 'vue-material/dist/vue-material.css';
 import 'flexboxgrid/dist/flexboxgrid.css';
 import 'animate.css/animate.css';
+import 'flexboxgrid-helpers/dist/flexboxgrid-helpers.min.css';
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -36,7 +37,7 @@ const veeConfig = {
 //Vue.use(VeeValidate,veeConfig);
 
 Vue.component('multiselect',MultiSelect);
-
+Vue.component('display',require('./components/Display.vue'));
 Vue.material.theme.register('default', {
   primary: 'blue',
   accent: 'teal',
@@ -68,6 +69,9 @@ Vue.filter('count',value => {
   return value ? value.length : 0;
 });
 
+Vue.filter('estimate', value => {
+  return _.round(value,2);
+});
 const store = new Vuex.Store(VuexStore);
 
 const router = new VueRouter({
@@ -97,12 +101,12 @@ const app = new Vue({
 
   },
   methods: {
-    toDashboard() {
-      this.$store.dispatch('setAuth');
+    async toDashboard() {
+      await this.$store.dispatch('setAuth');
       this.$router.push({
         name: 'user',
         params: {
-          username: this.$store.getters.authUser.username
+          username: await this.$store.getters.authUser.username
         }
       })
     },
@@ -132,6 +136,7 @@ const app = new Vue({
       firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
         .then(function () {
           self.toDashboard();
+          self.$store.dispatch('setAuthUserStatus','Online');
         })
         .catch(function (error) {
           alert(error.message);
@@ -142,6 +147,7 @@ const app = new Vue({
       firebase.auth().signOut().then(function () {
         self.$store.commit('SET_UID', null);
         self.$router.push('/')
+        self.$store.dispatch('setAuthUserStatus','Offline');
       }, function (error) {
         alert(error.message);
       });
@@ -153,7 +159,7 @@ firebase.auth().onAuthStateChanged(function (user) {
   if (!user) return;
   if(!store.getters.authUID) {
     store.dispatch('setUID', user.uid);
-  if(!store.getters.authUser);
+  if(!store.getters.authUser)
     store.dispatch('setAuth');
   }
 });

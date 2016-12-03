@@ -1,7 +1,7 @@
 <template>
   <div id="app" v-md-theme="'default'">
 
-    <dashboard v-if="$route.name != 'index' "></dashboard>
+    <dashboard v-if="$store.getters.authUID"></dashboard>
     <transition enter-active-class="animated zoomInUp" leave-active-class="animated zoomOutUp">
       <router-view></router-view>
     </transition>
@@ -21,7 +21,7 @@
 <style>
   @import url('//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic');
   @import url('//fonts.googleapis.com/icon?family=Material+Icons');
-  * {
+  html,body {
     overflow-x: hidden;
   }
 </style>

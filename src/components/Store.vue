@@ -1,7 +1,5 @@
 <template>
-  <div v-if="!currentStore">
-    Loading... Store
-  </div>
+  <display v-if="!currentStore" message="Store Not Found"/>
   <div v-else>
 
     <div class="row">
@@ -23,7 +21,7 @@
                 <router-link class="col-xs md-button md-accent" :to="{name: 'storeItems'}">
                   Items
                 </router-link>
-                <router-link class="col-xs md-button md-accent" :to="{name: 'storeItems'}">
+                <router-link class="col-xs md-button md-accent" :to="{name: 'storeTransactions'}">
                   Transactions
                 </router-link>
               </md-card-actions>
@@ -68,10 +66,7 @@
         </md-whiteframe>
       </div>
       <div class="col-xs-12 col-md-8">
-        <md-whiteframe md-elevation="3" style="margin: 5px;">
-          <router-view :storeItems="chunkedItems"></router-view>
-        </md-whiteframe>
-
+          <router-view style="margin: 1rem;" :storeItems="chunkedItems"></router-view>
       </div>
     </div>
   </div>

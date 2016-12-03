@@ -2,7 +2,7 @@ const routes = [
   {
     path: '/',
     component: require('./components/Index.vue'),
-    name: 'index',
+    name: 'home',
   },
   {
     path: '/items',
@@ -25,6 +25,11 @@ const routes = [
     name: 'store',
     children: [
       {
+        path: '',
+        component: require('./components/StoreInfo.vue'),
+        name: 'storeInfo',
+      },
+      {
         path: 'items',
         component: require('./components/StoreItems.vue'),
         name: 'storeItems',
@@ -34,8 +39,12 @@ const routes = [
         component: require('./components/StoreItems.vue'),
         name: 'storeTransactions',
       }
-
     ]
+  },
+  {
+    path: '/transaction/:transaction',
+    component: require('./components/Transaction.vue'),
+    name: 'transaction',
   },
   {
     path: '/user/:username',
@@ -48,13 +57,13 @@ const routes = [
     name: 'manager',
   },
   {
-    path: 'employee/:employee',
-    component: require('./components/Manager.vue'),
+    path: '/employee/:employee',
+    component: require('./components/Employee.vue'),
     name: 'employee',
   },
   {
-    path: 'customer/:customer',
-    component: require('./components/Manager.vue'),
+    path: '/customer/:customer',
+    component: require('./components/Customer.vue'),
     name: 'customer',
   },
 ];

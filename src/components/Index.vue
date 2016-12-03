@@ -1,26 +1,17 @@
 <template>
-  <div>
+  <div  v-if="!$store.getters.authUID">
 
-    <md-toolbar>
+    <md-toolbar >
       <div class="md-title" style="flex: 1">
         JJETS
       </div>
-      <div v-if="$store.getters.authUID">
-      <md-button class="md-icon-button md-raised" @click="$root.toDashboard">
-        <md-icon>dashboard</md-icon>
-        <md-tooltip direction="bottom"> Dashboard </md-tooltip>
+
+      <md-button class="md-raised md-accent" @click="toggleSignInDrawer">
+        Sign In
       </md-button>
-      </div>
-      <div v-else>
-      <md-button class="md-icon-button md-raised" @click="toggleSignInDrawer">
-        <md-icon>accessibility</md-icon>
-        <md-tooltip direction="bottom"> Sign In </md-tooltip>
+      <md-button class="md-raised md-accent" @click="toggleSignUpDrawer">
+        Sign Up
       </md-button>
-      <md-button class="md-icon-button md-raised" @click="toggleSignUpDrawer">
-        <md-icon>face</md-icon>
-        <md-tooltip direction="bottom"> Sign Up </md-tooltip>
-      </md-button>
-      </div>
     </md-toolbar>
 
     <md-sidenav class="md-right" ref="signInDrawer" >

@@ -1,68 +1,64 @@
 <template>
-
-  <div v-if="authUser">
+    <display v-if="!authUser" :message="$store.getters.authUID ? 'Loading... Your Account' : 'Heading back home'"/>
+  <div v-else>
     <md-toolbar>
       <div class="md-title" style="flex: 1">
         JJETS | {{$route.name | capitalize}}
       </div>
+      <div class="hidden-xs">
+        <router-link tag="button" class="md-button" :to="{name: 'home'}"> Home </router-link>
+        <router-link tag="button" class="md-button" :to="{name: 'items'}"> Items </router-link>
+        <router-link tag="button" class="md-button" :to="{name: 'stores'}"> Stores </router-link>
+        <router-link tag="button" class="md-button" :to="{name: 'user', params: {username: authUser.username}}"> Profiles </router-link>
+        <md-button @click="$root.signOut">Sign Out</md-button>
+      </div>
+      <div class="visible-xs">
 
-      <md-avatar class="md-raised">
-        <img src="//placeimg.com/40/40/people/1" alt="People">
-        <md-tooltip direction="bottom"> {{authUser.username | capitalize}} </md-tooltip>
-      </md-avatar>
-      <md-button class="md-icon-button md-raised" @click="toggleDashboard">
-        <md-icon>dashboard</md-icon>
-        <md-tooltip direction="bottom"> Dashboard </md-tooltip>
-      </md-button>
-      <md-button class="md-icon-button md-raised md-warn">
-        <md-icon>close</md-icon>
-        <md-tooltip direction="bottom"> Sign Out </md-tooltip>
-      </md-button>
+        <md-button class="md-icon-button md-raised" @click="toggleDashboard">
+          <md-icon>menu</md-icon>
+          <md-tooltip direction="bottom"> Dashboard </md-tooltip>
+        </md-button>
+      </div>
     </md-toolbar>
 
-  <md-sidenav class="md-left" ref="dashboardMenu">
-    <md-card>
-      <md-toolbar>
-        <div class="md-title">
-          {{authUser.username | capitalize}}
-        </div>
-      </md-toolbar>
-      <md-card-media>
-        <img :src="authUser.image_url ||'//placehold.it/1920x1080'">
-      </md-card-media>
-    </md-card>
-    <md-list >
-      <md-list-item>
-        <router-link :to="{name: 'items'}">Items</router-link>
-      </md-list-item>
-      <md-list-item>
-        <router-link :to="{name: 'stores'}">Stores</router-link>
-      </md-list-item>
-      <md-list-item v-if="!authUser.profiles.manager" @click="addProfile({user: authUser,profile: 'manager'})">
-        <md-icon>add</md-icon> Add Manager Profile
-      </md-list-item>
-      <md-list-item v-else>
-        <md-icon>videogame_asset</md-icon>
-        <span>Manager</span>
-        <md-list-expand>
-          <md-list>
+    <md-sidenav class="md-left" ref="dashboardMenu">
+      <md-card>
+        <md-toolbar>
+          <div class="md-title">
+            {{authUser.username | capitalize}}
+          </div>
+        </md-toolbar>
+        <md-card-media>
+          <img :src="authUser.image_url ||'//placeimg.com/900/900/people/1'">
+        </md-card-media>
+      </md-card>
+      <md-list >
+        <md-subheader>Navigation</md-subheader>
+        <md-list-item>
+          <md-icon>home</md-icon>
+          <router-link tag="span" :to="{name: 'home'}"> Home </router-link>
+        </md-list-item>
+        <md-list-item>
+          <md-icon>add</md-icon>
+          <router-link tag="span" :to="{name: 'items'}"> Items </router-link>
+        </md-list-item>
+        <md-list-item>
+          <md-icon>store</md-icon>
+          <router-link tag="span" :to="{name: 'stores'}"> Stores </router-link>
+        </md-list-item>
+        <md-list-item>
+          <md-icon>face</md-icon>
+          <router-link tag="span" :to="{name: 'user', params: {username: authUser.username}}"> Profiles </router-link>
+        </md-list-item>
+        <md-list-item>
+          <md-icon>face</md-icon>
+          <span @click="$root.signOut">Sign Out</span>
+        </md-list-item>
 
-          </md-list>
-        </md-list-expand>
-      </md-list-item>
-      <md-list-item v-if="!authUser.profiles.employee" @click="addProfile({user: authUser,profile: 'employee'})">
-        <md-icon>add</md-icon> Add Employee Profile
-      </md-list-item>
-      <md-list-item v-else>
-        <md-icon>videogame_asset</md-icon>
-        <span>Employee</span>
-        <md-list-expand>
-
-        </md-list-expand>
-      </md-list-item>
-    </md-list>
-  </md-sidenav>
+      </md-list>
+    </md-sidenav>
   </div>
+
 </template>
 
 <script>
@@ -76,7 +72,7 @@
     },
     methods: {
       ...mapActions([
-         'addProfile',
+        'addProfile',
       ]),
       toggleDashboard() {
         this.$refs.dashboardMenu.toggle();

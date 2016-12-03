@@ -1,10 +1,7 @@
 <template>
-  <div v-if="!chunkedStores">
-    Loading... Stores
-  </div>
+  <display v-if="!allStores" message="Loading... Stores"/>
   <div v-else style="margin-top: 20px;">
-
-    <div class="row" v-for="store3 in chunkedStores">
+    <div v-if="allStores.length" class="row" v-for="store3 in chunkedStores">
       <div class="col-xs-12 col-md-4" v-for="store in store3">
         <md-whiteframe md-elevation="3" style="margin: 5px;">
           <md-card md-with-hover>
@@ -54,6 +51,11 @@
         </md-whiteframe>
       </div>
 
+    </div>
+    <div v-else class="md-display-4 row middle-xs center-xs" style="height: 80vh;">
+      <div class="col-xs">
+        No Stores Available Yet
+      </div>
     </div>
   </div>
 </template>

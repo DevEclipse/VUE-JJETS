@@ -20,6 +20,7 @@ const actions = {
       ['customer']: false
     };
     user['created_date'] = user['updated_date'] = getters.serverTime;
+    user['status'] = "Online";
     getters.refUsers.child(user.username.replace(/\s/g, "").toLowerCase()).set(user);
   },
   addProfile({getters, dispatch}, {user, profile}) {

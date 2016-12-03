@@ -1,54 +1,62 @@
 <template>
-  <md-sidenav class="md-right" ref="addStoreItemDrawer">
-    <md-toolbar>
-      <div class="md-title">
-        Add Item
-        <div class="md-subhead">
-          Created By | {{item.created_by = authUser.profiles.manager | capitalize}}
-        </div>
+  <display v-if="!currentItem" message="Item Not Found"/>
+  <div v-else>
+    <div class="row">
+      <div class="col-xs">
+
       </div>
+      <div class="col-xs">
 
-    </md-toolbar>
-    <div style="margin: 10px;">
-      <md-input-container >
-        <label>
-          <md-icon>store</md-icon>
-          Item Name
-        </label>
-        <md-input v-model="item.name"></md-input>
-      </md-input-container>
-      <md-input-container >
-        <label>
-          <md-icon>timeline</md-icon>
-          Cost Price
-        </label>
-        <md-input v-model="item.cost_price" type="number" step="10.00" min="0"></md-input>
-      </md-input-container>
-      <md-input-container >
-        <label>
-          <md-icon>store</md-icon>
-          Image Url
-        </label>
-        <md-input v-model="item.image_url"></md-input>
-      </md-input-container>
-      <md-input-container >
-        <label>
-          <md-icon>store</md-icon>
-          Description
-        </label>
-        <md-textarea v-model="item.description"></md-textarea>
-      </md-input-container>
-      <md-button class="md-raised md-primary" style="width: 95%;" @click="addItem(item)">
-        Create
-      </md-button>
-
+      </div>
     </div>
-  </md-sidenav>
+    <md-sidenav class="md-right" ref="addStoreItemDrawer">
+      <md-toolbar>
+        <div class="md-title">
+          Add Store Item
+          <div class="md-subhead">
+            Item | {{storeItem.item = currentItem['.key']}}
+          </div>
+        </div>
+      </md-toolbar>
+      <div style="margin: 1rem;">
+        <md-input-container >
+          <label>
+            <md-icon>timeline</md-icon>
+            Retail Price
+          </label>
+          <md-input v-model="storeItem.retail_price" type="number" step="10.00" min="0"></md-input>
+        </md-input-container>
+        <md-input-container >
+          <label>
+            <md-icon>timeline</md-icon>
+            Quantity
+          </label>
+          <md-input v-model="storeItem.quantity" type="number" min="0"></md-input>
+        </md-input-container>
+        <md-button class="md-raised md-primary" style="width: 95%;" @click="addItem(item)">
+          Add To Store
+        </md-button>
+
+      </div>
+    </md-sidenav>
+  </div>
+
 </template>
 
 <script>
+  import {mapGetters,mapActions} from 'vuex';
   export default {
     name: 'item',
+    computed: {
+      ...mapGetters([
+        'currentItem',
+      ]),
+    },
+    methods: {
+      ...mapActions([
+         'addItem',
+      ]),
+    },
     data() {
       return {
         storeItem: {
@@ -56,7 +64,7 @@
           retail_price: '',
           quantity: '',
           store: '',
-        }
+        },
       }
     }
   }
