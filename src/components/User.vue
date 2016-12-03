@@ -29,7 +29,28 @@
           </md-card-media>
           <md-card-content>
             <div class="md-title">
-
+              {{currentUser.email}}
+            </div>
+            <div class="md-subhead">
+              Email
+            </div>
+            <div class="md-title">
+              {{currentUser.name}}
+            </div>
+            <div class="md-subhead">
+              Name
+            </div>
+            <div class="md-title">
+              {{currentUser.created_date | date}}
+            </div>
+            <div class="md-subhead">
+              Created Date
+            </div>
+            <div class="md-title">
+              {{currentUser.updated_date | date}}
+            </div>
+            <div class="md-subhead">
+              Updated Date
             </div>
           </md-card-content>
         </md-card>

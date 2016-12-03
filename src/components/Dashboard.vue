@@ -3,13 +3,13 @@
   <div v-else>
     <md-toolbar>
       <div class="md-title" style="flex: 1">
-        JJETS | {{$route.name | capitalize}}
+        JJETS | <span v-if="$route.name">{{$route.name | capitalize}}</span>
       </div>
       <div class="hidden-xs">
         <router-link tag="button" class="md-button" :to="{name: 'home'}"> Home </router-link>
         <router-link tag="button" class="md-button" :to="{name: 'items'}"> Items </router-link>
         <router-link tag="button" class="md-button" :to="{name: 'stores'}"> Stores </router-link>
-        <router-link tag="button" class="md-button" :to="{name: 'user', params: {username: authUser.username}}"> Profiles </router-link>
+        <router-link tag="button" class="md-button" :to="{name: 'user', params: {username: authUser.username}}"> Your Account </router-link>
         <md-button @click="$root.signOut">Sign Out</md-button>
       </div>
       <div class="visible-xs">
@@ -48,7 +48,7 @@
         </md-list-item>
         <md-list-item>
           <md-icon>face</md-icon>
-          <router-link tag="span" :to="{name: 'user', params: {username: authUser.username}}"> Profiles </router-link>
+          <router-link tag="span" :to="{name: 'user', params: {username: authUser.username}}"> Your Account </router-link>
         </md-list-item>
         <md-list-item>
           <md-icon>face</md-icon>

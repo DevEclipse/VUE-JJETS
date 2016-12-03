@@ -123,7 +123,7 @@ const app = new Vue({
           username: credentials.username,
           password: credentials.password,
           email: email,
-          name: displayName,
+          name: displayName || credentials.name,
           image_url: photoURL,
           uid: uid,
         };

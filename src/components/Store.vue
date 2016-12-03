@@ -10,7 +10,7 @@
               <md-card-header>
 
                 <div class="col-xs md-title">
-                  {{currentStore.name | capitalize}} | {{$route.name | capitalize}}
+                  {{currentStore.name | capitalize}}
                 </div>
               </md-card-header>
 
@@ -66,7 +66,9 @@
         </md-whiteframe>
       </div>
       <div class="col-xs-12 col-md-8">
+        <transition enter-active-class="animated fadeInRight" leave-active-class="animated fadeOutRight">
           <router-view style="margin: 1rem;" :storeItems="chunkedItems"></router-view>
+        </transition>
       </div>
     </div>
   </div>

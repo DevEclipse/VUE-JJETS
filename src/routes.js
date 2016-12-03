@@ -22,12 +22,11 @@ const routes = [
   {
     path: '/store/:store',
     component: require('./components/Store.vue'),
-    name: 'store',
     children: [
       {
         path: '',
         component: require('./components/StoreInfo.vue'),
-        name: 'storeInfo',
+        name: 'store',
       },
       {
         path: 'items',

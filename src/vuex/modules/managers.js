@@ -14,6 +14,9 @@ const getters = {
   currentManagerItems(state, getters) {
     return _.filter(getters.allItems, ['created_by', getters.currentManager['.key']]);
   },
+  currentManagerEmployees(state, getters) {
+    return _.filter(getters.allEmployees, ['.key', getters.currentManager['.key']]);
+  },
   getManager(state,getters) {
     if(!state.manager) return;
     return _.find(getters.allManagers,['.key',state.manager['.key']])
