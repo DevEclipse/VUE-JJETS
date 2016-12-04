@@ -32,7 +32,7 @@ const veeConfig = {
   messages: true,
   strict: true
 };
-
+Vue.config.debug = true;
 
 //Vue.use(VeeValidate,veeConfig);
 
@@ -55,7 +55,7 @@ Vue.filter('keys', value => {
   _.forEach(value,val => {
     keys.push(val['.key']);
   });
-  console.log(keys);
+  console.log(keys)
   return keys;
 });
 
@@ -64,13 +64,21 @@ Vue.filter('toArray',value => {
     return [value]
   });
 });
-
+Vue.filter('toIndex',value => {
+  return _.map(value, function(value, index) {
+    return index;
+  });
+});
 Vue.filter('count',value => {
   return value ? value.length : 0;
 });
 
 Vue.filter('estimate', value => {
   return _.round(value,2);
+});
+
+Vue.filter('chunk',(value,by) => {
+  return _.chunk(value,by);
 });
 const store = new Vuex.Store(VuexStore);
 
@@ -146,7 +154,7 @@ const app = new Vue({
       let self = this;
       firebase.auth().signOut().then(function () {
         self.$store.commit('SET_UID', null);
-        self.$router.push('/')
+        self.$router.push('/');
         self.$store.dispatch('setAuthUserStatus','Offline');
       }, function (error) {
         alert(error.message);

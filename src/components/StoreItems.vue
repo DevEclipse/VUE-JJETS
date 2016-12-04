@@ -1,21 +1,44 @@
 <template>
-  <div v-if="storeItems">
-    <div class="row" v-for="item4 in storeItems">
+  <display v-if="!currentStoreItems.length" message="No Store Items Yet"/>
+  <div v-else>
+    <md-input-container style="margin: 1rem;">
+      <label>
+        <md-icon>search</md-icon>
+        Search Item
+      </label>
+      <md-input v-model="itemSearch"></md-input>
+    </md-input-container>
+    <div class="row" v-for="item4 in chunkedStoreItems">
       <div class="col-xs-12 col-md-4" v-for="item in item4">
           {{item}}
       </div>
     </div>
   </div>
-  <div v-else class="row middle-xs center-xs">
-    <div class="col-xs md-display-4">
-      No Items
-    </div>
-  </div>
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
   export default {
     name: 'store-items',
-    props: ['storeItems'],
+    computed: {
+      chunkedStoreItems() {
+        let items = this.currentStoreItems;
+        let regExp = new RegExp(this.itemSearch);
+        if (this.itemSearch) {
+          items = _.filter(items, item => {
+            return regExp.test(item['.key']);
+          })
+        }
+        return _.chunk(items,4);
+      },
+      ...mapGetters([
+          'currentStoreItems',
+      ]),
+    },
+    data() {
+        return {
+          itemSearch: '',
+        }
+    }
   }
 </script>

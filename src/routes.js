@@ -5,6 +5,11 @@ const routes = [
     name: 'home',
   },
   {
+    path: '/tag/:tag',
+    component: require('./components/Tag.vue'),
+    name: 'tag',
+  },
+  {
     path: '/items',
     component: require('./components/Items.vue'),
     name: 'items',
@@ -18,7 +23,7 @@ const routes = [
     path: '/stores',
     component: require('./components/stores.vue'),
     name: 'stores',
-  },
+},
   {
     path: '/store/:store',
     component: require('./components/Store.vue'),
@@ -53,7 +58,28 @@ const routes = [
   {
     path: '/manager/:manager',
     component: require('./components/Manager.vue'),
-    name: 'manager',
+    children: [
+      {
+        path: '',
+        component: require('./components/ManagerInfo.vue'),
+        name: 'manager',
+      },
+      {
+        path: 'items',
+        component: require('./components/ManagerItems.vue'),
+        name: 'managerItems',
+      },
+      {
+        path: 'stores',
+        component: require('./components/ManagerStores.vue'),
+        name: 'managerStores',
+      },
+      {
+        path: 'employees',
+        component: require('./components/ManagerEmployees.vue'),
+        name: 'managerEmployees',
+      }
+    ],
   },
   {
     path: '/employee/:employee',

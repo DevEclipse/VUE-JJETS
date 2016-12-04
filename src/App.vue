@@ -2,7 +2,7 @@
   <div id="app" v-md-theme="'default'">
 
     <dashboard v-if="$store.getters.authUID"></dashboard>
-    <transition enter-active-class="animated zoomInUp" leave-active-class="animated zoomOutUp">
+    <transition enter-class="fixedpos" leave-class="fixedpos" enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
       <router-view></router-view>
     </transition>
   </div>
@@ -10,7 +10,7 @@
 
 <script>
   import Dashboard from './components/Dashboard.vue'
-  export default {
+export default {
     name: 'app',
     components: {
         Dashboard
@@ -23,5 +23,8 @@
   @import url('//fonts.googleapis.com/icon?family=Material+Icons');
   html,body {
     overflow-x: hidden;
+  },
+  .fixedpos {
+    position: fixed;
   }
 </style>

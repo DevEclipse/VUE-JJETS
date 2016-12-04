@@ -12,27 +12,19 @@ const getters = {
 const mutations = {};
 
 const actions = {
-  addItem({getters},item) {
+  addItem({getters,dispatch},item) {
     if(!item) return;
-    item['created_date'] = item['updated_date'] = getters.serverTime;
-    getters.refItems.child(item.name.replace(/\s/g, "").toLowerCase()).set(item);
+    dispatch('newObject',item);
+    getters.refItems.child(item.name.replace(/\s/g, "").toLowerCase()).set(getters.getNewObject);
   },
   deleteItem({getters},item) {
     if(!item) return;
     getters.refItems.child(item['.key']).remove();
   },
-  updateItem({getters},item) {
+  updateItem({getters,dispatch},item) {
     if(!item) return;
-    item['updated_date'] = getters.serverTime;
-    getters.refItems.child(item['.key']).update(item);
-  },
-  addStoreToItem({getters},storeItem) {
-    if(!storeItem) return;
-    getters.refItems.child(storeItem.item).child('stores').update({[storeItem.store]: true});
-  },
-  deleteStoreFromItem({getters},storeItem) {
-    if(!storeItem) return;
-    getters.refItems.child(storeItem['.key']).child('stores').child(storeItem.store).remove();
+    dispatch('updatedObject',item);
+    getters.refItems.child(item['.key']).update(getters.getUpdatedObject);
   },
 };
 //called by this.$store.dispatch('addUser')

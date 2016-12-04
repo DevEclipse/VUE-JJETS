@@ -4,7 +4,6 @@ const state = {
 };
 
 const getters = {
-
   currentStore(state,getters) {
     if(!getters.routeParams.store) return null;
     return _.find(getters.allStores,['.key',getters.routeParams.store]);
@@ -17,18 +16,17 @@ const getters = {
   currentStoreTransactions(state,getters) {
     return _.find(getters.allTransactions,['.key',getters.routeParams.transaction]);
   },
-
 };
 
-const mutations = {};
+const mutations = {
+};
 
 const actions = {
   addStore({getters,dispatch},store) {
     if(!store) return;
     let key = `${store.manager}_${store.name}`.replace(/\s/g, "").toLowerCase();
-    store['created_date'] = store['updated_date'] = getters.serverTime;
-    getters.refStores.child(key).set(store);
-    dispatch('addStoreToManager',store);
+    dispatch('newObject',store);
+    getters.refStores.child(key).set(getters.getNewObject);
   },
   deleteStore({getters,dispatch},store) {
     if(!store) return;
@@ -36,30 +34,11 @@ const actions = {
     getters.refStores.child(store['.key']).remove();
     dispatch('deleteStoreFromManager',store);
   },
-  updateStore({getters},store) {
+  updateStore({getters,dispatch},store) {
     if(!store) return;
-    store['updated_date'] = getters.serverTime;
-    getters.refStores.child(store['.key']).update(store);
+    dispatch('updatedObject',store);
+    getters.refStores.child(store['.key']).update(getters.getUpdatedObject);
   },
-  addStoreItem({getters,dispatch},storeItem) {
-    if(!storeItem) return;
-    storeItem['created_date'] = storeItem['updated_date'] = getters.serverTime;
-    getters.refStores.child(storeItem.store).child('items').child(storeItem.item).set(storeItem);
-    getters.refStores.child(storeItem.store).update({updated_date: getters.serverTime});
-    dispatch('addStoreToItem',storeItem);
-  },
-  deleteStoreItem({getters,dispatch},storeItem) {
-    getters.refStores.child(storeItem.store).child('items').child(storeItem['.key']).remove();
-    dispatch('deleteStoreFromItem',storeItem);
-  },
-  updateStoreItem({getters},storeItem) {
-    if(!storeItem) return;
-    storeItem['updated_date'] = getters.serverTime;
-    getters.refStores.child(storeItem.store).child('items').child(storeItem.item).update(storeItem);
-  },
-  setCurrentStores({getters},stores) {
-
-  }
 };
 //called by this.$store.dispatch('addUser')
 export default {

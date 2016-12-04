@@ -1,8 +1,12 @@
 import firebase from 'firebase'
 
 const getters = {
-
-
+  getNewObject(state) {
+    return state.newObject;
+  },
+  getUpdatedObject(state) {
+    return state.updateObject;
+  },
   allUsers(state) {
     return state.busers;
   },

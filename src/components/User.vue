@@ -1,15 +1,15 @@
 <template>
-    <display v-if="!currentUser" message="Loading... User"/>
+  <display v-if="!currentUser" message="User Not Found"/>
   <div v-else style="margin: 50px;">
-    <div class="currentUser.username == authUser.username">
+    <div class="currentUser['.key'] == authUser['.key']">
 
     </div>
     <div class="row">
       <div class="col-xs-12 col-md-4">
-        <md-card style="margin: 1rem;">
+        <md-card style="margin: 1rem;" md-with-hover>
           <md-card-header>
             <div class="md-display-1" style="flex: 1;">
-              {{currentUser.username | capitalize}}
+              {{currentUser['.key'] | capitalize}}
               <md-button class="md-fab md-mini md-fab-top-right">
                 <md-icon>edit</md-icon>
               </md-button>
@@ -160,6 +160,14 @@
         'currentUser',
         'authUser',
       ])
+    },
+    data() {
+      return {
+        user: {
+          name: '',
+          image_url: '',
+        }
+      }
     },
     methods: {
       ...mapActions([

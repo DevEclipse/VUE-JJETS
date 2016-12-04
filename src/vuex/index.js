@@ -24,15 +24,38 @@ export default {
     btransactions: null,
     btags: null,
     server_time: null,
+    updateObject: null,
+    newObject: null,
   },
   getters,
   mutations: {
     ['SET_REFS'](state, payload) {
       state.refs = payload;
     },
+    ['SET_UPDATE_OBJECT'](state,object) {
+      state.updateObject = object;
+    },
+    ['SET_NEW_OBJECT'](state,object) {
+      state.newObject = object;
+    },
     ...VuexFire.mutations
   },
-
+  actions: {
+    newObject({commit,getters},object) {
+      let resultObject = _.clone(object);
+      resultObject['created_date'] = resultObject['updated_date'] = getters.serverTime;
+      commit('SET_NEW_OBJECT',resultObject);
+    },
+    updatedObject({commit,getters},object) {
+      let resultObject = _.clone(object);
+      resultObject['updated_date'] = getters.serverTime;
+      if(resultObject['.key']) {
+        delete resultObject['.key'];
+      }
+      console.log(resultObject);
+      commit('SET_UPDATE_OBJECT',resultObject);
+    }
+  },
   modules: {
     users,
     managers,

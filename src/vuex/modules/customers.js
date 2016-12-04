@@ -5,22 +5,22 @@ const getters = {};
 const mutations = {};
 
 const actions = {
-  addCustomer({getters},customer) {
+  addCustomer({getters,dispatch},customer) {
     if(!customer) return;
-    getters.refCustomers.child(customer).set({
+    let newCustomer = {
       balance: 0,
-      created_date: getters.serverTime,
-      updated_date: getters.serverTime
-    });
+    };
+    dispatch('newObject',newCustomer);
+    getters.refCustomers.child(customer).set(getters.getNewObject);
   },
   deleteCustomer({getters},customer) {
     if(!customer) return;
     getters.refCustomers.child(customer['.key']).remove();
   },
-  updateCustomer({getters},customer) {
+  updateCustomer({getters,dispatch},customer) {
     if(!customer) return;
-    customer['updated_date'] = getters.serverTime;
-    getters.refCustomers.child(customer['.key']).update(customer);
+    dispatch('updatedObject',customer);
+    getters.refCustomers.child(customer['.key']).update(getters.getUpdatedObject);
   }
 };
 //called by this.$store.dispatch('addUser')

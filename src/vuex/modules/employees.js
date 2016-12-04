@@ -5,7 +5,8 @@ const state = {};
 const getters = {
 
   currentEmployee(state,getters) {
-    return _.find(getters.allEmployees,['.key',getters.currentUser.username]);
+    if(!getters.routeParams) return;
+    return _.find(getters.allEmployees,['.key',getters.routeParams.employee]);
   },
   currentEmployeeManagerStores(state,getters,rootState) {
     return _.filter(getters.allStores,['manager',getters.currentEmployee.manager]);
@@ -15,25 +16,22 @@ const getters = {
 const mutations = {};
 
 const actions = {
-  addEmployee({getters},employee) {
+  addEmployee({getters,dispatch},employee) {
     if(!employee) return;
-    getters.refEmployees.child(employee).set({
+    let newEmployee = {
       manager: employee,
-      created_date: getters.serverTime,
-      updated_date: getters.serverTime
-    });
-  },
-  applyToStore({getters},employee) {
-    if(!employee) return;
+    };
+    dispatch('newObject',newEmployee);
+    getters.refEmployees.child(employee).set(getters.getNewObject);
   },
   deleteEmployee({getters},employee) {
     if(!employee) return;
     getters.refEmployees.child(employee['.key']).remove();
   },
-  updateEmployee({getters},employee) {
+  updateEmployee({getters,dispatch},employee) {
     if(!employee) return;
-    employee['updated_date'] = getters.serverTime;
-    getters.refEmployees.child(employee['.key']).update(employee);
+    dispatch('updatedObject',employee);
+    getters.refEmployees.child(employee['.key']).update(getters.getUpdatedObject);
   }
 };
 //called by this.$store.dispatch('addUser')
