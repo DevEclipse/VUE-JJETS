@@ -10,15 +10,17 @@ const getters = {
   },
   currentStoreItems(state,getters) {
     return _.map(getters.currentStore.items,(value,key) => {
-      return _.assign(value,_.find(getters.allItems,['.key',key]))
+      return _.assign(_.clone(value),_.clone(_.find(getters.allItems,['.key',key])));
     })
   },
   currentStoreTransactions(state,getters) {
     return _.find(getters.allTransactions,['.key',getters.routeParams.transaction]);
   },
+
 };
 
 const mutations = {
+
 };
 
 const actions = {
@@ -32,13 +34,13 @@ const actions = {
     if(!store) return;
     console.log(store);
     getters.refStores.child(store['.key']).remove();
-    dispatch('deleteStoreFromManager',store);
   },
-  updateStore({getters,dispatch},store) {
+  updateStore({getters,dispatch,commit},store) {
     if(!store) return;
     dispatch('updatedObject',store);
     getters.refStores.child(store['.key']).update(getters.getUpdatedObject);
   },
+
 };
 //called by this.$store.dispatch('addUser')
 export default {

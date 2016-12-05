@@ -52,7 +52,6 @@ export default {
       if(resultObject['.key']) {
         delete resultObject['.key'];
       }
-      console.log(resultObject);
       commit('SET_UPDATE_OBJECT',resultObject);
     }
   },

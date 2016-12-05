@@ -47,7 +47,7 @@ const actions = {
     getters.refManagers.child(manager['.key']).update(getters.getUpdatedObject);
   },
 };
-//called by this.$store.dispatch('addUser')
+
 export default {
   state,
   getters,

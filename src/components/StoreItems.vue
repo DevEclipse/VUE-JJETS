@@ -12,7 +12,6 @@
       <div class="col-xs-12 col-md-4" v-for="item in item4">
           <md-card md-with-hover>
             <md-card-header>
-
               <md-card-header-text>
 
               <div class="md-title">
@@ -64,23 +63,69 @@
                   <div class="md-subhead">Discounted</div>
                 </md-card-header-text>
               </md-card-header>
+            </md-card-header>
+            <md-card-header>
+              <md-card-header-text>
+                <div class="md-subhead">
+                  Created At: {{item.created_date | date}}
+                </div>
+              </md-card-header-text>
+              <md-card-header-text>
+                <span class="md-subhead">
+                  Updated At: {{item.updated_date | date}}
+                </span>
+              </md-card-header-text>
+            </md-card-header>
               <md-card-actions>
-                <md-button class="md-accent">
-                  Add To Transaction
-                </md-button>
                 <span style="flex: 1;"></span>
-                <md-button class="md-accent">
-                  Edit
+                <md-button v-if="authUser.profiles.manager == currentStore.manager"
+                           class="md-fab md-mini"
+                           @click="toggleEditStoreItem(item['.key'])">
+                  <md-icon>edit</md-icon>
+                  <md-tooltip>Edit this Store Item</md-tooltip>
                 </md-button>
               </md-card-actions>
           </md-card>
       </div>
     </div>
+
+    <md-sidenav class="md-right" ref="editStoreItem">
+      <div v-if="storeItem">
+      <md-toolbar>
+        <div class="md-title">
+          Edit Store Item
+          <div class="md-subhead">
+            Item | {{currentStore.items[storeItem].item | capitalize}}
+          </div>
+        </div>
+      </md-toolbar>
+      <div style="margin: 1rem;">
+        <md-input-container >
+          <label>
+            <md-icon>timeline</md-icon>
+            Retail Price
+          </label>
+          <md-input v-model.lazy="currentStore.items[storeItem].retail_price" @change="updateStore(currentStore)"  type="number" step="10.00" min="0"></md-input>
+        </md-input-container>
+        <md-input-container >
+          <label>
+            <md-icon>timeline</md-icon>
+            Quantity
+          </label>
+
+          <md-input v-model.lazy="currentStore.items[storeItem].quantity" @change="updateStore(currentStore)" type="number" min="0"></md-input>
+        </md-input-container>
+        <md-switch v-model.lazy="currentStore.items[storeItem].taxed" @change="updateStore(currentStore)">Taxed</md-switch>
+        <md-switch v-model.lazy="currentStore.items[storeItem].discounted" @change="updateStore(currentStore)">Discounted</md-switch>
+      </div>
+      </div>
+    </md-sidenav>
+
   </div>
 </template>
 
 <script>
-  import {mapGetters} from 'vuex';
+  import {mapGetters,mapActions} from 'vuex';
   export default {
     name: 'store-items',
     computed: {
@@ -95,13 +140,26 @@
         return _.chunk(items,4);
       },
       ...mapGetters([
+          'currentStore',
           'currentStoreItems',
+          'authUser',
       ]),
     },
     data() {
         return {
           itemSearch: '',
+          storeItem: '',
         }
-    }
+    },
+    methods: {
+      toggleEditStoreItem(storeItem) {
+        this.storeItem = storeItem;
+        this.$refs.editStoreItem.toggle();
+      },
+      ...mapActions([
+          'updateStore',
+      ])
+    },
+
   }
 </script>

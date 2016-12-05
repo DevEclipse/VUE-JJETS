@@ -57,6 +57,27 @@
 
       </div>
     </md-sidenav>
+    <md-sidenav class="md-right" ref="editItem">
+      <div v-if="storeItem">
+        <md-toolbar>
+          <div class="md-title">
+            Edit Store Item
+            <div class="md-subhead">
+              Item | {{currentItem['.key'] | capitalize}}
+            </div>
+          </div>
+        </md-toolbar>
+        <div style="margin: 1rem;">
+          <md-input-container >
+            <label>
+              <md-icon>timeline</md-icon>
+              Cost Price
+            </label>
+            <md-input v-model.lazy="currentItem.cost_price" @change="updateItem(currentItem)" type="number" step="10.00" min="0"></md-input>
+          </md-input-container>
+        </div>
+      </div>
+    </md-sidenav>
   </div>
 
 </template>
@@ -70,12 +91,16 @@
         'currentItem',
         'authManager',
         'authManagerStores',
+        'serverTime'
       ]),
     },
     methods: {
       toggleAddStoreItemDrawer() {
         this.storeItem.retail_price = this.currentItem.cost_price * 1.5;
         this.$refs.addStoreItemDrawer.toggle();
+      },
+      toggleEditItem() {
+        this.$refs.editItem.toggle();
       },
       addToStore() {
         _.forEach(this.selectedStores,store => {
@@ -108,6 +133,8 @@
           store: '',
           taxed: true,
           discounted: false,
+          created_at: '',
+          updated_at: '',
         },
         selectedStores: [],
       }

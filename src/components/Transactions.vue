@@ -1,5 +1,5 @@
 <template>
-  <display v-if="!transactions.length" :message="No Transactions Yet"/>
+  <display v-if="!transactions.length" message="No Transactions Yet"/>
   <div v-else>
 
   </div>

@@ -40,7 +40,7 @@ const routes = [
       },
       {
         path: 'transactions',
-        component: require('./components/StoreItems.vue'),
+        component: require('./components/StoreTransactions.vue'),
         name: 'storeTransactions',
       }
     ]
