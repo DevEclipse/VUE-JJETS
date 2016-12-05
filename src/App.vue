@@ -2,7 +2,7 @@
   <div id="app" v-md-theme="'default'">
 
     <dashboard v-if="$store.getters.authUID"></dashboard>
-    <transition enter-class="fixedpos" leave-class="fixedpos" enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
+    <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
       <router-view></router-view>
     </transition>
   </div>
@@ -23,8 +23,5 @@ export default {
   @import url('//fonts.googleapis.com/icon?family=Material+Icons');
   html,body {
     overflow-x: hidden;
-  },
-  .fixedpos {
-    position: fixed;
   }
 </style>

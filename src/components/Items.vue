@@ -1,7 +1,7 @@
 <template>
   <display v-if="!allItems.length" message="No Items Yet"/>
   <div v-else>
-    <div class="row middle-xs" style="margin: 5px;">
+    <div class="row middle-xs" style="margin: 1rem;">
       <div class="col-xs-4">
         <md-input-container>
           <label>
@@ -16,8 +16,7 @@
     <div class="row" v-for="item3 in chunkedItems">
       <div class="col-xs-12 col-md-4" v-for="item in item3">
 
-        <transition-group tag="div" enter-active-class="animated lightSpeedIn"
-                          leave-active-class="animated lightSpeedOut">
+        <transition-group tag="div" enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
           <md-card md-with-hover style="margin-bottom: 5px;" :key="item['.key']">
             <md-card-header>
 
@@ -28,7 +27,7 @@
 
                 <md-card-header align="center">
                   <md-card-header-text>
-                    <div class="md-title">${{item.cost_price}}</div>
+                    <div class="md-title">&#8369;{{item.cost_price}}</div>
                     <div class="md-subhead">Cost Price</div>
                   </md-card-header-text>
                 </md-card-header>

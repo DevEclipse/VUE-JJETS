@@ -30,7 +30,6 @@
       ...mapGetters([
         'authUser',
         'currentStore',
-        'currentStoreItems'
       ])
     },
   }
