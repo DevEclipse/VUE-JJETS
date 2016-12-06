@@ -22,6 +22,7 @@
         Go To User Profile
       </router-link>
     </md-toolbar>
+
     <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
       <router-view></router-view>
     </transition>

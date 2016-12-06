@@ -21,7 +21,7 @@ const routes = [
   },
   {
     path: '/stores',
-    component: require('./components/stores.vue'),
+    component: require('./components/Shops.vue'),
     name: 'stores',
 },
   {
@@ -42,8 +42,18 @@ const routes = [
         path: 'transactions',
         component: require('./components/StoreTransactions.vue'),
         name: 'storeTransactions',
-      }
+      },
     ]
+  },
+  {
+    path: '/pos/:store',
+    component: require('./components/PointOfSale.vue'),
+    name: 'pos',
+  },
+  {
+    path: '/pos/:transaction',
+    component: require('./components/PointOfSale.vue'),
+    name: 'posTransaction',
   },
   {
     path: '/transaction/:transaction',

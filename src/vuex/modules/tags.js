@@ -3,6 +3,7 @@ const state = {};
 
 const getters = {
   currentTag(state,getters) {
+    if(!getters.routeParams) return;
     return _.find(getters.allTags,['.key',getters.routeParams.tag]);
   }
 };

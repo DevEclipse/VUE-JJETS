@@ -1,20 +1,16 @@
 <template>
   <display v-if="!currentUser" message="User Not Found"/>
   <div v-else style="margin: 50px;">
-    <div class="currentUser['.key'] == authUser['.key']">
-
-    </div>
     <div class="row">
       <div class="col-xs-12 col-md-4">
         <md-card style="margin: 1rem;" md-with-hover>
           <md-card-header>
             <div class="md-display-1" style="flex: 1;">
               {{currentUser['.key'] | capitalize}}
-              <md-button class="md-fab md-mini md-fab-top-right">
+              <md-button v-if="currentUser['.key'] == authUser['.key']" class="md-fab md-mini md-fab-top-right">
                 <md-icon>edit</md-icon>
               </md-button>
             </div>
-
             <div class="md-subhead">
               <span style="color: teal" v-if="currentUser.status == 'Online'">
                 {{currentUser.status}}
@@ -40,27 +36,21 @@
             <div class="md-subhead">
               Name
             </div>
-            <div class="md-title">
-              {{currentUser.created_date | date}}
+            <div class="md-subhead">
+            <span style="font-weight: bold;">Created: </span> {{currentUser.created_date | moment("from")}}
             </div>
             <div class="md-subhead">
-              Created Date
-            </div>
-            <div class="md-title">
-              {{currentUser.updated_date | date}}
-            </div>
-            <div class="md-subhead">
-              Updated Date
+              <span style="font-weight: bold;">Updated: </span> {{currentUser.updated_date | moment("from")}}
             </div>
           </md-card-content>
         </md-card>
       </div>
       <div class="col-xs-12 col-md">
-
-        <md-card style="margin: 1rem;" md-with-hover>
+        <div class="md-display-2 center-xs" style="margin: 1rem;">Profiles</div>
+        <md-card style="margin-bottom: 1rem;" md-with-hover>
           <md-card-header>
             <md-card-header-text>
-              <div class="md-title">Manager Profile</div>
+              <div class="md-title">Manager</div>
               <div class="md-subhead">{{currentUser.profiles.manager ? 'Available' : 'Not Available' }}</div>
               <div v-if="authUser">
                 <md-button v-if="!authUser.profiles.manager" @click="addProfile({user: authUser,profile: 'manager'})"
@@ -88,10 +78,10 @@
             </p>
           </md-card-content>
         </md-card>
-        <md-card style="margin: 1rem;" md-with-hover>
+        <md-card style="margin-bottom: 1rem;" md-with-hover>
           <md-card-header>
             <md-card-header-text>
-              <div class="md-title">Employee Profile</div>
+              <div class="md-title">Employee</div>
               <div class="md-subhead">{{currentUser.profiles.employee ? 'Available' : 'Not Available' }}</div>
               <div v-if="authUser">
                 <md-button v-if="!authUser.profiles.employee" @click="addProfile({user: authUser,profile: 'employee'})"
@@ -117,11 +107,10 @@
             </p>
           </md-card-content>
         </md-card>
-
-        <md-card style="margin: 1rem;" md-with-hover>
+        <md-card style="margin-bottom: 1rem;" md-with-hover>
           <md-card-header>
             <md-card-header-text>
-              <div class="md-title">Customer Profile</div>
+              <div class="md-title">Customer</div>
               <div class="md-subhead">{{currentUser.profiles.customer ? 'Available' : 'Not Available' }}</div>
               <div v-if="authUser">
                 <md-button v-if="!authUser.profiles.customer" @click="addProfile({user: authUser,profile: 'customer'})"

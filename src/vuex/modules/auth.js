@@ -8,22 +8,28 @@ const getters = {
     return state.uid;
   },
   authUser(state,getters) {
+    if(!getters.authUID) return;
     return state.auth =  _.find(getters.allUsers,['uid',getters.authUID]);;
   },
-  authManager(state,getters,rootState) {
+  authManager(state,getters) {
+    if(!getters.authUser) return;
     return _.find(getters.allManagers,['.key',getters.authUser.username])
   },
   authManagerStores(state, getters) {
+    if(!getters.authManager) return;
     return _.filter(getters.allStores, ['manager', getters.authManager['.key']]);
   },
   authManagerItems(state, getters) {
+    if(!getters.authManager) return;
     return _.filter(getters.allItems, ['created_by', getters.authManager['.key']]);
   },
   authEmployee(state,getters) {
+    if(!getters.authUser) return;
     return _.find(getters.allEmployees,['.key',getters.authUser.username])
   },
   authEmployeeStores(state, getters) {
-    return _.filter(getters.allStores, ['employee', getters.authEmployee['.key']]);
+    if(!getters.authEmployee) return;
+    return _.filter(getters.allStores, ['manager', getters.authEmployee.manager]);
   },
 };
 

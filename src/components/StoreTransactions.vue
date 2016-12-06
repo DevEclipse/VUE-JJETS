@@ -4,13 +4,9 @@
 </template>
 
 <script>
-  import Transactions from './Transactions.vue';
   import {mapGetters} from 'vuex';
   export default {
     name: 'store-transactions',
-    components: {
-        Transactions,
-    },
     computed: {
       ...mapGetters([
           'currentStoreTransactions',

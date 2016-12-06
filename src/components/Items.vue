@@ -1,65 +1,64 @@
 <template>
   <display v-if="!allItems.length" message="No Items Yet"/>
   <div v-else>
-    <div class="row middle-xs" style="margin: 1rem;">
-      <div class="col-xs-4">
-        <md-input-container>
-          <label>
-            <md-icon>search</md-icon>
-            Search
-          </label>
-          <md-input v-model="itemSearch"></md-input>
-        </md-input-container>
+    <div class="row middle-xs center-xs">
+      <div class="col-xs">
+        <div class="md-display-3">
+          Items
+        </div>
       </div>
     </div>
-    <hr/>
-    <div class="row" v-for="item3 in chunkedItems">
-      <div class="col-xs-12 col-md-4" v-for="item in item3">
 
-        <transition-group tag="div" enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
-          <md-card md-with-hover style="margin-bottom: 5px;" :key="item['.key']">
-            <md-card-header>
+    <cards :list="items" :default="allItems">
+      <template scope="props">
+        <md-card-header>
+          <md-card-header-text>
+            <div class="md-title">{{props.data.name}}</div>
+            <div class="md-subhead">
+              <span style="font-weight: bold;">Created By:</span>
+              {{props.data.created_by | capitalize}}</div>
 
+
+            <md-card-header align="center">
               <md-card-header-text>
-                <div class="md-title">{{item.name}}</div>
-                <div class="md-subhead">Created By: {{item.created_by | capitalize}}</div>
-
-
-                <md-card-header align="center">
-                  <md-card-header-text>
-                    <div class="md-title">&#8369;{{item.cost_price}}</div>
-                    <div class="md-subhead">Cost Price</div>
-                  </md-card-header-text>
-                </md-card-header>
-
+                <div class="md-title">&#8369;{{props.data.cost_price}}</div>
+                <div class="md-subhead">Cost Price</div>
               </md-card-header-text>
-
-              <md-card-media md-big>
-                <img src="//placehold.it/250x250" alt="People">
-              </md-card-media>
-
             </md-card-header>
 
-            <md-card-actions>
-              Tags:
-              <span v-for="tag in item.tags">
+          </md-card-header-text>
+
+          <md-card-media md-big>
+            <img src="//placehold.it/250x250" alt="People">
+          </md-card-media>
+
+        </md-card-header>
+        <md-card-header>
+          <md-card-header-text>
+          <span class="md-subhead">
+            <span style="font-weight: bold">Created:</span>{{props.data.created_date | moment("from")}}
+          </span>
+          <span class="md-subhead">
+            <span style="font-weight: bold">Updated:</span>{{props.data.updated_date | moment("from")}}
+          </span>
+          </md-card-header-text>
+        </md-card-header>
+        <md-card-actions>
+          Tags:
+          <span v-for="tag in props.data.tags">
                 <router-link :to="{name: 'tag',params: {tag: tag}}">{{tag}}</router-link>
               </span>
 
-              <span style="flex: 1"></span>
+          <span style="flex: 1"></span>
 
-              <router-link class="md-button md-accent"
-                           :to="{name: 'item',params: {item: item['.key']}}">More Info
-              </router-link>
+          <router-link class="md-button md-accent"
+                       :to="{name: 'item',params: {item: props.data['.key']}}">More Info
+          </router-link>
 
-            </md-card-actions>
-
-          </md-card>
-        </transition-group>
-      </div>
-    </div>
+        </md-card-actions>
+      </template>
+    </cards>
   </div>
-
 
 </template>
 
@@ -67,28 +66,11 @@
   import {mapGetters, mapActions} from 'vuex';
   export default {
     name: 'items',
+    props: ['items'],
     computed: {
-      chunkedItems() {
-        let items = this.allItems;
-        let regExp = new RegExp(this.itemSearch);
-        console.log(regExp);
-        if (this.itemSearch) {
-          items = _.filter(items, item => {
-            return regExp.test(item['.key']);
-          })
-        }
-        return _.chunk(items, 3);
-      },
       ...mapGetters([
         'allItems',
-        'authUser',
       ]),
     },
-    data() {
-      return {
-        itemSearch: '',
-
-      }
-    }
   }
 </script>

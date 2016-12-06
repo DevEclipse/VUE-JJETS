@@ -8,7 +8,8 @@ const getters = {
     if(!getters.routeParams) return;
     return _.find(getters.allEmployees,['.key',getters.routeParams.employee]);
   },
-  currentEmployeeManagerStores(state,getters,rootState) {
+  currentEmployeeManagerStores(state,getters) {
+    if(!getters.currentEmployee) return;
     return _.filter(getters.allStores,['manager',getters.currentEmployee.manager]);
   },
 };

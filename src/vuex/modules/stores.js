@@ -1,4 +1,3 @@
-
 const state = {
 
 };
@@ -14,7 +13,7 @@ const getters = {
     })
   },
   currentStoreTransactions(state,getters) {
-    return _.find(getters.allTransactions,['.key',getters.routeParams.transaction]);
+    return _.find(getters.allTransactions,['store',getters.currentStore['.key']]);
   },
 
 };
@@ -34,6 +33,10 @@ const actions = {
     if(!store) return;
     console.log(store);
     getters.refStores.child(store['.key']).remove();
+  },
+  updateStoreItem({getters,dispatch},storeItem) {
+    if(!storeItem) return;
+    getters.refStores.child(storeItem.store).child('items').child(storeItem.item).update(storeItem);
   },
   updateStore({getters,dispatch,commit},store) {
     if(!store) return;

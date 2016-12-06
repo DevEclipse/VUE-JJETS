@@ -1,5 +1,5 @@
 <template>
-  <div id="app" v-md-theme="'default'">
+  <div id="app" v-md-theme="'default'" >
 
     <dashboard v-if="$store.getters.authUID"></dashboard>
     <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
