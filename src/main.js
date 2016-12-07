@@ -27,6 +27,8 @@ Vue.use(VueMaterial);
 Vue.use(VueMoment);
 Vue.config.debug = true;
 
+Vue.component('employees',require('./components/Employees.vue'));
+Vue.component('transaction',require('./components/Transaction.vue'));
 Vue.component('transaction',require('./components/Transaction.vue'));
 Vue.component('transactions',require('./components/Transactions.vue'));
 Vue.component('cards',require('./components/Cards.vue'));
@@ -163,6 +165,5 @@ firebase.auth().onAuthStateChanged(function (user) {
   if (!user) return;
     store.dispatch('setUID', user.uid);
     store.dispatch('setAuth');
-    console.log(user,store.state.auth,store.state.uid);
 });
 

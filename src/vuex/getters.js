@@ -69,7 +69,9 @@ const getters = {
   routeParams(state) {
     return state.route.params;
   },
-
+  routeQuery(state) {
+    return state.route.query;
+  },
 };
 
 export default getters;

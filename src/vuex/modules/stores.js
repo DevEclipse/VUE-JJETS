@@ -8,14 +8,15 @@ const getters = {
     return _.find(getters.allStores,['.key',getters.routeParams.store]);
   },
   currentStoreItems(state,getters) {
+    if(!getters.currentStore) return;
     return _.map(getters.currentStore.items,(value,key) => {
       return _.assign(_.clone(value),_.clone(_.find(getters.allItems,['.key',key])));
     })
   },
   currentStoreTransactions(state,getters) {
-    return _.find(getters.allTransactions,['store',getters.currentStore['.key']]);
+    if(!getters.currentStore) return;
+    return _.filter(getters.allTransactions,['store',getters.currentStore['.key']]);
   },
-
 };
 
 const mutations = {

@@ -1,104 +1,99 @@
 const routes = [
   {
     path: '/',
-    component: require('./components/Index.vue'),
+    component: resolve => require(['./components/Index.vue'], resolve),
     name: 'home',
   },
   {
     path: '/tag/:tag',
-    component: require('./components/Tag.vue'),
+    component: resolve => require(['./components/Tag.vue'], resolve),
     name: 'tag',
   },
   {
     path: '/items',
-    component: require('./components/Items.vue'),
+    component: resolve => require(['./components/Items.vue'], resolve),
     name: 'items',
   },
   {
     path: '/item/:item',
-    component: require('./components/Item.vue'),
+    component: resolve => require(['./components/Item.vue'], resolve),
     name: 'item',
   },
   {
     path: '/stores',
-    component: require('./components/Shops.vue'),
+    component: resolve => require(['./components/Shops.vue'], resolve),
     name: 'stores',
-},
+  },
   {
     path: '/store/:store',
-    component: require('./components/Store.vue'),
+    component: resolve => require(['./components/Store.vue'],resolve),
     children: [
       {
         path: '',
-        component: require('./components/StoreInfo.vue'),
+        component: resolve=> require(['./components/StoreInfo.vue'],resolve),
         name: 'store',
       },
       {
         path: 'items',
-        component: require('./components/StoreItems.vue'),
+        component: resolve => require(['./components/StoreItems.vue'],resolve),
         name: 'storeItems',
       },
       {
         path: 'transactions',
-        component: require('./components/StoreTransactions.vue'),
+        component: resolve => require(['./components/StoreTransactions.vue'],resolve),
         name: 'storeTransactions',
       },
     ]
   },
   {
-    path: '/pos/:store',
-    component: require('./components/PointOfSale.vue'),
+    path: '/pos/:transaction',
+    component: resolve => require(['./components/PointOfSale.vue'],resolve),
     name: 'pos',
   },
   {
-    path: '/pos/:transaction',
-    component: require('./components/PointOfSale.vue'),
-    name: 'posTransaction',
-  },
-  {
     path: '/transaction/:transaction',
-    component: require('./components/Transaction.vue'),
+    component: resolve => require(['./components/Transaction.vue'],resolve),
     name: 'transaction',
   },
   {
     path: '/user/:username',
-    component: require('./components/User.vue'),
+    component: resolve => require(['./components/User.vue'],resolve),
     name: 'user',
   },
   {
     path: '/manager/:manager',
-    component: require('./components/Manager.vue'),
+    component: resolve => require(['./components/Manager.vue'],resolve),
     children: [
       {
         path: '',
-        component: require('./components/ManagerInfo.vue'),
+        component: resolve => require(['./components/ManagerInfo.vue'],resolve),
         name: 'manager',
       },
       {
         path: 'items',
-        component: require('./components/ManagerItems.vue'),
+        component: resolve => require(['./components/ManagerItems.vue'],resolve),
         name: 'managerItems',
       },
       {
         path: 'stores',
-        component: require('./components/ManagerStores.vue'),
+        component: resolve => require(['./components/ManagerStores.vue'],resolve),
         name: 'managerStores',
       },
       {
         path: 'employees',
-        component: require('./components/ManagerEmployees.vue'),
+        component: resolve => require(['./components/ManagerEmployees.vue'],resolve),
         name: 'managerEmployees',
       }
     ],
   },
   {
     path: '/employee/:employee',
-    component: require('./components/Employee.vue'),
+    component: resolve => require(['./components/Employee.vue'],resolve),
     name: 'employee',
   },
   {
     path: '/customer/:customer',
-    component: require('./components/Customer.vue'),
+    component: resolve => require(['./components/Customer.vue'],resolve),
     name: 'customer',
   },
 ];

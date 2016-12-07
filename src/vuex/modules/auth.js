@@ -31,6 +31,10 @@ const getters = {
     if(!getters.authEmployee) return;
     return _.filter(getters.allStores, ['manager', getters.authEmployee.manager]);
   },
+  authCustomer(state,getters) {
+    if(!getters.authUser) return;
+    return _.find(getters.allCustomers,['.key',getters.authUser.username])
+  },
 };
 
 const mutations = {

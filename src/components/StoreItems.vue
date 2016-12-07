@@ -114,12 +114,15 @@
         </md-card-header>
         <md-card-actions>
           <span style="flex: 1;"></span>
-          <md-button v-if="authUser.profiles.manager == currentStore.manager"
-                     class="md-fab md-mini"
+          <router-link tag="md-button" :to="{name: 'item',params: {item: props.data['.key']}}">
+              More Info
+          </router-link>
+          <div v-if="authManager">
+          <md-button v-if="authManager['.key'] == currentStore.manager"
                      @click="openEditItem(props.data['.key'])">
-            <md-icon>edit</md-icon>
-            <md-tooltip>Edit this Store Item</md-tooltip>
+              Edit
           </md-button>
+          </div>
         </md-card-actions>
       </template>
     </cards>
@@ -136,7 +139,7 @@
       ...mapGetters([
         'currentStore',
         'currentStoreItems',
-        'authUser',
+        'authManager',
         'serverTime',
       ]),
     },
@@ -162,7 +165,5 @@
         this.storeItem = null;
       },
     },
-
-
   }
 </script>

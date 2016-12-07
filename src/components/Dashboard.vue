@@ -11,7 +11,7 @@
 
       <md-dialog-actions>
         <md-button class="md-primary" @click="$root.signOut">Sign Out</md-button>
-        <md-button class="md-primary" @click="closeDialog('signOut')">Cancel</md-button>
+        <md-button class="md-primary" @click="$refs.signOut.close()">Cancel</md-button>
       </md-dialog-actions>
     </md-dialog>
 
@@ -38,15 +38,15 @@
           <img src="//placeimg.com/40/40/people/1" alt="People">
           <md-tooltip>{{authUser.username | capitalize}}</md-tooltip>
         </router-link>
-        <md-button class="md-icon-button"  @click="openDialog('signOut')">
+        <md-button class="md-icon-button"  @click="$refs.signOut.open()">
           <md-icon>close</md-icon>
           <md-tooltip>Sign Out</md-tooltip>
         </md-button>
       </div>
       <div class="visible-xs">
-        <md-button class="md-icon-button md-raised" @click="toggleDashboard">
-          <md-icon>menu</md-icon>
-          <md-tooltip direction="bottom"> Dashboard</md-tooltip>
+        <md-button class="md-icon-button" @click="toggleDashboard">
+          <md-icon>dashboard</md-icon>
+          <md-tooltip direction="bottom">Dashboard</md-tooltip>
         </md-button>
       </div>
       </div>
@@ -95,70 +95,27 @@
         </md-list-item>
         <md-list-item>
           <md-icon>face</md-icon>
-          <span @click="openDialog('signOut')">Sign Out</span>
+          <span @click="$refs.signOut.open()">Sign Out</span>
         </md-list-item>
         <md-subheader>Profiles</md-subheader>
-        <md-list-item v-if="authUser.profiles.manager">
+        <md-list-item v-if="authManager">
           <md-icon>store</md-icon>
-          <router-link tag="span" :to="{name: 'manager', params: {manager: authUser.profiles.manager}}">
+          <router-link tag="span" :to="{name: 'manager', params: {manager: authManager['.key']}}">
             Manager
           </router-link>
         </md-list-item>
-        <md-list-item v-if="authUser.profiles.employee">
+        <md-list-item v-if="authEmployee">
           <md-icon>store</md-icon>
-          <router-link tag="span" :to="{name: 'employee', params: {employee: authUser.profiles.employee}}">
+          <router-link tag="span" :to="{name: 'employee', params: {employee: authEmployee['.key']}}">
             Employee
           </router-link>
         </md-list-item>
-        <md-list-item v-if="authUser.profiles.customer">
+        <md-list-item v-if="authCustomer">
           <md-icon>store</md-icon>
-          <router-link tag="span" :to="{name: 'customer', params: {customer: authUser.profiles.customer}}">
+          <router-link tag="span" :to="{name: 'customer', params: {customer: authCustomer['.key']}}">
             Customer
           </router-link>
         </md-list-item>
-        <!--<md-list v-if="currentManager" class="visible-xs">-->
-          <!--<md-subheader>Manager</md-subheader>-->
-          <!--<md-list-item>-->
-            <!--<md-icon>home</md-icon>-->
-            <!--<router-link tag="span" :to="{name: 'manager'}"> Info</router-link>-->
-          <!--</md-list-item>-->
-          <!--<md-list-item>-->
-            <!--<md-icon>add</md-icon>-->
-            <!--<router-link tag="span" :to="{name: 'managerItems'}"> Items</router-link>-->
-          <!--</md-list-item>-->
-          <!--<md-list-item>-->
-            <!--<md-icon>store</md-icon>-->
-            <!--<router-link tag="span" :to="{name: 'managerStores'}"> Stores</router-link>-->
-          <!--</md-list-item>-->
-          <!--<md-list-item>-->
-            <!--<md-icon>store</md-icon>-->
-            <!--<router-link tag="span" :to="{name: 'managerEmployees'}"> Employees</router-link>-->
-          <!--</md-list-item>-->
-        <!--</md-list>-->
-        <!--<md-list v-if="currentStore" class="visible-xs">-->
-          <!--<md-subheader>Store</md-subheader>-->
-          <!--<md-list-item>-->
-            <!--<md-icon>home</md-icon>-->
-            <!--<router-link tag="span"  class="col-xs" :to="{name: 'store'}">-->
-              <!--Info-->
-            <!--</router-link>-->
-          <!--</md-list-item>-->
-          <!--<md-list-item>-->
-            <!--<md-icon>add</md-icon>-->
-            <!--<router-link tag="span"  class="col-xs" :to="{name: 'storeItems'}">-->
-              <!--Items-->
-            <!--</router-link>-->
-          <!--</md-list-item>-->
-          <!--<md-list-item>-->
-            <!--<md-icon>store</md-icon>-->
-
-            <!--<router-link  tag="span"  class="col-xs" :to="{name: 'storeTransactions'}">-->
-              <!--Transactions-->
-            <!--</router-link>-->
-          <!--</md-list-item>-->
-
-
-        <!--</md-list>-->
       </md-list>
     </md-sidenav>
   </div>
@@ -172,22 +129,14 @@
     computed: {
       ...mapGetters([
         'authUser',
-        'currentManager',
-        'currentStore',
+        'authManager',
+        'authEmployee',
+        'authCustomer',
       ])
     },
     methods: {
-      ...mapActions([
-        'addProfile',
-      ]),
       toggleDashboard() {
         this.$refs.dashboardMenu.toggle();
-      },
-      openDialog(ref) {
-        this.$refs[ref].open();
-      },
-      closeDialog(ref) {
-        this.$refs[ref].close();
       },
     },
   }

@@ -45,7 +45,6 @@
     computed: {
       ...mapGetters([
         'currentManager',
-        'authUser'
       ])
     },
   }

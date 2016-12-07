@@ -1,10 +1,10 @@
 <template>
   <div>
 
-      <md-dialog ref="addStore">
+      <md-dialog ref="addStoreDialog">
       <md-toolbar>
         <div class="md-title">
-          Add Store | {{store.manager = authUser.profiles.manager | capitalize}}
+          Add Store | {{store.manager = authManager['.key'] | capitalize}}
         </div>
       </md-toolbar>
       <div style="margin: 10px;">
@@ -32,9 +32,16 @@
         <md-input-container >
           <label>
             <md-icon>store</md-icon>
+            Location
+          </label>
+          <md-input v-model="store.location"></md-input>
+        </md-input-container>
+        <md-input-container >
+          <label>
+            <md-icon>store</md-icon>
             Image Url
           </label>
-          <md-input v-model="store.image_url"></md-input>
+          <md-input type="url" v-model="store.image_url"></md-input>
         </md-input-container>
         <md-input-container>
           <label>
@@ -43,12 +50,14 @@
           </label>
           <md-textarea v-model="store.description"></md-textarea>
         </md-input-container>
-        <md-button class="md-raised md-primary" style="width: 95%;" @click="updateStoresOnManager">
+        <md-button class="md-raised md-primary" style="width: 95%;" @click="addStore(store)">
           Create
         </md-button>
       </div>
     </md-dialog>
-
+    <md-button class="md-fab md-mini md-fab-bottom-right" style="position: fixed; z-index: 3;" @click="$refs.addStoreDialog.open();">
+      <md-icon>add</md-icon>
+    </md-button>
       <stores :stores="currentManagerStores"/>
 
   </div>
@@ -66,6 +75,7 @@
           description: '',
           tax_rate: '',
           discount_rate: '',
+          location: '',
         },
         storeSearch: '',
       }
@@ -74,26 +84,12 @@
       ...mapGetters([
         'currentManager',
         'currentManagerStores',
-        'authUser'
+        'authManager'
       ])
     },
     methods: {
-      updateStoresOnManager() {
-        let key = `${this.store.manager}_${this.store.name}`.replace(/\s/g, "").toLowerCase();
-        if(!this.currentManager.stores) {
-          this.currentManager.stores = {};
-        }
-        this.currentManager.stores[key] = true;
-        this.updateManager(this.currentManager);
-
-        this.addStore(this.store);
-        this.closeAddStore();
-      },
       ...mapActions([
         'addStore',
-        'authUser',
-        'currentManager',
-        'updateManager',
       ]),
     }
   }

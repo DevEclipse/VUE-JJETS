@@ -63,7 +63,7 @@
 
       <div class="row middle-xs center-xs" style="height: 100%">
         <div class="col-xs" style="color: white; font-size: 15vh; font-weight: bold;">
-          <div class="row middle-xs center-xs">JJET Systems </div>
+          <div class="row middle-xs center-xs">JJETS</div>
           <div class="row middle-xs center-xs" style="padding: 5rem;">
           <md-button class="md-accent md-raised" @click="openDialog('getStarted')">
             Get Started

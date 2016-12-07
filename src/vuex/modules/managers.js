@@ -32,7 +32,6 @@ const actions = {
     if (!manager) return;
     let newManager = {
       void_code: manager,
-      employees: {[manager]: true},
     };
     dispatch('newObject',newManager);
     getters.refManagers.child(manager).set(getters.getNewObject);

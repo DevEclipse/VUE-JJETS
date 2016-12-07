@@ -19,7 +19,7 @@
         Employees
       </router-link>
       <router-link :to="{name: 'user', params: {username: currentManager['.key']}}" class="md-button">
-        Go To User Profile
+        User: {{currentManager['.key']}}
       </router-link>
     </md-toolbar>
 
@@ -34,8 +34,8 @@
   export default {
     computed: {
       ...mapGetters([
+        'authManager',
         'currentManager',
-        'authUser'
       ])
     },
   }

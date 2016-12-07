@@ -1,6 +1,13 @@
 <template>
   <display v-if="!allStores.length" message="No Stores Yet"/>
   <div v-else>
+    <div class="row middle-xs center-xs">
+      <div class="col-xs">
+        <div class="md-display-3">
+          Stores
+        </div>
+      </div>
+    </div>
     <cards :list="stores" :default="allStores">
       <template scope="props">
         <md-card-header>

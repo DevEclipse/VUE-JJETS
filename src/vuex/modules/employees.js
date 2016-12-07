@@ -12,6 +12,7 @@ const getters = {
     if(!getters.currentEmployee) return;
     return _.filter(getters.allStores,['manager',getters.currentEmployee.manager]);
   },
+
 };
 
 const mutations = {};

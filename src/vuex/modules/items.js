@@ -7,6 +7,12 @@ const getters = {
     if(!getters.allItems) return;
     return _.find(getters.allItems,['.key',getters.routeParams.item]);
   },
+  currentItemStores(state,getters) {
+    if(!getters.currentItem) return;
+      return _.filter(getters.allStores,store => {
+        return _.has(store.items,getters.currentItem['.key'])
+      })
+  }
 };
 
 const mutations = {};
@@ -27,7 +33,7 @@ const actions = {
     getters.refItems.child(item['.key']).update(getters.getUpdatedObject);
   },
 };
-//called by this.$store.dispatch('addUser')
+
 export default {
   state,
   getters,

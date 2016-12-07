@@ -1,7 +1,7 @@
 <template>
   <display v-if="!currentItem" message="Item Not Found"/>
   <div v-else>
-    <md-dialog  ref="addStoreItem">
+    <md-dialog ref="addStoreItem">
       <md-toolbar>
         <div class="md-title" style="flex: 1;">
           Add Store Item
@@ -11,14 +11,14 @@
         </div>
       </md-toolbar>
       <div style="margin: 1rem;">
-        <md-input-container >
+        <md-input-container>
           <label>
             <md-icon>timeline</md-icon>
             Retail Price
           </label>
           <md-input v-model="storeItem.retail_price" type="number" step="10.00" min="0"></md-input>
         </md-input-container>
-        <md-input-container >
+        <md-input-container>
           <label>
             <md-icon>timeline</md-icon>
             Quantity
@@ -28,8 +28,9 @@
         </md-input-container>
         <md-switch v-model="storeItem.taxed">Taxed</md-switch>
         <md-switch v-model="storeItem.discounted">Discounted</md-switch>
-        <div  v-if="authManager">
-          <multiselect :options="authManager.stores | toIndex"
+        <div v-if="authManager">
+
+          <multiselect :options="authManagerStores | keys"
                        v-model="selectedStores"
                        :multiple="true"
                        :searchable="true"></multiselect>
@@ -63,7 +64,7 @@
               <md-icon>store</md-icon>
               Image Url
             </label>
-            <md-input v-model="item.image_url"></md-input>
+            <md-input type="url" v-model="item.image_url"></md-input>
           </md-input-container>
           <md-input-container>
             <label>
@@ -92,39 +93,115 @@
     </md-dialog>
 
     <md-toolbar class="md-accent">
-      <div class="md-title"  style="flex: 1;">
-        {{currentItem.name | capitalize}}
+      <div class="md-toolbar-container">
+        <div class="md-title" style="flex: 1;">
+          {{currentItem.name | capitalize}}
+        </div>
+        <div v-if="authManager">
+          <md-button v-if="currentItem.created_by == authManager['.key']" @click="openEditItem">
+            Edit
+          </md-button>
+          <md-button @click="openAddStoreItem">
+            Add To Your Stores
+          </md-button>
+        </div>
+        <router-link class="md-button" :to="{name: 'manager',params: {manager: currentItem.created_by}}">
+          Creator: {{currentItem.created_by}}
+        </router-link>
       </div>
-      <div v-if="authManager">
-      <md-button v-if="currentItem.created_by == authManager['.key']" @click="openEditItem">
-        Edit
-      </md-button>
-      <md-button @click="openAddStoreItem">
-        Add To Your Stores
-      </md-button>
-      </div>
-      <router-link class="md-button" :to="{name: 'manager',params: {manager: currentItem.created_by}}">
-        Creator: {{currentItem.created_by}}
-      </router-link>
     </md-toolbar>
-    <ul>
-      <li v-for="(store,index) in currentItem.stores">
-        {{index}} {{store}}
-      </li>
-    </ul>
 
+    <div class="row">
+      <div class="col-xs-12 center-xs middle-xs col-md">
+        <md-card md-with-hover>
+          <md-card-header>
+            <md-card-header-text>
+              <div class="md-title">&#8369;{{currentItem.cost_price}}</div>
+              <div class="md-subhead">Cost Price</div>
+            </md-card-header-text>
+          </md-card-header>
+          <md-card-media-cover>
+            <md-card-media>
+              <img :src="currentItem.image_url || '//placehold.it/1920x1080'"/>
+            </md-card-media>
+          </md-card-media-cover>
+          <md-card-content>
+            <md-card-header>
+              <div class="md-title">Description</div>
+              <p class="md-caption">
+                {{currentItem.description || 'No Description'}}
+              </p>
+            </md-card-header>
+            <md-card-header>
+              <md-card-header-text>
+                <div class="md-subhead">
+                  <span style="font-weight: bold;">
+                    Created:
+                  </span>
+                  {{currentItem.created_date | moment("from")}}
+                </div>
+              </md-card-header-text>
+              <md-card-header-text>
+                <div class="md-subhead">
+                  <span style="font-weight: bold;">
+                    Updated:
+                  </span>
+                  {{currentItem.updated_date | moment("from")}}
+                </div>
+              </md-card-header-text>
+              <md-card-header-text>
+                <span style="font-weight: bold;">Tags: </span>
+                <span v-if="!currentItem.tags">
+                  No Tags
+                </span>
+                <span v-else v-for="tag in currentItem.tags">
+                  <router-link :to="{name: 'tag',params: {tag: tag}}">{{tag}}</router-link>
+                </span>
+              </md-card-header-text>
+            </md-card-header>
 
+          </md-card-content>
+        </md-card>
+      </div>
+
+      <div class="col-xs-12 col-md">
+        <md-list class="col-xs-12 col-md md-triple-line">
+          <md-subheader>Available Stores</md-subheader>
+          <md-list-item v-for="store in currentItemStores">
+            <md-avatar>
+              <img :src="store.image_url || 'https://placeimg.com/40/40/people/1'" alt="People">
+            </md-avatar>
+            <div class="md-list-text-container">
+          <span>
+            {{store.name | capitalize}}
+          </span>
+              <span>
+            Retail Price: &#8369;{{store.items[currentItem['.key']].retail_price}}
+          </span>
+              <span>
+            Stock: {{store.items[currentItem['.key']].quantity || 'Out of Stock' }}
+          </span>
+            </div>
+            <router-link tag="md-button" class="md-icon-button md-list-action"
+                         :to="{name: 'storeItems', params: {store: store['.key']},query: {searchKey: currentItem['.key']}}">
+              <md-icon>info</md-icon>
+            </router-link>
+          </md-list-item>
+        </md-list>
+      </div>
+    </div>
   </div>
 
 </template>
 
 <script>
-  import {mapGetters,mapActions} from 'vuex';
+  import {mapGetters, mapActions} from 'vuex';
   export default {
     name: 'item',
     computed: {
       ...mapGetters([
         'currentItem',
+        'currentItemStores',
         'authManager',
         'authManagerStores',
         'serverTime',
@@ -157,20 +234,18 @@
         this.item = _.clone(this.currentItem);
       },
       addToStore() {
-        _.forEach(this.selectedStores,store => {
-            this.currentItem.stores[store] = true;
-            let storeFound = _.find(this.authManagerStores,['.key',store]);
-            let storeItem = _.find(storeFound.items,['item',this.storeItem.item]);
-            if(storeItem) {
-                alert(`Item is already existing on ${store}`);
-                return;
-            }
-            this.storeItem.store = store;
-            this.storeItem.created_at = this.serverTime;
-            this.storeItem.updated_at = this.serverTime;
-            this.updateStoreItem(this.storeItem);
+        _.forEach(this.selectedStores, store => {
+          let storeFound = _.find(this.authManagerStores, ['.key', store]);
+          let storeItem = _.find(storeFound.items, ['item', this.storeItem.item]);
+          if (storeItem) {
+            alert(`Item is already existing on ${store}`);
+            return;
+          }
+          this.storeItem.store = store;
+          this.storeItem.created_at = this.serverTime;
+          this.storeItem.updated_at = this.serverTime;
+          this.updateStoreItem(this.storeItem);
         });
-        this.updateItem(this.currentItem);
       },
       ...mapActions([
         'addItem',

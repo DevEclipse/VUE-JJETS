@@ -6,13 +6,13 @@
       <span class="md-title" style="flex: 1;">
         {{currentStore.name | capitalize}}
       </span>
-        <router-link class="col-xs md-button" :to="{name: 'store'}">
+        <router-link tag="md-button" :to="{name: 'store'}">
           Info
         </router-link>
-        <router-link class="col-xs md-button" :to="{name: 'storeItems'}">
+        <router-link tag="md-button" :to="{name: 'storeItems'}">
           Items
         </router-link>
-        <router-link class="col-xs md-button" :to="{name: 'storeTransactions'}">
+        <router-link tag="md-button" :to="{name: 'storeTransactions'}">
           Transactions
         </router-link>
       </div>
@@ -30,7 +30,6 @@
     name: 'store',
     computed: {
       ...mapGetters([
-        'authUser',
         'currentStore',
       ])
     },

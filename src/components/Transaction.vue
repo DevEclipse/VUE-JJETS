@@ -1,32 +1,33 @@
 <template>
-  <display v-if="!transaction" message="No Transaction"/>
+  <display v-if="!transaction" message="Create a Transaction"/>
   <div v-else>
-    <table>
-      <thead>
-      <tr>
-        <th>Item</th>
-        <th>Retail Price</th>
-        <th>Quantity</th>
-      </tr>
-      </thead>
-      <tbody v-if="transaction.items">
-      <tr v-for="storeItem in transaction.items">
-        <td>storeItem.item</td>
-        <td>storeItem.retail_price</td>
-        <td>
-          <md-input-container>
-            <label>Quantity</label>
-            <md-input v-model="storeItem.quantity"/>
-          </md-input-container>
-        </td>
-      </tr>
-      </tbody>
-      <tbody v-else>
-        <tr>
-          <td colspan="3">No Items Yet</td>
-        </tr>
-      </tbody>
-    </table>
+    <md-table v-once>
+      <md-table-header>
+        <md-table-row>
+          <md-table-head> Item </md-table-head>
+          <md-table-head md-numeric>Retail Price</md-table-head>
+          <md-table-head md-numeric>Quantity </md-table-head>
+          <md-table-head md-numeric>Taxed</md-table-head>
+          <md-table-head md-numeric>Discounted</md-table-head>
+          <md-table-head md-numeric>Subtotal</md-table-head>
+          <md-table-head md-numeric>Tax</md-table-head>
+          <md-table-head md-numeric>Discount</md-table-head>
+          <md-table-head md-numeric>Total</md-table-head>
+        </md-table-row>
+      </md-table-header>
+
+      <md-table-body v-if="transaction.items">
+        <md-table-row v-for="item in transaction.items" :key="item['.key']">
+          <md-table-cell>{{item.item}}</md-table-cell>
+          <md-table-cell>{{item.retail_price}}</md-table-cell>
+          <md-table-cell>{{item.quantity}}</md-table-cell>
+          <md-table-cell>{{item.taxed}}</md-table-cell>
+          <md-table-cell>{{item.discounted}}</md-table-cell>
+          <md-table-cell>{{item.retail_price * item.quantity}}</md-table-cell>
+
+        </md-table-row>
+      </md-table-body>
+    </md-table>
   </div>
 </template>
 
