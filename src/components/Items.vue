@@ -11,15 +11,19 @@
 
     <cards :list="items" :default="allItems">
       <template scope="props">
+          <md-toolbar class="md-accent">
+            <div class="md-toolbar-container">
+              <div class="md-title">{{props.data.name}}</div>
+            </div>
+          </md-toolbar>
         <md-card-header>
           <md-card-header-text>
-            <div class="md-title">{{props.data.name}}</div>
             <div class="md-subhead">
               <span style="font-weight: bold;">Created By:</span>
-              {{props.data.created_by | capitalize}}</div>
+              {{props.data.created_by | capitalize}}
+            </div>
 
-
-            <md-card-header align="center">
+            <md-card-header align="center" style="margin: 2rem;">
               <md-card-header-text>
                 <div class="md-title">&#8369;{{props.data.cost_price}}</div>
                 <div class="md-subhead">Cost Price</div>
@@ -29,7 +33,7 @@
           </md-card-header-text>
 
           <md-card-media md-big>
-            <img src="//placehold.it/250x250" alt="People">
+            <img :src="props.data.image_url || '//placehold.it/250x250'" alt="People">
           </md-card-media>
 
         </md-card-header>
@@ -38,7 +42,7 @@
           <span class="md-subhead">
             <span style="font-weight: bold">Created:</span>{{props.data.created_date | moment("from")}}
           </span>
-          <span class="md-subhead">
+            <span class="md-subhead">
             <span style="font-weight: bold">Updated:</span>{{props.data.updated_date | moment("from")}}
           </span>
           </md-card-header-text>

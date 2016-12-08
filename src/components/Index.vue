@@ -16,7 +16,6 @@
             <md-button  class="md-raised md-accent" style="width: 95%" @click="$root.signIn(signIn)"> Sign In</md-button>
           </md-tab>
 
-
           <md-tab id="signUp" md-icon="accessibility" md-label="Sign Up" md-active>
             <md-input-container style="margin: 1rem;">
               <label>Username</label>
@@ -75,12 +74,18 @@
     </div>
 
     <div class="row center-xs middle-xs" style="height: 100vh;background: url('https://cloud--net.com/images/pos/bg2.jpg') no-repeat center center fixed; background-size: cover;">
-      <div id="features" class="col-xs-6" style="height: 30vh; background: teal;">
-
+      <div id="features" class="col-xs-10 center-xs middle" style="height: 50vh; background: teal; color: white;">
+          <div class="row center-xs middle-xs" style="height: 100%; font-size: 15vh; color: white; font-weight: bold;">
+            Our Systems
+          </div>
       </div>
     </div>
     <div class="row" style="height: 100vh;background: url('http://cdn2.hubspot.net/hub/164692/file-229125836-jpg/images/mp900442309.jpg') no-repeat center center fixed; background-size: cover;">
-
+      <div class="col-xs">
+        <div class="row center-xs middle-xs" style="height: 100%; font-size: 15vh; color: white; font-weight: bold;">
+          Point of Sales
+        </div>
+      </div>
     </div>
 
   </div>

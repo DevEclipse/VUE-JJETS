@@ -17,63 +17,39 @@
 
     <md-toolbar class="md-dense">
       <div class="md-toolbar-container">
-      <div class="md-title" style="flex: 1">
-        JJETS | <span v-if="$route.name">{{$route.name | capitalize}}</span>
-      </div>
-      <div class="hidden-xs">
-        <router-link class="md-button md-icon-button" :to="{name: 'home'}">
-          <md-icon>home</md-icon>
-          <md-tooltip>Home</md-tooltip>
-        </router-link>
-        <router-link class="md-button md-icon-button" :to="{name: 'items'}">
-          <md-icon>shopping basket</md-icon>
-          <md-tooltip>Items</md-tooltip>
-        </router-link>
+        <div class="md-title" style="flex: 1">
+          JJETS | <span v-if="$route.name">{{$route.name | capitalize}}</span>
+        </div>
 
-        <router-link class="md-button md-icon-button" :to="{name: 'stores'}">
-          <md-icon>store</md-icon>
-          <md-tooltip>Stores</md-tooltip>
-        </router-link>
-        <router-link class="md-avatar" :to="{name: 'user', params: {username: authUser['.key']}}">
-          <img src="//placeimg.com/40/40/people/1" alt="People">
-          <md-tooltip>{{authUser.username | capitalize}}</md-tooltip>
-        </router-link>
-        <md-button class="md-icon-button"  @click="$refs.signOut.open()">
-          <md-icon>close</md-icon>
-          <md-tooltip>Sign Out</md-tooltip>
-        </md-button>
-      </div>
-      <div class="visible-xs">
         <md-button class="md-icon-button" @click="toggleDashboard">
           <md-icon>dashboard</md-icon>
           <md-tooltip direction="bottom">Dashboard</md-tooltip>
         </md-button>
       </div>
-      </div>
     </md-toolbar>
 
     <md-sidenav class="md-fixed md-left" ref="dashboardMenu">
-        <md-toolbar class="md-account-header">
-          <md-list class="md-transparent">
-            <md-list-item class="md-avatar-list" >
-              <md-avatar class="md-large">
-                <img :src="authUser.image_url || 'https://placeimg.com/64/64/people/8'" alt="People">
-              </md-avatar>
-            </md-list-item>
+      <md-toolbar class="md-account-header">
+        <md-list class="md-transparent">
+          <md-list-item class="md-avatar-list">
+            <md-avatar class="md-large">
+              <img :src="authUser.image_url || 'https://placeimg.com/64/64/people/8'" alt="People">
+            </md-avatar>
+          </md-list-item>
 
-            <md-list-item>
-              <div class="md-list-text-container">
+          <md-list-item>
+            <div class="md-list-text-container">
 
-                <span>{{authUser.name | capitalize}}</span>
-                <span>{{authUser.email}}</span>
-              </div>
-
-              <router-link :to="{name: 'user',params: {username: authUser['.key']}}" tag="md-button" class="md-icon-button md-list-action">
-                <md-icon>send</md-icon>
-              </router-link>
-            </md-list-item>
-          </md-list>
-        </md-toolbar>
+              <span>{{authUser.name | capitalize}}</span>
+              <span>{{authUser.email}}</span>
+            </div>
+            <router-link :to="{name: 'user', params: {username: authUser['.key']}}" tag="md-button"
+                         class="md-icon-button md-list-action">
+              <md-icon>send</md-icon>
+            </router-link>
+          </md-list-item>
+        </md-list>
+      </md-toolbar>
 
       <md-list>
         <md-subheader>Navigation</md-subheader>
@@ -88,10 +64,6 @@
         <md-list-item>
           <md-icon>store</md-icon>
           <router-link tag="span" :to="{name: 'stores'}"> Stores</router-link>
-        </md-list-item>
-        <md-list-item>
-          <md-icon>face</md-icon>
-          <router-link tag="span" :to="{name: 'user', params: {username: authUser['.key']}}"> Your Account </router-link>
         </md-list-item>
         <md-list-item>
           <md-icon>face</md-icon>

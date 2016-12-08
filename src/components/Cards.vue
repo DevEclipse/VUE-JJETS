@@ -21,11 +21,11 @@
     </span>
     <transition-group tag="div" class="row" v-for="list3 in chunkedList" enter-active-class="animated bounceInRight"
                       leave-active-class="animated bounceOutRight">
-
-      <md-card md-with-hover class="col-xs-12 col-md-4" v-for="data in list3" :key="data['.key']">
-        <slot :data="data"></slot>
-      </md-card>
-
+      <div class="col-xs-12 col-md-4" v-for="data in list3" :key="data['.key']">
+        <md-card md-with-hover>
+          <slot :data="data"></slot>
+        </md-card>
+      </div>
     </transition-group>
 
   </div>
@@ -45,11 +45,10 @@
     computed: {
       chunkedList() {
         let items = this.list || this.default;
-        let regExp = new RegExp(this.search.toLowerCase());
         if(!items) return;
         if (this.search) {
           items = _.filter(items, item => {
-            return regExp.test(item[this.searchKey]);
+            return new RegExp(this.search.toLowerCase()).test(item[this.searchKey]);
           })
         }
         return _.chunk(items, 3);

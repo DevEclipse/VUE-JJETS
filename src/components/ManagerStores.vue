@@ -55,9 +55,11 @@
         </md-button>
       </div>
     </md-dialog>
+
     <md-button class="md-fab md-mini md-fab-bottom-right" style="position: fixed; z-index: 3;" @click="$refs.addStoreDialog.open();">
       <md-icon>add</md-icon>
     </md-button>
+
       <stores :stores="currentManagerStores"/>
 
   </div>

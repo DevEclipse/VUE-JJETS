@@ -10,22 +10,43 @@
     </div>
     <cards :list="stores" :default="allStores">
       <template scope="props">
+        <md-toolbar class="md-accent">
+          <div class="md-toolbar-container">
+            <div class="md-title"  style="flex: 1">
+              {{props.data.name}}
+            </div>
+            <router-link tag="md-button" :to="{name: 'store',params: {store: props.data['.key']}}"
+                         class="md-icon-button">
+              <md-icon>info</md-icon>
+              <md-tooltip direction="bottom">View this Store</md-tooltip>
+            </router-link>
+          </div>
+        </md-toolbar>
         <md-card-header>
-          <div class="md-title" style="flex: 1">
-            {{props.data.name}}
+          <md-card-header-text>
+          <div class="md-subhead">
+            <span style="font-weight: bold;">Store Id: </span>{{props.data['.key']}}
           </div>
-          <div class="md-subhead" style="flex: 1">
-            {{props.data['.key']}}
-          </div>
-          <router-link :to="{name: 'store',params: {store: props.data['.key']}}"
-                       class="md-button md-fab md-fab-top-right md-mini">
-            <md-icon>info</md-icon>
-            <md-tooltip direction="bottom">View this Store</md-tooltip>
-          </router-link>
+            <md-card-header>
+              <md-card-header-text>
+                <div class="md-subhead">
+                  <span style="font-weight: bold;">Created: </span>{{props.data.created_date | moment("from")}}
+                </div>
+              </md-card-header-text >
+            </md-card-header>
+            <md-card-header>
+              <md-card-header-text>
+                <div class="md-subhead">
+                  <span style="font-weight: bold;">Updated: </span>{{props.data.updated_date | moment("from")}}
+                </div>
+              </md-card-header-text >
+            </md-card-header>
+          </md-card-header-text >
+          <md-card-media md-big>
+            <img :src="props.data.image_url || `//placehold.it/500x500`">
+          </md-card-media>
         </md-card-header>
-        <md-card-media>
-          <img :src="props.data.image_url || `//placehold.it/1920x1080`">
-        </md-card-media>
+
         <md-card-content>
           <div class="md-title" align="center">
             Total

@@ -9,12 +9,6 @@ const getters = {
     if(!getters.currentTransaction) return;
     return _.find(getters.allStores,['.key',getters.currentTransaction.store]);
   },
-  currentTransactionStoreItems(state,getters) {
-    if(!getters.currentTransactionStore) return;
-    return _.map(getters.currentTransactionStore.items,(value,key) => {
-      return _.assign(_.clone(value),_.clone(_.find(getters.allItems,['.key',key])));
-    })
-  }
 };
 const mutations = {};
 const actions = {
@@ -26,12 +20,12 @@ const actions = {
   },
   deleteTransaction({getters},transaction) {
     if(!transaction) return;
-    getters.refItems.child(transaction['.key']).remove();
+    getters.refTransactions.child(transaction['.key']).remove();
   },
-  updateTransaction({getters,dispatch},item) {
-    if(!item) return;
+  updateTransaction({getters,dispatch},transaction) {
+    if(!transaction) return;
     dispatch('updatedObject',transaction);
-    getters.refItems.child(transaction['.key']).update(getters.getUpdatedObject);
+    getters.refTransactions.child(transaction['.key']).update(getters.getUpdatedObject);
   },
 };
 export default {

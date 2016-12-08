@@ -3,35 +3,29 @@
   <div v-else>
     <cards :list="transactions" :filters="['.key','employee']">
       <template scope="props">
-
+        <md-toolbar class="md-accent">
+          <div class="md-toolbar-container">
+            <div class="md-title" style="flex: 1;">{{props.data.status}}</div>
+            <div v-if="authEmployee">
+              <router-link :to="{name: 'pos', params: {transaction: props.data['.key']}}" tag="md-button" v-if="props.data.employee == authEmployee['.key']" class="md-icon-button">
+                <md-icon>edit</md-icon>
+              </router-link>
+            </div>
+          </div>
+        </md-toolbar>
         <md-card-header>
           <md-card-header-text>
             <div class="md-title">{{props.data['.key']}}</div>
             <div class="md-subhead">Transaction Id</div>
           </md-card-header-text>
 
-
-          <div v-if="authEmployee">
-            <router-link :to="{name: 'pos', params: {transaction: props.data['.key']}}" tag="md-button" v-if="props.data.employee == authEmployee['.key']" class="md-fab md-mini md-fab-top-right">
-              <md-icon>edit</md-icon>
-            </router-link>
-          </div>
-
-          <md-button v-else-if="!props.data.status == 'Processing'" class="md-fab md-mini md-fab-top-right">
-            <md-icon>info</md-icon>
-          </md-button>
-
         </md-card-header>
-        <md-card-content>
-          <div class="md-title">{{props.data.status}}</div>
-          <div class="md-subhead">Status</div>
-          <div v-if="props.data.status == 'Processing'">
-            {{props.data.employee | capitalize}} is processing the transaction
-          </div>
-          <div v-else>
-            hehe
-          </div>
-        </md-card-content>
+        <md-card-header>
+          <md-card-header-text>
+            <div class="md-title">{{props.data.employee | capitalize}}</div>
+            <div class="md-subhead">Assigned Employee</div>
+          </md-card-header-text>
+        </md-card-header>
       </template>
     </cards>
   </div>

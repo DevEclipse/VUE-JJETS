@@ -31,7 +31,16 @@
     <md-toolbar class="md-accent">
       <div class="md-toolbar-container">
         <div class="md-title" style="flex: 1;">Employee | {{currentEmployee['.key'] | capitalize}}</div>
-        <md-button>Hire</md-button>
+        <div v-if="authManager">
+          <md-button v-if="authManager['.key'] == currentEmployee['.key']">Self Employed</md-button>
+          <md-button v-else-if="authManager['.key'] == currentEmployee.manager">Terminate</md-button>
+          <md-button v-else>Hire</md-button>
+        </div>
+        <div v-if="authEmployee">
+          <md-button v-if="authEmployee['.key'] == currentEmployee['.key'] && authManager['.key'] != currentEmployee['.key']">
+            Resign
+          </md-button>
+        </div>
       </div>
     </md-toolbar>
     <md-list class="md-triple-line">
@@ -45,11 +54,11 @@
           <span>{{store.name}}</span>
           <span>{{store['.key']}}</span>
         </div>
-
-        <md-button class="md-icon-button md-list-action" @click="setStoreTransaction(store)">
+        <div v-if="authEmployee">
+        <md-button v-if="authEmployee['.key'] == currentEmployee['.key']" class="md-icon-button md-list-action" @click="setStoreTransaction(store)">
           <md-icon class="md-primary">work</md-icon>
         </md-button>
-
+        </div>
         <md-divider class="md-inset"></md-divider>
       </md-list-item>
     </md-list>
@@ -63,6 +72,7 @@
   export default {
     computed: {
       ...mapGetters([
+        'authManager',
         'authEmployee',
         'currentEmployee',
         'currentEmployeeManagerStores',

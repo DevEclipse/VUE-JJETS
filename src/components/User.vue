@@ -1,11 +1,12 @@
 <template>
   <display v-if="!currentUser" message="User Not Found"/>
-  <div v-else style="margin: 50px;">
+  <div v-else>
     <div class="row">
-      <div class="col-xs-12 col-md-4">
+      <div class="col-xs-12 col-md">
         <md-card style="margin: 1rem;" md-with-hover>
           <md-card-header>
-            <div class="md-display-1" style="flex: 1;">
+
+            <div class="md-title" style="flex: 1;">
               {{currentUser['.key'] | capitalize}}
               <md-button v-if="currentUser['.key'] == authUser['.key']" class="md-fab md-mini md-fab-top-right">
                 <md-icon>edit</md-icon>
@@ -19,6 +20,7 @@
               {{currentUser.status}}
               </span>
             </div>
+
           </md-card-header>
           <md-card-media>
             <img :src="currentUser.image_url || '//placehold.it/1920x1080'"/>
@@ -43,27 +45,101 @@
               <span style="font-weight: bold;">Updated: </span> {{currentUser.updated_date | moment("from")}}
             </div>
           </md-card-content>
-          <md-card-actions>
+        </md-card>
+      </div>
+      <div class="col-xs-12 col-md">
+        <md-card md-with-hover style="margin: 1rem;">
+          <md-toolbar class="md-accent">
+            <div class="md-title" style="flex: 1;">
+              Manager
+            </div>
             <md-button v-if="!authManager" tag="md-button" @click="addManager(authUser['.key'])">
               <md-icon>add</md-icon> Manager
             </md-button>
             <router-link v-else tag="md-button" :to="{name: 'manager', params: {manager: authManager['.key']}}">
-              Manager
+              Manage
             </router-link>
+          </md-toolbar>
+          <md-card-header>
+            <md-card-header-text>
+
+              <md-card-header-text style="margin: 2rem;">
+                <div class="md-subhead">Description:</div>
+                <md-card-header-text style="margin: 1rem;">
+                  <p>Profile that is used for managing stores, items and employees</p>
+                </md-card-header-text>
+              </md-card-header-text>
+
+            </md-card-header-text>
+
+              <md-card-media md-big>
+                <img :src="'//placehold.it/800x800'"/>
+              </md-card-media>
+
+          </md-card-header>
+        </md-card>
+        <md-card md-with-hover style="margin: 1rem;">
+          <md-toolbar class="md-accent">
+            <div class="md-title" style="flex: 1;">
+              Employee
+            </div>
             <md-button v-if="!authEmployee" tag="md-button" @click="addEmployee(authUser['.key'])">
               <md-icon>add</md-icon> Employee
             </md-button>
             <router-link v-else tag="md-button" :to="{name: 'employee', params: {employee: authEmployee['.key']}}">
-              Employee
+              Work
             </router-link>
+          </md-toolbar>
+          <md-card-header>
+            <md-card-header-text>
+
+              <md-card-header-text style="margin: 2rem;">
+                <div class="md-subhead">Description:</div>
+                <md-card-header-text style="margin: 1rem;">
+                  <p>Profile that is used for working on your manager's stores which
+                    you as an employee creates and validates the transactions</p>
+                </md-card-header-text>
+              </md-card-header-text>
+
+            </md-card-header-text>
+
+            <md-card-media md-big>
+              <img :src="'//placehold.it/800x800'"/>
+            </md-card-media>
+
+          </md-card-header>
+        </md-card>
+        <md-card md-with-hover style="margin: 1rem;">
+
+          <md-toolbar class="md-accent">
+            <div class="md-title" style="flex: 1;">
+              Customer
+            </div>
             <md-button v-if="!authCustomer" tag="md-button" @click="addCustomer(authUser['.key'])">
               <md-icon>add</md-icon> Customer
             </md-button>
             <router-link v-else tag="md-button" :to="{name: 'customer', params: {customer: authCustomer['.key']}}">
-              Customer
+              Shop
             </router-link>
+          </md-toolbar>
 
-          </md-card-actions>
+          <md-card-header>
+            <md-card-header-text>
+
+              <md-card-header-text style="margin: 2rem;">
+                <div class="md-subhead">Description:</div>
+                <md-card-header-text style="margin: 1rem;">
+                  <p>Profile that is used for shopping items from different stores that are made from managers</p>
+                </md-card-header-text>
+              </md-card-header-text>
+
+            </md-card-header-text>
+
+            <md-card-media md-big>
+              <img :src="'//placehold.it/800x800'"/>
+            </md-card-media>
+
+          </md-card-header>
         </md-card>
       </div>
     </div>

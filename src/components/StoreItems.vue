@@ -51,16 +51,28 @@
 
     <cards :list="currentStoreItems" default="currentStoreItems">
       <template scope="props">
-        <md-card-header>
-          <md-card-header-text>
-
-            <div class="md-title">
+        <md-toolbar class="md-accent">
+          <div class="md-toolbar-container">
+            <div class="md-title" style="flex: 1;">
               {{props.data.name}}
             </div>
+            <router-link tag="md-button" class="md-icon-button" :to="{name: 'item',params: {item: props.data['.key']}}">
+              <md-icon>info</md-icon>
+            </router-link>
+            <span v-if="authManager">
+              <md-button class="md-icon-button" v-if="authManager['.key'] == currentStore.manager"
+                         @click="openEditItem(props.data['.key'])">
+                <md-icon>edit</md-icon>
+              </md-button>
+            </span>
+          </div>
+        </md-toolbar>
+        <md-card-header>
+          <md-card-header-text>
+            <div class="md-title">{{props.data['.key']}}</div>
             <div class="md-subhead">
-              {{props.data['.key']}}
+              Store Item Id
             </div>
-
 
           </md-card-header-text>
 
@@ -80,7 +92,7 @@
           </md-card-header-text>
           <md-card-header-text>
             <div class="md-title">
-              {{props.data.quantity}}
+              {{props.data.quantity || 'Out of Stock'}}
             </div>
             <div class="md-subhead">
               Quantity
@@ -112,18 +124,6 @@
             </div>
           </md-card-header-text>
         </md-card-header>
-        <md-card-actions>
-          <span style="flex: 1;"></span>
-          <router-link tag="md-button" :to="{name: 'item',params: {item: props.data['.key']}}">
-              More Info
-          </router-link>
-          <div v-if="authManager">
-          <md-button v-if="authManager['.key'] == currentStore.manager"
-                     @click="openEditItem(props.data['.key'])">
-              Edit
-          </md-button>
-          </div>
-        </md-card-actions>
       </template>
     </cards>
 

@@ -8,7 +8,11 @@
         </div>
       </div>
     </div>
-    <cards :list="employees" default="allEmployees"/>
+    <cards :list="employees" default="allEmployees">
+      <template scope="props">
+        {{props}}
+      </template>
+    </cards>
   <div>
 </template>
 
