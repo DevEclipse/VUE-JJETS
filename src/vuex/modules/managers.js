@@ -5,8 +5,8 @@ const state = {
 
 const getters = {
   currentManager(state,getters) {
-    if(!getters.routeParams.manager) return;
-    return _.find(getters.allManagers,['.key',getters.routeParams.manager])
+    if(!getters.routeParams) return;
+    return _.find(getters.allManagers,['.key',getters.routeParams.username])
   },
   currentManagerStores(state, getters) {
     if(!getters.currentManager) return;

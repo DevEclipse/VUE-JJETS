@@ -8,6 +8,7 @@ import customers from './modules/customers'
 import transactions from './modules/transactions'
 import auth from './modules/auth'
 import tags from './modules/tags'
+import stocks from './modules/stocks'
 import getters from './getters'
 
 
@@ -23,6 +24,7 @@ export default {
     bcustomers: null,
     btransactions: null,
     btags: null,
+    bstocks: null,
     server_time: null,
     updateObject: null,
     newObject: null,
@@ -61,6 +63,7 @@ export default {
     employees,
     customers,
     stores,
+    stocks,
     items,
     transactions,
     tags,

@@ -7,8 +7,8 @@
           Add Store | {{store.manager = authManager['.key'] | capitalize}}
         </div>
       </md-toolbar>
-      <div style="margin: 10px;">
-        <md-input-container >
+      <md-dialog-content style="padding: 2rem;">
+        <md-input-container>
           <label>
             <md-icon>store</md-icon>
             Store Name
@@ -50,10 +50,15 @@
           </label>
           <md-textarea v-model="store.description"></md-textarea>
         </md-input-container>
-        <md-button class="md-raised md-primary" style="width: 95%;" @click="addStore(store)">
-          Create
-        </md-button>
-      </div>
+      </md-dialog-content>
+        <md-dialog-actions>
+          <md-button class="md-raised md-primary" @click="() => { addStore(store); $refs.addStoreDialog.close();}">
+            Create
+          </md-button>
+          <md-button class="md-raised md-warn" @click="$refs.addStoreDialog.close()">
+            Cancel
+          </md-button>
+        </md-dialog-actions>
     </md-dialog>
 
     <md-button class="md-fab md-mini md-fab-bottom-right" style="position: fixed; z-index: 3;" @click="$refs.addStoreDialog.open();">

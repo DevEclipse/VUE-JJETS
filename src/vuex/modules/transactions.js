@@ -9,6 +9,10 @@ const getters = {
     if(!getters.currentTransaction) return;
     return _.find(getters.allStores,['.key',getters.currentTransaction.store]);
   },
+  currentTransactionStocks(state,getters) {
+    if(!getters.currentTransactionStore) return;
+    return _.filter(getters.allStocks,['store',getters.currentTransactionStore['.key']]);
+  },
 };
 const mutations = {};
 const actions = {

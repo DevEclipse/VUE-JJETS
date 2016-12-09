@@ -1,42 +1,35 @@
 <template>
   <display v-if="!allItems.length" message="No Items Yet"/>
   <div v-else>
-    <div class="row middle-xs center-xs">
-      <div class="col-xs">
-        <div class="md-display-3">
-          Items
-        </div>
-      </div>
-    </div>
 
-    <cards :list="items" :default="allItems">
+    <cards :list="items" :defaultList="allItems" :filters="['name','created_by']">
       <template scope="props">
-          <md-toolbar class="md-accent">
+          <md-toolbar class="md-accent md-large">
             <div class="md-toolbar-container">
-              <div class="md-title">{{props.data.name}}</div>
+              <div class="md-title" style="flex: 1;">{{props.data.name}}</div>
+              <router-link tag="md-button" class="md-icon-button"
+                           :to="{name: 'item',params: {item: props.data['.key']}}">
+                <md-icon>info</md-icon>
+              </router-link>
+            </div>
+            <div class="md-toolbar-container">
+              <div class="md-title">Cost Price: &#8369;{{props.data.cost_price}}</div>
             </div>
           </md-toolbar>
-        <md-card-header>
-          <md-card-header-text>
-            <div class="md-subhead">
-              <span style="font-weight: bold;">Created By:</span>
-              {{props.data.created_by | capitalize}}
-            </div>
-
-            <md-card-header align="center" style="margin: 2rem;">
-              <md-card-header-text>
-                <div class="md-title">&#8369;{{props.data.cost_price}}</div>
-                <div class="md-subhead">Cost Price</div>
-              </md-card-header-text>
-            </md-card-header>
-
-          </md-card-header-text>
-
-          <md-card-media md-big>
-            <img :src="props.data.image_url || '//placehold.it/250x250'" alt="People">
+        <md-card-media-cover md-solid>
+          <md-card-media md-ratio="16:9">
+            <vue-image :image="props.data.image_url" alt="Item"></vue-image>
           </md-card-media>
 
-        </md-card-header>
+          <md-card-area>
+            <md-card-header>
+              <div class="md-body-2">
+                Description:
+                <p>{{props.data.description || 'No Description'}}</p>
+              </div>
+            </md-card-header>
+          </md-card-area>
+        </md-card-media-cover>
         <md-card-header>
           <md-card-header-text>
           <span class="md-subhead">
@@ -54,10 +47,9 @@
               </span>
 
           <span style="flex: 1"></span>
-
-          <router-link class="md-button md-accent"
-                       :to="{name: 'item',params: {item: props.data['.key']}}">More Info
-          </router-link>
+          Created By: <router-link :to="{name: 'manager', params: {username: props.data.created_by}}">
+          {{props.data.created_by | capitalize}}
+        </router-link>
 
         </md-card-actions>
       </template>

@@ -7,11 +7,9 @@ const getters = {
     if(!getters.allItems) return;
     return _.find(getters.allItems,['.key',getters.routeParams.item]);
   },
-  currentItemStores(state,getters) {
+  currentItemStocks(state,getters) {
     if(!getters.currentItem) return;
-      return _.filter(getters.allStores,store => {
-        return _.has(store.items,getters.currentItem['.key'])
-      })
+      return _.filter(getters.allStocks,['item',getters.currentItem['.key']]);
   }
 };
 
@@ -21,7 +19,7 @@ const actions = {
   addItem({getters,dispatch},item) {
     if(!item) return;
     dispatch('newObject',item);
-    getters.refItems.child(item.name.replace(/\s/g, "").toLowerCase()).set(getters.getNewObject);
+    getters.refItems.push(getters.getNewObject);
   },
   deleteItem({getters},item) {
     if(!item) return;

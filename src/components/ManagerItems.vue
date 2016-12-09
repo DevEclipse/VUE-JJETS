@@ -1,6 +1,7 @@
 <template>
   <display v-if="!authManager" message="Loading... Manager"/>
   <div v-else>
+
     <md-dialog ref="addItemDialog">
       <md-toolbar>
         <div class="md-title" style="flex: 1;">
@@ -46,9 +47,8 @@
                      :searchable="true"
                      :taggable="true"
                      :limit="5"
-                     @tag="addTag"
-                     tag-placeholder="Add this as new tag"
                      placeholder="Type to search or add tag"></multiselect>
+
         <md-button class="md-raised md-primary" style="width: 95%;" @click="addItem(item)">
           Create
         </md-button>
@@ -58,6 +58,7 @@
     <md-button class="md-fab md-mini md-fab-bottom-right" style="position: fixed; z-index: 3;" @click="$refs.addItemDialog.open()">
       <md-icon>add</md-icon>
     </md-button>
+
 
     <items :items="currentManagerItems"/>
   </div>

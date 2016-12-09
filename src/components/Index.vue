@@ -2,9 +2,10 @@
   <div v-if="!$store.getters.authUID">
 
     <md-dialog ref="getStarted">
-
+      <md-dialog-content style="padding: 0;">
         <md-tabs md-fixed>
           <md-tab id="signIn" md-icon="face"  md-label="Sign In">
+
             <md-input-container style="margin: 1rem;">
               <label>Email</label>
               <md-input type="email" v-model="signIn.email"></md-input>
@@ -14,9 +15,11 @@
               <md-input type="password" v-model="signIn.password"></md-input>
             </md-input-container>
             <md-button  class="md-raised md-accent" style="width: 95%" @click="$root.signIn(signIn)"> Sign In</md-button>
+
           </md-tab>
 
           <md-tab id="signUp" md-icon="accessibility" md-label="Sign Up" md-active>
+
             <md-input-container style="margin: 1rem;">
               <label>Username</label>
               <md-input v-model="signUp.username"></md-input>
@@ -38,11 +41,12 @@
               <md-input type="password" v-model="confirmPassword"></md-input>
             </md-input-container>
             <md-button class="md-raised md-accent" style="width: 95%" @click="$root.signUp(signUp)"> Sign Up</md-button>
+
           </md-tab>
 
 
         </md-tabs>
-
+      </md-dialog-content>
     </md-dialog>
 
     <div style="height: 100vh;
@@ -52,11 +56,11 @@
 
       <md-toolbar class="md-transparent">
         <div class="md-toolbar-container">
-          <div class="md-title" style="flex: 1; font-weight: bold; color: teal;">
+          <div class="md-title" style="flex: 1; font-weight: bold; color: white;">
             JJETS
           </div>
-          <a href="#features" class="md-button">Features</a>
-          <a href="#" class="md-button">About Us</a>
+          <a href="#features" class="md-button md-accent">Features</a>
+          <a href="#" class="md-button md-accent">About Us</a>
         </div>
       </md-toolbar>
 
@@ -73,32 +77,88 @@
 
     </div>
 
-    <div class="row center-xs middle-xs" style="height: 100vh;background: url('https://cloud--net.com/images/pos/bg2.jpg') no-repeat center center fixed; background-size: cover;">
-      <div id="features" class="col-xs-10 center-xs middle" style="height: 50vh; background: teal; color: white;">
-          <div class="row center-xs middle-xs" style="height: 100%; font-size: 15vh; color: white; font-weight: bold;">
-            Our Systems
+    <div class="row center-xs middle-xs" style="height: 100vh;">
+
+        <div class="md-display-4" style="font-weight: bold;">Features</div>
+          <div class="row center-xs" style="height: 100%; margin: 2rem; font-size: 1.5rem; color: grey; ">
+            <div class="col-xs-12 col-md">
+              <md-card md-with-hover >
+                <md-toolbar >
+                  <div class="md-toolbar-container">
+                    <div class="md-title">
+                      <md-icon>alarm</md-icon> Real Time
+                    </div>
+                  </div>
+                </md-toolbar>
+                <md-card-content>
+                  <div class="md-subheading">
+                    Using the real time database technology of Google's Firebase Database
+                    we make this possible to receive updates in real time.
+                  </div>
+                </md-card-content>
+              </md-card>
+            </div>
+            <div class="col-xs-12 col-md">
+              <md-card md-with-hover>
+                <md-toolbar >
+                  <div class="md-toolbar-container">
+                    <div class="md-title">
+                      <md-icon>autorenew</md-icon>No Reloading
+                    </div>
+                  </div>
+                </md-toolbar>
+                <md-card-content>
+                  <div class="md-subheading">
+                    Using the single page application technology from modern frameworks like vue js
+                    we accomplish to make this site easy to use.
+                  </div>
+                </md-card-content>
+              </md-card>
+            </div>
+            <div class="col-xs-12 col-md">
+              <md-card md-with-hover>
+                <md-toolbar >
+                  <div class="md-toolbar-container">
+                    <div class="md-title">
+                     <md-icon>face</md-icon> One Account
+                    </div>
+                  </div>
+                </md-toolbar>
+                <md-card-content>
+                  <div class="md-subheading">
+                    Using the single page application technology from modern frameworks like vue js
+                    we accomplish to make this site easy to use.
+                  </div>
+                </md-card-content>
+              </md-card>
+            </div>
           </div>
-      </div>
+
     </div>
-    <div class="row" style="height: 100vh;background: url('http://cdn2.hubspot.net/hub/164692/file-229125836-jpg/images/mp900442309.jpg') no-repeat center center fixed; background-size: cover;">
-      <div class="col-xs">
-        <div class="row center-xs middle-xs" style="height: 100%; font-size: 15vh; color: white; font-weight: bold;">
-          Point of Sales
+    <div class="row" style="height: 100vh;">
+      <div class="col-xs center-xs">
+        <div class="row center-xs middle-xs" style="height: 50%;">
+          <md-card md-with-hover>
+            <md-card-content>
+              <div class="md-display-4" style=" font-weight: bold;">Point of Sales</div>
+            </md-card-content>
+          </md-card>
         </div>
       </div>
     </div>
 
   </div>
+
   <div v-else class="row">
-    <div class="col-xs">
-      People you may know
-    </div>
+    asd
   </div>
 </template>
 
 <script>
   import {mapGetters, mapActions} from 'vuex';
+
   export default {
+    name: 'index',
     computed: {
       ...mapGetters([
         'allUsers',

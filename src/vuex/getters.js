@@ -41,7 +41,12 @@ const getters = {
   refStores(state) {
     return state.refs.bstores;
   },
-
+  allStocks(state) {
+    return state.bstocks;
+  },
+  refStocks(state) {
+    return state.refs.bstocks;
+  },
   allItems(state) {
     return state.bitems;
   },

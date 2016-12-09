@@ -66,25 +66,25 @@
           <router-link tag="span" :to="{name: 'stores'}"> Stores</router-link>
         </md-list-item>
         <md-list-item>
-          <md-icon>face</md-icon>
+          <md-icon>power settings new</md-icon>
           <span @click="$refs.signOut.open()">Sign Out</span>
         </md-list-item>
         <md-subheader>Profiles</md-subheader>
         <md-list-item v-if="authManager">
           <md-icon>store</md-icon>
-          <router-link tag="span" :to="{name: 'manager', params: {manager: authManager['.key']}}">
+          <router-link tag="span" :to="{name: 'manager', params: {username: authManager['.key']}}">
             Manager
           </router-link>
         </md-list-item>
         <md-list-item v-if="authEmployee">
           <md-icon>store</md-icon>
-          <router-link tag="span" :to="{name: 'employee', params: {employee: authEmployee['.key']}}">
+          <router-link tag="span" :to="{name: 'employee', params: {username: authEmployee['.key']}}">
             Employee
           </router-link>
         </md-list-item>
         <md-list-item v-if="authCustomer">
           <md-icon>store</md-icon>
-          <router-link tag="span" :to="{name: 'customer', params: {customer: authCustomer['.key']}}">
+          <router-link tag="span" :to="{name: 'customer', params: {username: authCustomer['.key']}}">
             Customer
           </router-link>
         </md-list-item>

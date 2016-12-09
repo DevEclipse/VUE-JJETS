@@ -34,9 +34,9 @@ const routes = [
         name: 'store',
       },
       {
-        path: 'items',
-        component: resolve => require(['./components/StoreItems.vue'],resolve),
-        name: 'storeItems',
+        path: 'stocks',
+        component: resolve => require(['./components/Stocks.vue'],resolve),
+        name: 'stocks',
       },
       {
         path: 'transactions',
@@ -47,13 +47,13 @@ const routes = [
   },
   {
     path: '/pos/:transaction',
-    component: resolve => require(['./components/PointOfSale.vue'],resolve),
+    component: resolve => require(['./components/Transaction.vue'],resolve),
     name: 'pos',
   },
   {
-    path: '/transaction/:transaction',
-    component: resolve => require(['./components/Transaction.vue'],resolve),
-    name: 'transaction',
+    path: '/receipt/:transaction',
+    component: resolve => require(['./components/Receipt.vue'],resolve),
+    name: 'receipt',
   },
   {
     path: '/user/:username',
@@ -61,7 +61,7 @@ const routes = [
     name: 'user',
   },
   {
-    path: '/manager/:manager',
+    path: '/manager/:username',
     component: resolve => require(['./components/Manager.vue'],resolve),
     children: [
       {
@@ -87,12 +87,12 @@ const routes = [
     ],
   },
   {
-    path: '/employee/:employee',
+    path: '/employee/:username',
     component: resolve => require(['./components/Employee.vue'],resolve),
     name: 'employee',
   },
   {
-    path: '/customer/:customer',
+    path: '/customer/:username',
     component: resolve => require(['./components/Customer.vue'],resolve),
     name: 'customer',
   },

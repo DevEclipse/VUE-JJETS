@@ -27,6 +27,7 @@ Vue.use(VueMaterial);
 Vue.use(VueMoment);
 Vue.config.debug = true;
 
+Vue.component('vue-image', require('./components/VueImage.vue'));
 Vue.component('employees',require('./components/Employees.vue'));
 Vue.component('transaction',require('./components/Transaction.vue'));
 Vue.component('transaction',require('./components/Transaction.vue'));
@@ -36,9 +37,13 @@ Vue.component('stores',require('./components/Shops.vue'));
 Vue.component('items',require('./components/Items.vue'));
 Vue.component('multiselect',MultiSelect);
 Vue.component('display',require('./components/Display.vue'));
-Vue.material.theme.register('default', {
-  primary: 'blue',
-  accent: 'teal',
+
+Vue.material.theme.registerAll({
+  default: {
+    primary: 'blue',
+    accent: 'teal',
+    warn: 'red'
+  },
 });
 
 Vue.filter('date', value => {
@@ -58,9 +63,7 @@ Vue.filter('keys', value => {
 });
 
 Vue.filter('toArray',value => {
-  return _.map(value, function(value, index) {
-    return [value]
-  });
+  return _.values(value);
 });
 Vue.filter('toIndex',value => {
   return _.map(value, function(value, index) {
@@ -75,8 +78,12 @@ Vue.filter('estimate', value => {
   return _.round(value,2);
 });
 
-Vue.filter('chunk',(value,by) => {
-  return _.chunk(value,by);
+Vue.filter('chunkArray',(array, length = 3) => {
+  return _.chunk(array,length);
+});
+
+Vue.filter('percent',value => {
+  return `${value * 100}%`;
 });
 const store = new Vuex.Store(VuexStore);
 
@@ -98,13 +105,13 @@ const app = new Vue({
     bemployees: db.ref('employees'),
     bcustomers: db.ref('customers'),
     btransactions: db.ref('transactions'),
+    bstocks: db.ref('stocks'),
     btags: db.ref('tags'),
   },
   render: h => h(App),
   beforeCreate() {
     let self = this;
     this.$store.commit('SET_REFS', this.$firebaseRefs);
-
   },
   methods: {
     async toDashboard() {
@@ -158,6 +165,10 @@ const app = new Vue({
         alert(error.message);
       });
     },
+    speakMessage(message) {
+      let msg = new SpeechSynthesisUtterance(message);
+      window.speechSynthesis.speak(msg);
+    },
   }
 }).$mount('#app');
 
@@ -166,4 +177,5 @@ firebase.auth().onAuthStateChanged(function (user) {
     store.dispatch('setUID', user.uid);
     store.dispatch('setAuth');
 });
+
 

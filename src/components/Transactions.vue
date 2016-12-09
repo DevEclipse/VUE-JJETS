@@ -1,7 +1,7 @@
 <template>
   <display v-if="!transactions" message="No Transactions Yet"/>
   <div v-else>
-    <cards :list="transactions" :filters="['.key','employee']">
+    <cards :list="transactions" :filters="['customer','employee']">
       <template scope="props">
         <md-toolbar class="md-accent">
           <div class="md-toolbar-container">

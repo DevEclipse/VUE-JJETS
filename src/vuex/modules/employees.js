@@ -6,13 +6,26 @@ const getters = {
 
   currentEmployee(state,getters) {
     if(!getters.routeParams) return;
-    return _.find(getters.allEmployees,['.key',getters.routeParams.employee]);
+    return _.find(getters.allEmployees,['.key',getters.routeParams.username]);
   },
   currentEmployeeManagerStores(state,getters) {
     if(!getters.currentEmployee) return;
     return _.filter(getters.allStores,['manager',getters.currentEmployee.manager]);
   },
-
+  currentEmployeeTransactions(state,getters) {
+    if(!getters.currentEmployee) return;
+    return _.filter(getters.allTransactions,['employee',getters.currentEmployee['.key']])
+  },
+  currentEmployeeManagerStoresTransactions(state,getters) {
+    if(getters.currentEmployeeManagerStores.length) {
+      return _.filter(getters.allTransactions,transaction => {
+          _.forEach(getters.currentEmployeeManagerStores,store => {
+            console.log(transaction.store == store['.key']);
+            return transaction.store == store['.key'] && transaction.employee == '';
+          })
+      })
+    }
+  }
 };
 
 const mutations = {};

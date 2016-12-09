@@ -1,22 +1,26 @@
 <template>
   <display v-if="!currentItem" message="Item Not Found"/>
   <div v-else>
-    <md-dialog ref="addStoreItem">
-      <md-toolbar>
-        <div class="md-title" style="flex: 1;">
-          Add Store Item
+    <md-dialog v-if="authManager" ref="addStock">
+      <md-toolbar class="md-large">
+        <div class="md-toolbar-container">
+          <div class="md-title" style="flex: 1;">
+            Add Stock
+          </div>
         </div>
-        <div class="md-subhead">
-          Item | {{storeItem.item = currentItem['.key']}}
+        <div class="md-toolbar-container">
+          <div class="md-subhead">
+            Item | {{stock.item = currentItem['.key']}}
+          </div>
         </div>
       </md-toolbar>
-      <div style="margin: 1rem;">
+      <md-dialog-content style="padding: 3rem;">
         <md-input-container>
           <label>
             <md-icon>timeline</md-icon>
             Retail Price
           </label>
-          <md-input v-model="storeItem.retail_price" type="number" step="10.00" min="0"></md-input>
+          <md-input v-model="stock.retail_price" type="number" step="10.00" min="0"></md-input>
         </md-input-container>
         <md-input-container>
           <label>
@@ -24,22 +28,28 @@
             Quantity
           </label>
 
-          <md-input v-model="storeItem.quantity" type="number" min="0"></md-input>
+          <md-input v-model="stock.quantity" type="number" min="0"></md-input>
         </md-input-container>
-        <md-switch v-model="storeItem.taxed">Taxed</md-switch>
-        <md-switch v-model="storeItem.discounted">Discounted</md-switch>
-        <div v-if="authManager">
+        <md-switch v-model="stock.taxed">Taxed</md-switch>
+        <md-switch v-model="stock.discounted">Discounted</md-switch>
 
-          <multiselect :options="authManagerStores | keys"
-                       v-model="selectedStores"
-                       :multiple="true"
-                       :searchable="true"></multiselect>
-        </div>
-        <md-button class="md-raised md-primary" style="width: 95%;" @click="addToStore">
-          Add To Store
+        <multiselect :options="authManagerStores"
+                     v-model="selectedStores"
+                     placeholder="Select Stores"
+                     key=".key"
+                     label="name"
+                     :multiple="true"
+                     :searchable="true"></multiselect>
+
+      </md-dialog-content>
+      <md-dialog-actions>
+        <md-button class="md-raised md-primary" @click="addToStore">
+          Add To Stores
         </md-button>
-
-      </div>
+        <md-button class="md-raised md-warn" @click="$refs.addStock.close()">
+          Cancel
+        </md-button>
+      </md-dialog-actions>
     </md-dialog>
     <md-dialog ref="editItemDialog">
       <div v-if="item">
@@ -48,10 +58,17 @@
             Edit
           </div>
           <div class="md-subhead">
-            Item | {{item.name}}
+            Item | {{item['.key']}}
           </div>
         </md-toolbar>
-        <div style="margin: 1rem;">
+        <md-dialog-content style="padding: 3rem;">
+          <md-input-container>
+            <label>
+              <md-icon>timeline</md-icon>
+              Name
+            </label>
+            <md-input v-model="item.name"></md-input>
+          </md-input-container>
           <md-input-container>
             <label>
               <md-icon>timeline</md-icon>
@@ -84,11 +101,15 @@
                        tag-placeholder="Add this as new tag"
                        placeholder="Type to search or add tag"></multiselect>
 
-          <md-button class="md-raised md-primary" style="width: 95%;" @click="updateItem(item)">
+        </md-dialog-content>
+        <md-dialog-actions>
+          <md-button class="md-raised md-primary" @click="() => {updateItem(item); $refs.editItemDialog.close();}">
             Update
           </md-button>
-
-        </div>
+          <md-button class="md-raised md-warn" @click="$refs.editItemDialog.close()">
+            Cancel
+          </md-button>
+        </md-dialog-actions>
       </div>
     </md-dialog>
 
@@ -97,17 +118,29 @@
         <div class="md-title" style="flex: 1;">
           {{currentItem.name | capitalize}}
         </div>
-        <div v-if="authManager">
+
+        <span v-if="authManager" class="hidden-xs">
+
           <md-button v-if="currentItem.created_by == authManager['.key']" @click="openEditItem">
-            Edit
+            <md-icon>edit</md-icon> Edit
           </md-button>
-          <md-button @click="openAddStoreItem">
-            Add To Your Stores
+
+          <md-button v-if="authManagerStores.length" @click="openAddStock">
+             <md-icon>store</md-icon> Add To Your Stores
           </md-button>
-        </div>
-        <router-link class="md-button" :to="{name: 'manager',params: {manager: currentItem.created_by}}">
-          Creator: {{currentItem.created_by}}
-        </router-link>
+        </span>
+
+
+        <span v-if="authManager" class="visible-xs">
+
+          <md-button class="md-icon-button" v-if="currentItem.created_by == authManager['.key']" @click="openEditItem">
+            <md-icon>edit</md-icon>
+          </md-button>
+
+          <md-button class="md-icon-button" v-if="authManagerStores.length" @click="openAddStock">
+            <md-icon>store</md-icon>
+          </md-button>
+        </span>
       </div>
     </md-toolbar>
 
@@ -167,26 +200,26 @@
       <div class="col-xs-12 col-md">
         <md-list class="col-xs-12 col-md md-triple-line">
           <md-subheader>Available Stores</md-subheader>
-          <md-list-item v-for="store in currentItemStores">
+
+          <md-list-item v-if="currentItemStocks" v-for="stock in currentItemStocks">
+
             <md-avatar>
-              <img :src="store.image_url || 'https://placeimg.com/40/40/people/1'" alt="People">
+              <img :src="findStore(stock.store).image_url || 'https://placeimg.com/40/40/people/1'" alt="People">
             </md-avatar>
             <div class="md-list-text-container">
-          <span>
-            {{store.name | capitalize}}
-          </span>
-              <span>
-            Retail Price: &#8369;{{store.items[currentItem['.key']].retail_price}}
-          </span>
-              <span>
-            Stock: {{store.items[currentItem['.key']].quantity || 'Out of Stock' }}
-          </span>
+              <span>{{findStore(stock.store).name | capitalize}}</span>
+              <span>Retail Price: &#8369;{{stock.retail_price}}</span>
+              <span>Stock: {{stock.quantity || 'Out of Stock' }}</span>
             </div>
             <router-link tag="md-button" class="md-icon-button md-list-action"
-                         :to="{name: 'storeItems', params: {store: store['.key']},query: {searchKey: currentItem['.key']}}">
+                         :to="{name: 'stocks', params: {store: stock.store},query: {searchKey: currentItem.name}}">
               <md-icon>info</md-icon>
             </router-link>
           </md-list-item>
+          <md-list-item v-else>
+            <span class="md-title">No Available Stores</span>
+          </md-list-item>
+
         </md-list>
       </div>
     </div>
@@ -199,18 +232,20 @@
   export default {
     name: 'item',
     computed: {
+
       ...mapGetters([
         'currentItem',
-        'currentItemStores',
+        'currentItemStocks',
         'authManager',
         'authManagerStores',
-        'serverTime',
-        'allTags'
+        'allStocks',
+        'allTags',
+        'allStores'
       ]),
     },
     data() {
       return {
-        storeItem: {
+        stock: {
           item: '',
           retail_price: '',
           quantity: 0,
@@ -225,9 +260,12 @@
       }
     },
     methods: {
-      openAddStoreItem() {
-        this.storeItem.retail_price = this.currentItem.cost_price * 1.5;
-        this.$refs.addStoreItem.open();
+      findStore(store) {
+        return _.find(this.allStores,['.key',store]);
+      },
+      openAddStock() {
+        this.stock.retail_price = this.currentItem.cost_price * 1.5;
+        this.$refs.addStock.open();
       },
       openEditItem() {
         this.$refs.editItemDialog.open();
@@ -235,22 +273,21 @@
       },
       addToStore() {
         _.forEach(this.selectedStores, store => {
-          let storeFound = _.find(this.authManagerStores, ['.key', store]);
-          let storeItem = _.find(storeFound.items, ['item', this.storeItem.item]);
-          if (storeItem) {
-            alert(`Item is already existing on ${store}`);
+          let storeStocks = _.filter(this.allStocks, ['store', store['.key']]);
+          console.log(storeStocks);
+          let stock = _.find(storeStocks, ['item', this.stock.item]);
+          if (stock) {
+            alert(`Item is already existing on ${store.name}`);
             return;
           }
-          this.storeItem.store = store;
-          this.storeItem.created_at = this.serverTime;
-          this.storeItem.updated_at = this.serverTime;
-          this.updateStoreItem(this.storeItem);
+          this.stock.store = store['.key'];
+          this.addStock(this.stock);
         });
       },
       ...mapActions([
         'addItem',
         'updateItem',
-        'updateStoreItem',
+        'addStock',
         'addTag'
       ]),
     },
