@@ -21,7 +21,7 @@ const actions = {
   },
   updateTag({getters,dispatch},tag) {
     if(!tag) return;
-    dispatch('updatedObject',tag);
+    dispatch('updateObject',tag);
     getters.refStores.child(tag['.key']).update(getters.getUpdatedObject);
   },
 };

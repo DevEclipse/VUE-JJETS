@@ -9,6 +9,13 @@
           </div>
         </md-toolbar>
         <div style="padding: 1rem;">
+          <multiselect :options="allCustomers | keys"
+                       v-model="currentTransaction.customer"
+                       :searchable="true"
+                       :hide-selected="true"
+                       placeholder="Search Customer"></multiselect>
+        </div>
+        <div style="padding: 1rem;">
           <md-input-container>
             <label>Amount</label>
             <md-input v-model="amount" type="number" :min="currentTransaction.total"></md-input>
@@ -29,19 +36,33 @@
     </md-dialog>
     <md-toolbar class="md-accent">
       <div class="md-toolbar-container">
-        <div class="md-title" style="flex: 1;">Transaction: {{currentTransaction['.key']}}</div>
-        <md-button  v-if="currentTransaction.status == 'Processing'"  @click="checkOutAmount">
+        <div class="md-title" style="flex: 1;">Transaction: <span class="md-caption">
+          {{currentTransaction['.key']}}
+        </span></div>
+        <md-button v-if="currentTransaction.status == 'Processing'" @click="checkOutAmount">
           <md-icon>payment</md-icon>
           Check Out
         </md-button>
         <router-link tag="md-button" :to="{name: 'receipt', params: {transaction: currentTransaction['.key']}}" v-else>
-          <md-icon>receipt</md-icon> Receipt
+          <md-icon>receipt</md-icon>
+          Receipt
         </router-link>
       </div>
     </md-toolbar>
+    <md-button  v-if="currentTransactionStocks && currentTransaction.status == 'Processing' || currentTransaction.status == 'Returning'" class="md-fab md-mini md-fab-bottom-right"
+               style="position: fixed; z-index: 3;"
+               @click="$refs.storeStocksMenu.toggle()">
+      <md-icon>add</md-icon>
+    </md-button>
+    <md-sidenav class="md-fixed md-right" ref="storeStocksMenu">
 
-    <div class="row" v-if="authEmployee">
-      <div v-if="currentTransactionStocks && currentTransaction.status == 'Processing' || currentTransaction.status == 'Returning'" class="col-xs-12 col-md-4">
+        <md-toolbar>
+          <div class="md-toolbar-container">
+            <div class="md-title">
+              {{currentTransactionStore.name | capitalize}} Stocks
+            </div>
+          </div>
+        </md-toolbar>
         <md-input-container>
           <label>
             <md-icon>search</md-icon>
@@ -60,15 +81,15 @@
                   <vue-image :image="findItem(stock.item).image_url" alt="No Stock Image"/>
                 </md-avatar>
                 <div class="md-list-text-container">
+                          <span>
+                            Item: {{findItem(stock.item).name | capitalize }}
+                          </span>
                   <span>
-                    Item: {{findItem(stock.item).name | capitalize }}
-                  </span>
+                            Retail Price: &#8369;{{stock.retail_price}}
+                          </span>
                   <span>
-                    Retail Price: &#8369;{{stock.retail_price}}
-                  </span>
-                  <span>
-                    Stock: {{stock.quantity || 'Out of Stock' }}
-                  </span>
+                            Stock: {{stock.quantity || 'Out of Stock' }}
+                          </span>
                 </div>
 
                 <md-button v-if="stock.quantity" class="md-icon-button md-list-action"
@@ -92,22 +113,22 @@
             </md-list-item>
           </div>
         </md-list>
-      </div>
-      <div class="col-xs-12 col-md">
+
+    </md-sidenav>
+    <div v-if="authEmployee">
+
+
         <md-toolbar class="md-accent md-large">
           <div class="md-toolbar-container">
             <div class="md-subhead" style="flex: 1;">
-             Employee: {{(currentTransaction.employee || 'No Employee') | capitalize}}
+              Store: {{currentTransactionStore.name | capitalize}}
             </div>
             <div class="md-subhead" style="flex: 1;">
-             Customer: {{(currentTransaction.customer || 'Anonymous') | capitalize}}
-          </div>
-            <md-input-container>
-              <label>Decrement By</label>
-              <md-select v-model="decrementBy">
-                <md-option :value="n" v-if="n % 10 == 0" v-for="n in 50">{{n}}</md-option>
-              </md-select>
-            </md-input-container>
+              Employee: {{(currentTransaction.employee || 'No Employee') | capitalize}}
+            </div>
+            <div class="md-subhead">
+              Customer: {{(currentTransaction.customer || 'Anonymous') | capitalize}}
+            </div>
           </div>
           <div class="md-toolbar-container">
             <div class="md-subhead" style="flex: 1;">
@@ -130,10 +151,13 @@
                   <md-table-head>Retail Price</md-table-head>
                   <md-table-head>Quantity</md-table-head>
                   <md-table-head>Item Total</md-table-head>
-                  <md-table-head v-if="currentTransaction.status == 'Processing' || currentTransaction.status == 'Returning'">Configuration</md-table-head>
+                  <md-table-head
+                    v-if="currentTransaction.status == 'Processing' || currentTransaction.status == 'Returning'">
+                    Configuration
+                  </md-table-head>
                 </md-table-row>
               </md-table-header>
-              <md-table-body v-if="currentTransaction.items">
+              <md-table-body v-if="currentTransaction.items && currentTransactionStocks">
                 <md-table-row v-for="item in currentTransaction.items">
                   <md-table-cell>
 
@@ -144,15 +168,20 @@
                     &#8369;{{item.retail_price}}
                   </md-table-cell>
                   <md-table-cell>
-                    {{item.quantity}}
+                    <md-input-container v-if="currentTransaction.status == 'Processing'
+                                        || currentTransaction.status == 'Returning'">
+                      <md-input :value="item.quantity" min="0" @blur.native="quantityChange(item,$event.target)"
+                                type="number"></md-input>
+                    </md-input-container>
+                    <span v-else>
+                      {{item.quantity}}
+                    </span>
                   </md-table-cell>
                   <md-table-cell>
                     &#8369;{{item.retail_price * item.quantity}}
                   </md-table-cell>
-                  <md-table-cell v-if="currentTransaction.status == 'Processing' || currentTransaction.status == 'Returning'">
-                    <md-button v-if="item.quantity > decrementBy" class="md-icon-button" @click="deductQuantity(item)">
-                      <md-icon>remove</md-icon>
-                    </md-button>
+                  <md-table-cell
+                    v-if="currentTransaction.status == 'Processing' || currentTransaction.status == 'Returning'">
                     <md-button class="md-icon-button" @click="removeItem(item)">
                       <md-icon>delete</md-icon>
                     </md-button>
@@ -161,35 +190,34 @@
                 <md-table-row>
                   <md-table-cell></md-table-cell>
                   <md-table-cell></md-table-cell>
-                  <md-table-cell>Sub Total: </md-table-cell>
+                  <md-table-cell>Sub Total:</md-table-cell>
                   <md-table-cell>&#8369;{{currentTransaction.subtotal}}</md-table-cell>
                 </md-table-row>
                 <md-table-row>
                   <md-table-cell></md-table-cell>
                   <md-table-cell></md-table-cell>
-                  <md-table-cell>Tax: </md-table-cell>
+                  <md-table-cell>Tax:</md-table-cell>
                   <md-table-cell>&#8369;{{currentTransaction.tax}}</md-table-cell>
                 </md-table-row>
                 <md-table-row>
                   <md-table-cell></md-table-cell>
                   <md-table-cell></md-table-cell>
-                  <md-table-cell>Discount: </md-table-cell>
+                  <md-table-cell>Discount:</md-table-cell>
                   <md-table-cell>&#8369;{{currentTransaction.discount}}</md-table-cell>
                 </md-table-row>
               </md-table-body>
             </md-table>
           </md-table-card>
           <md-card-media-actions>
-          <span>Total: &#8369;{{currentTransaction.total}}</span>
-          <span>Amount: &#8369;{{currentTransaction.amount}}</span>
-          <span>Change: &#8369;{{currentTransaction.change}}</span>
+            <span>Total: &#8369;{{currentTransaction.total}}</span>
+            <span>Amount: &#8369;{{currentTransaction.amount}}</span>
+            <span>Change: &#8369;{{currentTransaction.change}}</span>
           </md-card-media-actions>
         </md-card>
 
-      </div>
     </div>
   </div>
-  </div>
+
 </template>
 
 <script>
@@ -216,7 +244,7 @@
         'authEmployee',
         'authUser',
         'allItems',
-        'serverTime'
+        'allCustomers'
       ])
     },
     data() {
@@ -256,13 +284,6 @@
         this.reUpdateTransaction();
         this.updateStock(item);
       },
-      deductQuantity(item) {
-        let stock = this.findStock(item.stock);
-        item.quantity -= this.decrementBy || 1;
-        stock.quantity += this.decrementBy || 1;
-        this.reUpdateTransaction();
-        this.updateStock(stock);
-      },
       ...mapActions([
         'updateTransaction',
         'updateStore',
@@ -275,13 +296,26 @@
         delete this.currentTransaction.items[item.stock];
         this.reUpdateTransaction();
       },
+      quantityChange(item, target) {
+        let quantity = parseInt(target.value);
+        let stock = this.findStock(item.stock);
+        let oldStockQuantity = stock.quantity;
+        stock.quantity += item.quantity - quantity;
+        console.log(oldStockQuantity,stock.quantity);
+        if(stock.quantity < 0) {
+          target.value = quantity = item.quantity + oldStockQuantity;
+          stock.quantity = 0;
+        }
+        item.quantity = quantity;
+        this.reUpdateTransaction();
+        this.updateStock(stock);
+      },
       reUpdateTransaction(){
         let subTotal = 0;
         _.forEach(this.currentTransaction.items, item => {
           subTotal += item.retail_price * parseInt(item.quantity);
         });
         let taxedItems = _.filter(this.currentTransaction.items, item => {
-          console.log(item);
           return this.findStock(item.stock).taxed;
         });
         this.currentTransaction.tax = _.round(_.sumBy(taxedItems, item => {
@@ -304,11 +338,14 @@
         this.$refs.checkOutDialog.open();
       },
       checkOut() {
+        let date = new Date(this.currentTransaction.created_date);
+        console.log(date);
+        date.setDate(date.getDate() + 7);
+        this.currentTransaction.expiration_date = date.getTime() / 1000 | 0;
         this.currentTransaction.status = 'Processed';
-        this.currentTransaction.expiration_date = this.serverTime.addDays(7);
         this.reUpdateTransaction();
         this.$refs.checkOutDialog.close();
       }
-    }
+    },
   }
 </script>

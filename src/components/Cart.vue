@@ -6,10 +6,8 @@
     <span>Games</span>
 
     <md-list-expand>
-      <md-list>
-        <md-list-item class="md-inset">Console</md-list-item>
-        <md-list-item class="md-inset">PC</md-list-item>
-        <md-list-item class="md-inset">Phone</md-list-item>
+      <md-list v-for="item in getCart.items">
+        {{item}}
       </md-list>
     </md-list-expand>
 
@@ -26,7 +24,7 @@
           'getCart',
       ]),
       cartStoreItems() {
-          let cartItems = _.filter(this.getCart.items)
+
       }
     }
   }

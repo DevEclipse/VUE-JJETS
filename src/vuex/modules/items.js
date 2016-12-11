@@ -1,6 +1,7 @@
-import firebase from 'firebase'
 
-const state = {};
+const state = {
+  storedItem: null,
+};
 
 const getters = {
   currentItem(state,getters) {
@@ -10,25 +11,43 @@ const getters = {
   currentItemStocks(state,getters) {
     if(!getters.currentItem) return;
       return _.filter(getters.allStocks,['item',getters.currentItem['.key']]);
-  }
+  },
+  storedItem(state) {
+    if(!state.storedItem) return;
+    return state.storedItem;
+  },
+  storedItemStocks(state,getters) {
+    if(!getters.storedItem) return;
+    return _.filter(getters.allStocks,['item',getters.storedItem['.key']]);
+  },
 };
 
-const mutations = {};
+const mutations = {
+  ['STORE_ITEM'](state,item) {
+    state.storedItem = item;
+  },
+};
 
 const actions = {
-  addItem({getters,dispatch},item) {
-    if(!item) return;
-    dispatch('newObject',item);
-    getters.refItems.push(getters.getNewObject);
+  addItem({dispatch},value) {
+    dispatch('addRefObject',{ref: 'Item', value});
   },
-  deleteItem({getters},item) {
-    if(!item) return;
-    getters.refItems.child(item['.key']).remove();
+  deleteItem({dispatch},value) {
+    dispatch('deleteRefObject',{ref: 'Item', value});
   },
-  updateItem({getters,dispatch},item) {
-    if(!item) return;
-    dispatch('updatedObject',item);
-    getters.refItems.child(item['.key']).update(getters.getUpdatedObject);
+  updateItem({dispatch},value) {
+    dispatch('updateRefObject',{ref: 'Item', value,action: 'storeItem'});
+  },
+  storeItem({commit,getters},item) {
+    commit('STORE_ITEM',_.clone(item) || {
+        name: '',
+        cost_price: 0,
+        image_url: '',
+        description: '',
+        created_by: getters.authManager['.key'],
+        rating: 0,
+        tags: ['item'],
+      });
   },
 };
 

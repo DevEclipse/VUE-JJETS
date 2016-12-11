@@ -35,6 +35,13 @@ const getters = {
     if(!getters.authUser) return;
     return _.find(getters.allCustomers,['.key',getters.authUser.username])
   },
+  sameUser(state,getters) {
+    if(!getters.authUser && !getters.currentUser) return;
+    return getters.currentUser['.key'] == getters.authUser['.key'];
+  },
+  sameManagerEmployee(state,getters) {
+    if(!getters.authUser && !getters.currentUser) return;
+  }
 };
 
 const mutations = {

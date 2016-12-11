@@ -33,8 +33,6 @@ Vue.component('transaction',require('./components/Transaction.vue'));
 Vue.component('transaction',require('./components/Transaction.vue'));
 Vue.component('transactions',require('./components/Transactions.vue'));
 Vue.component('cards',require('./components/Cards.vue'));
-Vue.component('stores',require('./components/Shops.vue'));
-Vue.component('items',require('./components/Items.vue'));
 Vue.component('multiselect',MultiSelect);
 Vue.component('display',require('./components/Display.vue'));
 
@@ -58,7 +56,6 @@ Vue.filter('keys', value => {
   _.forEach(value,val => {
     keys.push(val['.key']);
   });
-  console.log(keys)
   return keys;
 });
 
@@ -83,7 +80,7 @@ Vue.filter('chunkArray',(array, length = 3) => {
 });
 
 Vue.filter('percent',value => {
-  return `${value * 100}%`;
+  return `${_.round(value * 100,2)}%`;
 });
 const store = new Vuex.Store(VuexStore);
 
@@ -159,8 +156,8 @@ const app = new Vue({
       let self = this;
       firebase.auth().signOut().then(function () {
         self.$store.commit('SET_UID', null);
-        self.$router.push('/');
         self.$store.dispatch('setAuthUserStatus','Offline');
+        self.$router.push('/');
       }, function (error) {
         alert(error.message);
       });

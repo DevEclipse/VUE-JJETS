@@ -15,13 +15,8 @@ const routes = [
     name: 'items',
   },
   {
-    path: '/item/:item',
-    component: resolve => require(['./components/Item.vue'], resolve),
-    name: 'item',
-  },
-  {
     path: '/stores',
-    component: resolve => require(['./components/Shops.vue'], resolve),
+    component: resolve => require(['./components/Stores.vue'], resolve),
     name: 'stores',
   },
   {
@@ -41,9 +36,24 @@ const routes = [
       {
         path: 'transactions',
         component: resolve => require(['./components/StoreTransactions.vue'],resolve),
-        name: 'storeTransactions',
+        name: 'transactions',
       },
     ]
+  },
+  {
+    path: '/customers',
+    component: resolve => require(['./components/Stores.vue'], resolve),
+    name: 'customers',
+  },
+  {
+    path: '/managers',
+    component: resolve => require(['./components/Stores.vue'], resolve),
+    name: 'managers',
+  },
+  {
+    path: '/employees',
+    component: resolve => require(['./components/Stores.vue'], resolve),
+    name: 'employees',
   },
   {
     path: '/pos/:transaction',
@@ -57,45 +67,33 @@ const routes = [
   },
   {
     path: '/user/:username',
-    component: resolve => require(['./components/User.vue'],resolve),
-    name: 'user',
-  },
-  {
-    path: '/manager/:username',
-    component: resolve => require(['./components/Manager.vue'],resolve),
+    component: {template: `<router-view></router-view>`},
     children: [
       {
         path: '',
-        component: resolve => require(['./components/ManagerInfo.vue'],resolve),
+        component: resolve => require(['./components/User.vue'],resolve),
+        name: 'user',
+      },
+      {
+        path: 'manager',
+        component: resolve => require(['./components/Manager.vue'],resolve),
         name: 'manager',
       },
       {
-        path: 'items',
-        component: resolve => require(['./components/ManagerItems.vue'],resolve),
-        name: 'managerItems',
+        path: 'employee',
+        component: resolve => require(['./components/Employee.vue'],resolve),
+        name: 'employee',
       },
       {
-        path: 'stores',
-        component: resolve => require(['./components/ManagerStores.vue'],resolve),
-        name: 'managerStores',
+        path: 'customer',
+        component: resolve => require(['./components/Customer.vue'],resolve),
+        name: 'customer',
       },
-      {
-        path: 'employees',
-        component: resolve => require(['./components/ManagerEmployees.vue'],resolve),
-        name: 'managerEmployees',
-      }
-    ],
+    ]
   },
-  {
-    path: '/employee/:username',
-    component: resolve => require(['./components/Employee.vue'],resolve),
-    name: 'employee',
-  },
-  {
-    path: '/customer/:username',
-    component: resolve => require(['./components/Customer.vue'],resolve),
-    name: 'customer',
-  },
+
+
+
 ];
 
 export default routes

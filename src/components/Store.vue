@@ -10,13 +10,15 @@
           <router-link tag="md-button" :to="{name: 'store'}">
             <md-icon>info</md-icon> Info
           </router-link>
-          <router-link tag="md-button" :to="{name: 'stocks'}">
+          <span v-if="authEmployee || authManager">
+          <router-link tag="md-button" :to="{name: 'stocks'}" v-if="authManager['.key'] == currentStore.manager || authEmployee['.key'].manager == currentStore.manager">
             <md-icon>store</md-icon> Stocks
           </router-link>
+                </span>
           <span v-if="authEmployee || authManager">
         <router-link
           v-if="authManager['.key'] == currentStore.manager || authEmployee['.key'].manager == currentStore.manager"
-          tag="md-button" :to="{name: 'storeTransactions'}">
+          tag="md-button" :to="{name: 'transactions'}">
          <md-icon>timeline</md-icon> Transactions
         </router-link>
           </span>
@@ -28,7 +30,7 @@
           <router-link tag="md-button" class="md-icon-button"  :to="{name: 'stocks'}">
             <md-icon>store</md-icon>
           </router-link>
-          <router-link tag="md-button" class="md-icon-button"  :to="{name: 'storeTransactions'}">
+          <router-link tag="md-button" class="md-icon-button"  :to="{name: 'transactions'}">
             <md-icon>timeline</md-icon>
           </router-link>
         </div>

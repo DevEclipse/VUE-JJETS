@@ -1,36 +1,6 @@
 {
   "rules": {
-    "users": {
       ".read": true,
       ".write": true
-    },
-    "managers": {
-      ".read": true,
-      ".write": true
-    },
-    "employees": {
-      ".read": true,
-      ".write": true
-    },
-    "customers": {
-      ".read": true,
-      ".write": true
-    },
-    "stores": {
-      ".read": true,
-      ".write": true
-    },
-    "transactions": {
-      ".read": true,
-      ".write": true
-    },
-    "items": {
-      ".read": true,
-      ".write": true
-    },
-    "tags": {
-      ".read": true,
-      ".write": true
-    }
   }
 }

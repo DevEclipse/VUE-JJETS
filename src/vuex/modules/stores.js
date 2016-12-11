@@ -1,5 +1,5 @@
 const state = {
-
+  storedStore: null,
 };
 
 const getters = {
@@ -11,6 +11,10 @@ const getters = {
     if(!getters.currentStore) return;
     return _.filter(getters.allTransactions,['store',getters.currentStore['.key']]);
   },
+  storedStore(state) {
+    if(!state.storedStore) return;
+    return state.storedStore;
+  },
 };
 
 const mutations = {
@@ -18,24 +22,16 @@ const mutations = {
 };
 
 const actions = {
-  addStore({getters,dispatch},store) {
-    if(!store) return;
-    dispatch('newObject',store);
-    getters.refStores.push(getters.getNewObject);
+  addStore({dispatch},value) {
+    dispatch('addRefObject',{ref: 'Store', value});
   },
-  deleteStore({getters,dispatch},store) {
-    if(!store) return;
-    console.log(store);
-    getters.refStores.child(store['.key']).remove();
+  deleteStore({dispatch},value) {
+    dispatch('deleteRefObject',{ref: 'Store', value});
   },
-  updateStore({getters,dispatch,commit},store) {
-    if(!store) return;
-    dispatch('updatedObject',store);
-    getters.refStores.child(store['.key']).update(getters.getUpdatedObject);
+  updateStore({dispatch},value) {
+    dispatch('updateRefObject',{ref: 'Store', value,action: 'storeStock'});
   },
-
 };
-//called by this.$store.dispatch('addUser')
 export default {
   state,
   getters,

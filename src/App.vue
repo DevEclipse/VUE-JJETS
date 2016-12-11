@@ -24,4 +24,10 @@ export default {
   html,body {
     overflow-x: hidden;
   }
+  .h-100 {
+    height: 100%;
+  }
+  .w-100 {
+    width: 100%;
+  }
 </style>

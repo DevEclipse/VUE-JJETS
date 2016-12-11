@@ -1,5 +1,8 @@
 const state = {
-  cart: {},
+  cartItems: {},
+  storedCustomer: {
+    balance: 0,
+  },
 };
 
 const getters = {
@@ -7,23 +10,24 @@ const getters = {
     if (!getters.routeParams) return;
     return _.find(getters.allCustomers, ['.key', getters.routeParams.username]);
   },
-  getCart(state) {
-    return state.cart;
-  }
+  storedCartItems(state) {
+    return state.cartItems;
+  },
+  storedCustomer(state) {
+    if(!state.storedCustomer) return;
+    return state.storedCustomer;
+  },
 };
 
 const mutations = {
-  ['ADD_STORE_ITEM_TO_CART'](state, storeItem) {
-    if (!state.cart[storeItem.store]) {
-      state.cart[storeItem.store] = {
-        items: {},
-      }
+  ['ADD_CART_ITEM'](state, storeItem) {
+    console.log(storeItem);
+    if(!state.cartItems[storeItem['.key']]) {
+      state.cartItems[storeItem['.key']] = {
+        quantity: 1,
+      };
     }
-      state.cart[storeItem.store].items[storeItem.item] = storeItem;
   },
-  ['ADD_QUANTITY_TO_STORE_ITEM'](state,storeItem) {
-    state.cart[storeItem.store].items[storeItem.item].quantity += storeItem.quantity;
-  }
 };
 
 const actions = {
@@ -35,19 +39,17 @@ const actions = {
     dispatch('newObject', newCustomer);
     getters.refCustomers.child(customer).set(getters.getNewObject);
   },
-  deleteCustomer({getters}, customer) {
-    if (!customer) return;
-    getters.refCustomers.child(customer['.key']).remove();
+  deleteCustomer({dispatch}, value) {
+    dispatch('deleteRefObject',{ref: 'Customer', value});
   },
-  updateCustomer({getters, dispatch}, customer) {
-    if (!customer) return;
-    dispatch('updatedObject', customer);
-    getters.refCustomers.child(customer['.key']).update(getters.getUpdatedObject);
+  updateCustomer({dispatch}, value) {
+    dispatch('updateRefObject',{ref: 'Customer', value})
   },
-  addItemToCart({commit,}, storeItem) {
-    commit('ADD_STORE_ITEM_TO_CART', storeItem);
-    if(getters.getCart[storeItem.store].items[storeItem.item])
-    commit('ADD_QUANTITY_TO_STORE_ITEM',storeItem)
+  checkOutCart({getters}) {
+
+  },
+  addItemToCart({commit}, value) {
+    commit('ADD_CART_ITEM', value);
   }
 };
 

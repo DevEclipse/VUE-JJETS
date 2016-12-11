@@ -2,7 +2,7 @@
   <div v-if="!$store.getters.authUID">
 
     <md-dialog ref="getStarted">
-      <md-dialog-content style="padding: 0;">
+      <md-dialog-content style="padding: 0">
         <md-tabs md-fixed>
           <md-tab id="signIn" md-icon="face"  md-label="Sign In">
 
@@ -150,7 +150,21 @@
   </div>
 
   <div v-else class="row">
-    asd
+    <md-list class="col-xs md-triple-line">
+      <md-subheader>Other Users you may know</md-subheader>
+      <md-list-item v-for="user in allUsers">
+        <md-avatar>
+          <vue-image :image="user.image_url" alt="User"></vue-image>
+        </md-avatar>
+        <div class="md-list-text-container">
+          <span>{{user.name}}</span>
+          <span>{{user['.key']}}</span>
+        </div>
+          <router-link tag="md-button" class="md-icon-button" :to="{name: 'user', params: {username: user['.key']}}">
+            <md-icon>info</md-icon>
+          </router-link>
+      </md-list-item>
+    </md-list>
   </div>
 </template>
 

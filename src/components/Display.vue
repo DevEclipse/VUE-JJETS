@@ -1,9 +1,8 @@
 <template>
-    <div class="row middle-xs center-xs" style="height: 100vh;
-    background: url('http://pos.dsoftbd.com/wp-content/uploads/2014/07/b-slide11.jpg?id=558')
-    no-repeat center center fixed; background-size: cover; ">
+    <div class="row middle-xs center-xs" style="height: 100vh;">
       <div class="col-xs md-display-3" style="color: white; font-weight: bold;">
         {{message}}
+        <slot></slot>
       </div>
     </div>
 </template>

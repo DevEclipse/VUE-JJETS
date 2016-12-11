@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div  v-if="dataList.length" class="container">
     <div class="row" v-if="filters">
       <div class="col-xs-12 col-md">
         <md-input-container>
@@ -13,15 +13,11 @@
       <div class="col-xs-12 col-md-4" style="margin: 1rem;">
         <multiselect :options="filters"
                      v-model="searchKey"
-                     placeholder="Search Customer"></multiselect>
+                     placeholder="Search By"></multiselect>
       </div>
     </div>
 
-    <span v-if="routeQuery.searchKey" hidden>
-      {{search = routeQuery.searchKey}}
-    </span>
-
-    <transition-group v-for="data3 in dataList"
+    <transition-group  style="margin-bottom: 1rem;" v-for="data3 in dataList"
                       class="row"
                       enter-active-class="animated bounceInRight"
                       leave-active-class="animated bounceOutRight">
@@ -33,37 +29,33 @@
       </div>
 
     </transition-group>
-
   </div>
+    <display v-else message="No Results"/>
+
 </template>
 
 <script>
   import {mapGetters} from 'vuex';
   export default {
     name: 'cards',
-    props: ['list', 'defaultList', 'filters'],
+    props: ['list', 'filters'],
     data() {
       return {
-          search: '',
           searchKey: '',
+          search: '',
       }
     },
     computed: {
       dataList() {
-        let items = this.list || this.defaultList;
+        let items = this.list;
         if(items && this.search && this.searchKey) {
           let regExp = new RegExp(`${this.search}`,'i');
-          console.log(regExp);
           items = _.filter(items, item => {
-              console.log(regExp.test(item[this.searchKey]),item[this.searchKey])
              return regExp.test(item[this.searchKey])
           });
         }
         return _.chunk(items, 3);
       },
-      ...mapGetters([
-          'routeQuery',
-      ])
-    }
+    },
   }
 </script>

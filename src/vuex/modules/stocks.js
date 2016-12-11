@@ -1,5 +1,5 @@
 const state = {
-
+  storedStock: null,
 };
 
 const getters = {
@@ -7,30 +7,40 @@ const getters = {
     if(!getters.currentStore) return;
     return _.filter(getters.allStocks,['store',getters.currentStore['.key']]);
   },
+  storedStock(state) {
+    if(!state.storedStock) return;
+    return state.storedStock;
+  },
 };
 
 const mutations = {
-
+  ['STORE_STOCK'](state,item) {
+    state.storedStock = item;
+  },
 };
 
 const actions = {
-  addStock({getters,dispatch},stock) {
-    if(!stock) return;
-    console.log(stock);
-    dispatch('newObject',stock);
-    getters.refStocks.push(getters.getNewObject);
+  addStock({dispatch},value) {
+    dispatch('addRefObject',{ref: 'Stock', value});
   },
-  deleteStock({getters,dispatch},store) {
-    if(!store) return;
-    console.log(store);
-    getters.refStocks.child(stock['.key']).remove();
+  deleteStock({dispatch},value) {
+    dispatch('deleteRefObject',{ref: 'Stock', value});
   },
-  updateStock({getters,dispatch},stock) {
-    if(!stock) return;
-    dispatch('updatedObject',stock);
-    getters.refStocks.child(stock['.key']).update(getters.getUpdatedObject);
+  updateStock({dispatch},value) {
+    dispatch('updateRefObject',{ref: 'Stock', value,action: 'storeStock'});
   },
-
+  storeStock({commit,getters},stock) {
+    commit('STORE_STOCK',_.clone(stock) || {
+        item: '',
+        retail_price: '',
+        quantity: 0,
+        store: getters.currentStore['.key'],
+        taxed: true,
+        discounted: false,
+        returns: '',
+        times_bought: '',
+      });
+  },
 };
 //called by this.$store.dispatch('addUser')
 export default {

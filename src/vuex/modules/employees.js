@@ -1,6 +1,9 @@
-import firebase from 'firebase'
 
-const state = {};
+const state = {
+  storedEmployee: {
+    manager: '',
+  },
+};
 
 const getters = {
 
@@ -25,7 +28,11 @@ const getters = {
           })
       })
     }
-  }
+  },
+  storedEmployee(state) {
+    if(!state.storedEmployee) return;
+    return state.storedEmployee;
+  },
 };
 
 const mutations = {};
@@ -39,17 +46,14 @@ const actions = {
     dispatch('newObject',newEmployee);
     getters.refEmployees.child(employee).set(getters.getNewObject);
   },
-  deleteEmployee({getters},employee) {
-    if(!employee) return;
-    getters.refEmployees.child(employee['.key']).remove();
+  deleteEmployee({dispatch}, value) {
+    dispatch('deleteRefObject',{ref: 'Employee', value});
   },
-  updateEmployee({getters,dispatch},employee) {
-    if(!employee) return;
-    dispatch('updatedObject',employee);
-    getters.refEmployees.child(employee['.key']).update(getters.getUpdatedObject);
-  }
+  updateEmployee({dispatch}, value) {
+    dispatch('updateRefObject',{ref: 'Employee', value})
+  },
 };
-//called by this.$store.dispatch('addUser')
+
 export default {
   state,
   getters,

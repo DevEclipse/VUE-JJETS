@@ -1,6 +1,9 @@
 import firebase from 'firebase'
 
 const state = {
+  storedManager: {
+    void_code: '',
+  }
 };
 
 const getters = {
@@ -20,7 +23,10 @@ const getters = {
     if(!getters.currentManager) return;
     return _.filter(getters.allEmployees, ['.key', getters.currentManager['.key']]);
   },
-
+  storedManager(state) {
+    if(!state.storedManager) return;
+    return state.storedManager;
+  },
 };
 
 const mutations = {
@@ -36,14 +42,11 @@ const actions = {
     dispatch('newObject',newManager);
     getters.refManagers.child(manager).set(getters.getNewObject);
   },
-  deleteManager({getters}, manager) {
-    if (!manager) return;
-    getters.refManagers.child(manager['.key']).remove();
+  deleteManager({dispatch}, value) {
+    dispatch('deleteRefObject',{ref: 'Manager', value});
   },
-  updateManager({getters,dispatch}, manager) {
-    if (!manager) return;
-    dispatch('updatedObject',manager);
-    getters.refManagers.child(manager['.key']).update(getters.getUpdatedObject);
+  updateManager({dispatch}, value) {
+    dispatch('updateRefObject',{ref: 'Manager', value})
   },
 };
 
