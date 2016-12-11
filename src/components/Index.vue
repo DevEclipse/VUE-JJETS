@@ -22,25 +22,25 @@
 
             <md-input-container style="margin: 1rem;">
               <label>Username</label>
-              <md-input v-model="signUp.username"></md-input>
+              <md-input v-model.trim="signUp.username"></md-input>
             </md-input-container>
             <md-input-container style="margin: 1rem;">
               <label>Name</label>
-              <md-input v-model="signUp.name"></md-input>
+              <md-input v-model.trim="signUp.name"></md-input>
             </md-input-container>
             <md-input-container style="margin: 1rem;">
               <label>Email</label>
-              <md-input v-model="signUp.email"></md-input>
+              <md-input v-model.trim="signUp.email"></md-input>
             </md-input-container>
             <md-input-container style="margin: 1rem;">
               <label>Password</label>
-              <md-input type="password" v-model="signUp.password"></md-input>
+              <md-input type="password" v-model.trim="signUp.password"></md-input>
             </md-input-container>
             <md-input-container style="margin: 1rem;">
               <label>Confirm Password</label>
-              <md-input type="password" v-model="confirmPassword"></md-input>
+              <md-input disabled="signUp.password.length < 7" type="password" v-model.trim="confirmPassword"></md-input>
             </md-input-container>
-            <md-button class="md-raised md-accent" style="width: 95%" @click="$root.signUp(signUp)"> Sign Up</md-button>
+            <md-button disabled="signUp.password != confirmPassword" class="md-raised md-accent" style="width: 95%" @click="$root.signUp(signUp)"> Sign Up</md-button>
 
           </md-tab>
 
