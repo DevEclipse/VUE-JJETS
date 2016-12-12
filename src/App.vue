@@ -1,20 +1,37 @@
 <template>
   <div id="app" v-md-theme="'default'" >
 
-    <dashboard v-if="$store.getters.authUID"></dashboard>
-    <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight">
-      <router-view></router-view>
+    <dashboard>
+      <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight" mode="out-in">
+        <router-view :authUser="authUser"
+                     :authManager="authManager"
+                     :authEmployee="authEmployee"
+                     :authCustomer="authCustomer">
+        </router-view>
+      </transition>
+    </dashboard>
+    <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight" mode="out-in">
+      <router-view name="index"></router-view>
     </transition>
   </div>
 </template>
-
+"
 <script>
-  import Dashboard from './components/Dashboard.vue'
+  import Dashboard from './components/Dashboard.vue';
+  import {mapGetters, mapActions} from 'vuex';
 export default {
     name: 'app',
     components: {
         Dashboard
-    }
+    },
+    computed: {
+      ...mapGetters([
+        'authUser',
+        'authManager',
+        'authEmployee',
+        'authCustomer',
+      ])
+    },
   }
 </script>
 

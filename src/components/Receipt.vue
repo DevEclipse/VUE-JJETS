@@ -76,6 +76,7 @@
     <div class="row center-xs">
       <div class="md-subheading" style="padding: 2rem;">Created: {{ currentTransaction.created_date | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}</div>
       <div class="md-subheading" style="padding: 2rem;">Expires: {{ currentTransaction.expiration_date | moment("dddd, MMMM Do YYYY, h:mm:ss a") }}</div>
+      <div class="md-subheading" style="padding: 2rem;">Customer: {{ currentTransaction.customer }}</div>
     </div>
   </div>
 </template>

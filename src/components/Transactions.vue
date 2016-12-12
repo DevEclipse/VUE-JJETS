@@ -25,9 +25,6 @@
           </md-card-header-text>
 
         </md-card-header>
-        <md-card-actions>
-
-        </md-card-actions>
       </template>
     </cards>
   </div>
@@ -37,10 +34,9 @@
   import {mapGetters,mapActions} from 'vuex';
   export default {
     name: 'transactions',
-    props: ['transactions'],
+    props: ['transactions','authEmployee'],
     computed: {
       ...mapGetters([
-        'authEmployee',
         'storedTransaction',
       ])
     },

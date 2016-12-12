@@ -103,7 +103,6 @@ const app = new Vue({
     bcustomers: db.ref('customers'),
     btransactions: db.ref('transactions'),
     bstocks: db.ref('stocks'),
-    btags: db.ref('tags'),
   },
   render: h => h(App),
   beforeCreate() {
@@ -119,6 +118,7 @@ const app = new Vue({
           username: await this.$store.getters.authUser.username
         }
       })
+
     },
     signUp(credentials) {
       let self = this;
@@ -146,7 +146,7 @@ const app = new Vue({
       firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
         .then(function () {
           self.toDashboard();
-          self.$store.dispatch('setAuthUserStatus','Online');
+          // self.$store.dispatch('setAuthUserStatus','Online');
         })
         .catch(function (error) {
           alert(error.message);
@@ -156,7 +156,7 @@ const app = new Vue({
       let self = this;
       firebase.auth().signOut().then(function () {
         self.$store.commit('SET_UID', null);
-        self.$store.dispatch('setAuthUserStatus','Offline');
+        // self.$store.dispatch('setAuthUserStatus','Offline');
         self.$router.push('/');
       }, function (error) {
         alert(error.message);
@@ -175,4 +175,4 @@ firebase.auth().onAuthStateChanged(function (user) {
     store.dispatch('setAuth');
 });
 
-
+console.log(app);

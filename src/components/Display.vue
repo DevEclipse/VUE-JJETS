@@ -1,6 +1,6 @@
 <template>
     <div class="row middle-xs center-xs" style="height: 100vh;">
-      <div class="col-xs md-display-3" style="color: white; font-weight: bold;">
+      <div class="col-xs md-display-3" style="font-weight: bold;">
         {{message}}
         <slot></slot>
       </div>

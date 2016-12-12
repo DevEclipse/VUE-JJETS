@@ -13,19 +13,20 @@ const getters = {
   },
   authManager(state,getters) {
     if(!getters.authUser) return;
-    return _.find(getters.allManagers,['.key',getters.authUser.username])
+    console.log(getters.authUser);
+    return _.find(getters.allManagers,['username',getters.authUser.username])
   },
   authManagerStores(state, getters) {
     if(!getters.authManager) return;
-    return _.filter(getters.allStores, ['manager', getters.authManager['.key']]);
+    return _.filter(getters.allStores, ['manager', getters.authManager['username']]);
   },
   authManagerItems(state, getters) {
     if(!getters.authManager) return;
-    return _.filter(getters.allItems, ['created_by', getters.authManager['.key']]);
+    return _.filter(getters.allItems, ['created_by', getters.authManager['username']]);
   },
   authEmployee(state,getters) {
     if(!getters.authUser) return;
-    return _.find(getters.allEmployees,['.key',getters.authUser.username])
+    return _.find(getters.allEmployees,['username',getters.authUser.username])
   },
   authEmployeeStores(state, getters) {
     if(!getters.authEmployee) return;
@@ -33,14 +34,20 @@ const getters = {
   },
   authCustomer(state,getters) {
     if(!getters.authUser) return;
-    return _.find(getters.allCustomers,['.key',getters.authUser.username])
+    return _.find(getters.allCustomers,['username',getters.authUser.username])
   },
   sameUser(state,getters) {
     if(!getters.authUser && !getters.currentUser) return;
-    return getters.currentUser['.key'] == getters.authUser['.key'];
+    return getters.authUser.username == getters.currentUser.username;
   },
-  sameManagerEmployee(state,getters) {
-    if(!getters.authUser && !getters.currentUser) return;
+  sameEmployeeManagerStore(state,getters) {
+    if(!getters.authEmployee && !getters.currentStore) return;
+    return getters.authEmployee.manager == getters.currentStore.manager;
+  },
+  sameManagerStore(state,getters) {
+    if(!getters.authManager && !getters.currentStore) return;
+    return getters.authManager['username'] == getters.currentStore.manager;
+
   }
 };
 
@@ -60,11 +67,12 @@ const actions = {
   setUID({commit},uid) {
     commit('SET_UID',uid);
   },
-  setAuthUserStatus({getters},status) {
-    let user = getters.authUser;
-    if(user) {
-      getters.refUsers.child(user['.key']).update(status);
-    }
+  setAuthUserStatus({getters,dispatch},status) {
+    // let user = getters.authUser;
+    // if(user) {
+    //   user.status = status;
+    //   dispatch('updateUser',user);
+    // }
   }
 };
 

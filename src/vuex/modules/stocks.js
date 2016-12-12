@@ -1,5 +1,6 @@
 const state = {
   storedStock: null,
+  foundStock: null,
 };
 
 const getters = {
@@ -11,6 +12,14 @@ const getters = {
     if(!state.storedStock) return;
     return state.storedStock;
   },
+  storedStockItem(state,getters) {
+    if(!getters.storedStock) return;
+    return _.find(getters.allItems,['.key',getters.storedStock.item]);
+  },
+  foundStock(state) {
+    if(!state.foundStock) return;
+    return state.foundStock;
+  }
 };
 
 const mutations = {
@@ -20,15 +29,6 @@ const mutations = {
 };
 
 const actions = {
-  addStock({dispatch},value) {
-    dispatch('addRefObject',{ref: 'Stock', value});
-  },
-  deleteStock({dispatch},value) {
-    dispatch('deleteRefObject',{ref: 'Stock', value});
-  },
-  updateStock({dispatch},value) {
-    dispatch('updateRefObject',{ref: 'Stock', value,action: 'storeStock'});
-  },
   storeStock({commit,getters},stock) {
     commit('STORE_STOCK',_.clone(stock) || {
         item: '',
@@ -41,6 +41,9 @@ const actions = {
         times_bought: '',
       });
   },
+  findStock({commit,getters},key) {
+    commit('STORE_FOUND_STOCK',_.find(getters.allStocks,['.key',key]));
+  }
 };
 //called by this.$store.dispatch('addUser')
 export default {

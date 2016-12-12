@@ -1,6 +1,5 @@
 <template>
-  <display v-if="!authUser" :message="$store.getters.authUID ? 'Loading... Your Account' : 'Heading back home'"/>
-  <div v-else>
+  <div v-if="authUser">
 
     <md-dialog ref="signOut">
       <md-toolbar>
@@ -43,7 +42,7 @@
               <span>{{authUser.name | capitalize}}</span>
               <span>{{authUser.email}}</span>
             </div>
-            <router-link :to="{name: 'user', params: {username: authUser['.key']}}" tag="md-button"
+            <router-link :to="{name: 'user', params: {username: authUser.username}}" tag="md-button"
                          class="md-icon-button md-list-action">
               <md-icon>send</md-icon>
             </router-link>
@@ -66,32 +65,34 @@
           <router-link tag="span" :to="{name: 'stores'}"> Stores</router-link>
         </md-list-item>
         <md-list-item>
-          <md-icon>power settings new</md-icon>
+          <md-icon>cancel</md-icon>
           <span @click="$refs.signOut.open()">Sign Out</span>
         </md-list-item>
         <md-subheader>Profiles</md-subheader>
         <md-list-item v-if="authManager">
           <md-icon>store</md-icon>
-          <router-link tag="span" :to="{name: 'manager', params: {username: authManager['.key']}}">
+          <router-link tag="span" :to="{name: 'manager', params: {username: authManager.username}}">
             Manager
           </router-link>
         </md-list-item>
         <md-list-item v-if="authEmployee">
           <md-icon>store</md-icon>
-          <router-link tag="span" :to="{name: 'employee', params: {username: authEmployee['.key']}}">
+          <router-link tag="span" :to="{name: 'employee', params: {username: authEmployee.username}}">
             Employee
           </router-link>
         </md-list-item>
         <md-list-item v-if="authCustomer">
           <md-icon>store</md-icon>
-          <router-link tag="span" :to="{name: 'customer', params: {username: authCustomer['.key']}}">
+          <router-link tag="span" :to="{name: 'customer', params: {username: authCustomer.username}}">
             Customer
           </router-link>
         </md-list-item>
       </md-list>
     </md-sidenav>
-  </div>
 
+    <slot></slot>
+
+  </div>
 </template>
 
 <script>

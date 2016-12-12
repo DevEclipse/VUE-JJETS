@@ -72,7 +72,7 @@
 
       <cards :list="filterStocks">
         <template scope="props">
-          <md-toolbar>
+          <md-toolbar class="md-large md-accent">
             <div class="md-toolbar-container">
               <div class="md-title md-accent" style="flex: 1;">
                 {{findItem(props.data.item).name | capitalize}}
@@ -80,6 +80,13 @@
               <md-button class="md-icon-button" @click="openEditStock(props.data)">
                 <md-icon>edit</md-icon>
               </md-button>
+            </div>
+            <div class="md-toolbar-container">
+              <div class="md-subhead">
+                <router-link tag="md-button" :to="{name: 'manager', params: {username: findItem(props.data.item).created_by}}">
+                  <md-icon>face</md-icon> Created By: {{findItem(props.data.item).created_by | capitalize}}
+                </router-link>
+              </div>
             </div>
           </md-toolbar>
 
@@ -121,8 +128,8 @@
               <vue-image :image="item.image_url" alt="Store"/>
             </md-avatar>
             <div class="md-list-text-container">
-              <span>{{item.cost_price ? `&#8369;${item.cost_price}` : 'Free'}}</span>
-              <span>{{item.name}}</span>
+              <span>Name: {{item.name | capitalize}}</span>
+              <span>Cost Price: {{item.cost_price ? `&#8369;${item.cost_price}` : 'Free'}}</span>
               <span>Created By: {{item.created_by | capitalize}}</span>
             </div>
             <md-button class="md-icon-button md-list-action" @click="addItemStock(item)">

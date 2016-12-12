@@ -25,16 +25,6 @@ const mutations = {
   },
 };
 const actions = {
-  addTransaction({dispatch}, value) {
-    console.log(value);
-    dispatch('addRefObject',{ref: 'Transaction', value});
-  },
-  deleteTransaction({dispatch}, value) {
-    dispatch('deleteRefObject',{ref: 'Transaction', value});
-  },
-  updateTransaction({dispatch}, value) {
-    dispatch('updateRefObject',{ref: 'Transaction', value,action: 'storeTransaction'});
-  },
   storeTransaction({commit,getters},transaction) {
     let defaultData = {
       customer: '',
@@ -45,7 +35,7 @@ const actions = {
       total: 0,
       change: 0,
       status: 'Processing',
-      store: getters.currentStore['.key'],
+      store: getters.currentStore ? getters.currentStore['.key'] : '',
       employee: getters.authEmployee['.key'],
       updated_by: getters.authEmployee['.key'],
     };

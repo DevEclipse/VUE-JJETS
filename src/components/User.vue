@@ -32,12 +32,16 @@
                style="position: fixed; z-index: 3;" @click="editUser">
       <md-icon>edit</md-icon>
     </md-button>
-    <md-button v-if="sameUser" class="md-fab md-mini md-fab-bottom-left"
+    <md-button v-if="sameUser" class="md-fab md-mini md-fab-bottom-left hidden-xs"
+               style="position: fixed; z-index: 3;" @click="showUsers = !showUsers">
+      <md-icon>info</md-icon>
+    </md-button>
+    <md-button v-if="sameUser" class="md-fab md-mini md-fab-bottom-left visible-xs"
                style="position: fixed; z-index: 3;" @click="$refs.otherUsersMenu.toggle()">
       <md-icon>info</md-icon>
     </md-button>
     <md-sidenav class="md-fixed md-right" ref="otherUsersMenu">
-      <md-list class="md-triple-line">
+      <md-list class="md-triple-line visible-xs">
         <md-subheader>Other Users you may know</md-subheader>
         <md-list-item v-for="user in allUsers">
           <md-avatar>
@@ -45,9 +49,9 @@
           </md-avatar>
           <div class="md-list-text-container">
             <span>{{user.name}}</span>
-            <span>{{user['.key']}}</span>
+            <span>{{user.username}}</span>
           </div>
-          <router-link tag="md-button" class="md-icon-button" :to="{name: 'user', params: {username: user['.key']}}">
+          <router-link tag="md-button" class="md-icon-button" :to="{name: 'user', params: {username: user.username}}">
             <md-icon>info</md-icon>
           </router-link>
         </md-list-item>
@@ -55,10 +59,11 @@
     </md-sidenav>
     <div class="row">
       <div class="col-xs-12 col-md">
-        <md-card>
+        <md-card style="margin-bottom: 1rem;">
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
-              <div class="md-title">{{currentUser.username | capitalize}}</div>
+              <div class="md-title" style="flex: 1;">{{currentUser.username | capitalize}}</div>
+              <div class="md-subhead">Status: {{currentUser.status}}</div>
             </div>
           </md-toolbar>
           <md-card-media-cover md-solid>
@@ -76,21 +81,51 @@
                   <div class="md-subhead">{{currentUser.name}}</div>
                 </md-card-header-text>
               </md-card-header>
+              <md-card-header>
+                <md-card-header-text>
+                  <div class="md-subhead">Created: {{currentUser.created_date | moment("from")}}</div>
+                </md-card-header-text>
+                <md-card-header-text>
+                  <div class="md-subhead">Updated:{{currentUser.updated_date | moment("from")}}</div>
+                </md-card-header-text>
+              </md-card-header>
             </md-card-area>
           </md-card-media-cover>
         </md-card>
+        <transition enter-active-class="animated bounceInLeft" leave-active-class="animated bounceOutLeft">
+        <md-list v-if="showUsers" class="md-triple-line hidden-xs">
+          <md-subheader>Other Users you may know</md-subheader>
+          <md-list-item v-for="user in allUsers">
+            <md-avatar>
+              <vue-image :image="user.image_url" alt="User"></vue-image>
+            </md-avatar>
+            <div class="md-list-text-container">
+              <span>{{user.name}}</span>
+              <span>{{user.username}}</span>
+            </div>
+            <router-link tag="md-button" class="md-icon-button" :to="{name: 'user', params: {username: user.username}}">
+              <md-icon>info</md-icon>
+            </router-link>
+          </md-list-item>
+        </md-list>
+        </transition>
       </div>
 
       <div class="col-xs-12 col-md">
-        <md-card>
+        <md-card style="margin-bottom: 1rem;">
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
               <span class="md-title" style="flex: 1;"> Manager Profile </span>
-              <router-link :to="{name: 'manager'}" tag="md-button" class="md-icon-button">
+              <md-button v-if="!authManager" @click="addManager({username: authUser.username,void_code: authUser.username})">
+                <md-icon>add</md-icon> Add Manager Profile
+              </md-button>
+              <span class="md-subhead" v-else-if="!currentManager">
+               No Manager Profile
+              </span>
+              <router-link v-else :to="{name: 'manager'}" tag="md-button" class="md-icon-button">
                 <md-icon>info</md-icon>
               </router-link>
             </div>
-
           </md-toolbar>
           <md-card-media-cover md-solid>
             <md-card-media>
@@ -111,18 +146,21 @@
             </md-card-area>
           </md-card-media-cover>
         </md-card>
-        <md-card>
+        <md-card style="margin-bottom: 1rem;">
+
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
               <span class="md-title" style="flex: 1;"> Employee Profile </span>
-              <md-button v-if="!authEmployee" class="md-icon-button">
-                <md-icon>+</md-icon>
+              <md-button v-if="!authEmployee" @click="addEmployee({username: authUser.username,manager: authUser.username})">
+                <md-icon>add</md-icon> Add Employee Profile
               </md-button>
-              <router-link v-if="currentEmployee" :to="{name: 'employee'}" tag="md-button" class="md-icon-button">
+              <span class="md-subhead" v-else-if="!currentEmployee">
+               No Employee Profile
+              </span>
+              <router-link v-else :to="{name: 'employee'}" tag="md-button" class="md-icon-button">
                 <md-icon>info</md-icon>
               </router-link>
             </div>
-
           </md-toolbar>
           <md-card-media-cover md-solid>
             <md-card-media>
@@ -143,11 +181,17 @@
             </md-card-area>
           </md-card-media-cover>
         </md-card>
-        <md-card>
+        <md-card style="margin-bottom: 1rem;">
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
               <span class="md-title" style="flex: 1;"> Customer Profile </span>
-              <router-link :to="{name: 'customer'}" tag="md-button" class="md-icon-button">
+              <md-button v-if="!authCustomer" @click="addCustomer({username: authUser.username,balance: 0})">
+                <md-icon>add</md-icon> Add Customer Profile
+              </md-button>
+              <span class="md-subhead" v-else-if="!currentCustomer">
+               No Customer Profile
+              </span>
+              <router-link v-else :to="{name: 'customer'}" tag="md-button" class="md-icon-button">
                 <md-icon>info</md-icon>
               </router-link>
             </div>
@@ -181,10 +225,12 @@
   import {mapGetters,mapActions} from 'vuex';
   export default {
     name: 'user',
+    props: ['authUser', 'authManager', 'authEmployee', 'authCustomer'],
     data() {
       return {
         user: null,
         search: '',
+        showUsers: true,
       }
     },
     computed: {
@@ -199,16 +245,12 @@
         return users;
       },
       ...mapGetters([
+        'sameUser',
+        'allUsers',
         'currentUser',
         'currentEmployee',
         'currentManager',
-        'currentCustomer',
-        'authUser',
-        'authEmployee',
-        'authManager',
-        'authCustomer',
-        'sameUser',
-        'allUsers'
+        'currentCustomer'
       ])
     },
     methods: {

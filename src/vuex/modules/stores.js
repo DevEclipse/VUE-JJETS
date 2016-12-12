@@ -3,33 +3,38 @@ const state = {
 };
 
 const getters = {
-  currentStore(state,getters) {
-    if(!getters.routeParams.store) return null;
-    return _.find(getters.allStores,['.key',getters.routeParams.store]);
+  currentStore(state, getters) {
+    if (!getters.routeParams.store) return null;
+    return _.find(getters.allStores, ['.key', getters.routeParams.store]);
   },
-  currentStoreTransactions(state,getters) {
-    if(!getters.currentStore) return;
-    return _.filter(getters.allTransactions,['store',getters.currentStore['.key']]);
+  currentStoreTransactions(state, getters) {
+    if (!getters.currentStore) return;
+    return _.filter(getters.allTransactions, ['store', getters.currentStore['.key']]);
   },
   storedStore(state) {
-    if(!state.storedStore) return;
+    if (!state.storedStore) return;
     return state.storedStore;
   },
 };
 
 const mutations = {
-
+  ['STORE_STOCK'](state, store) {
+    state.storedStore = store;
+  }
 };
 
 const actions = {
-  addStore({dispatch},value) {
-    dispatch('addRefObject',{ref: 'Store', value});
-  },
-  deleteStore({dispatch},value) {
-    dispatch('deleteRefObject',{ref: 'Store', value});
-  },
-  updateStore({dispatch},value) {
-    dispatch('updateRefObject',{ref: 'Store', value,action: 'storeStock'});
+  storeStore({commit, getters}, store) {
+    commit('STORE_STOCK', _.clone(store) || {
+        manager: getters.authManager.username,
+        name: '',
+        image_url: '',
+        description: '',
+        tax_rate: '',
+        discount_rate: '',
+        location: '',
+        rating: 0,
+      });
   },
 };
 export default {

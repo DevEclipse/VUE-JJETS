@@ -1,6 +1,7 @@
 
 const state = {
   storedItem: null,
+  foundItem: null,
 };
 
 const getters = {
@@ -20,35 +21,36 @@ const getters = {
     if(!getters.storedItem) return;
     return _.filter(getters.allStocks,['item',getters.storedItem['.key']]);
   },
+  foundItem(state) {
+    if(!state.foundItem) return;
+    return state.foundItem;
+  }
 };
 
 const mutations = {
   ['STORE_ITEM'](state,item) {
     state.storedItem = item;
   },
+  ['STORE_FOUND_ITEM'](state,item) {
+    state.foundItem = item;
+  }
 };
 
 const actions = {
-  addItem({dispatch},value) {
-    dispatch('addRefObject',{ref: 'Item', value});
-  },
-  deleteItem({dispatch},value) {
-    dispatch('deleteRefObject',{ref: 'Item', value});
-  },
-  updateItem({dispatch},value) {
-    dispatch('updateRefObject',{ref: 'Item', value,action: 'storeItem'});
-  },
   storeItem({commit,getters},item) {
     commit('STORE_ITEM',_.clone(item) || {
         name: '',
         cost_price: 0,
         image_url: '',
         description: '',
-        created_by: getters.authManager['.key'],
+        created_by: getters.authManager['username'],
         rating: 0,
         tags: ['item'],
       });
   },
+  findItem({commit,getters},key) {
+    commit('STORE_FOUND_ITEM',_.find(getters.allItems,['username',key]));
+  }
 };
 
 export default {

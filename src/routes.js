@@ -1,13 +1,8 @@
 const routes = [
   {
     path: '/',
-    component: resolve => require(['./components/Index.vue'], resolve),
+    components: {index: resolve => require(['./components/Index.vue'], resolve)},
     name: 'home',
-  },
-  {
-    path: '/tag/:tag',
-    component: resolve => require(['./components/Tag.vue'], resolve),
-    name: 'tag',
   },
   {
     path: '/items',
@@ -22,12 +17,8 @@ const routes = [
   {
     path: '/store/:store',
     component: resolve => require(['./components/Store.vue'],resolve),
+    name: 'store',
     children: [
-      {
-        path: '',
-        component: resolve=> require(['./components/StoreInfo.vue'],resolve),
-        name: 'store',
-      },
       {
         path: 'stocks',
         component: resolve => require(['./components/Stocks.vue'],resolve),
@@ -67,29 +58,23 @@ const routes = [
   },
   {
     path: '/user/:username',
-    component: {template: `<router-view></router-view>`},
-    children: [
-      {
-        path: '',
-        component: resolve => require(['./components/User.vue'],resolve),
-        name: 'user',
-      },
-      {
-        path: 'manager',
-        component: resolve => require(['./components/Manager.vue'],resolve),
-        name: 'manager',
-      },
-      {
-        path: 'employee',
-        component: resolve => require(['./components/Employee.vue'],resolve),
-        name: 'employee',
-      },
-      {
-        path: 'customer',
-        component: resolve => require(['./components/Customer.vue'],resolve),
-        name: 'customer',
-      },
-    ]
+    component: resolve => require(['./components/User.vue'],resolve),
+    name: 'user',
+  },
+  {
+    path: '/manager/:username',
+    component: resolve => require(['./components/Manager.vue'],resolve),
+    name: 'manager',
+  },
+  {
+    path: '/employee/:username',
+    component: resolve => require(['./components/Employee.vue'],resolve),
+    name: 'employee',
+  },
+  {
+    path: '/customer/:username',
+    component: resolve => require(['./components/Customer.vue'],resolve),
+    name: 'customer',
   },
 
 

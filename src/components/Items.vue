@@ -43,18 +43,6 @@
               <md-textarea v-model="storedItem.description"></md-textarea>
             </md-input-container>
 
-            <multiselect :options="allTags | keys"
-                         v-model="storedItem.tags"
-                         :multiple="true"
-                         :searchable="true"
-                         :taggable="true"
-                         :allow-empty="false"
-                         :hide-selected="true"
-                         :close-on-select="false"
-                         :max="3"
-                         @tag="addTag"
-                         tag-placeholder="Add this as new tag"
-                         placeholder="Type to search or add tag"></multiselect>
 
           </md-dialog-content>
           <md-dialog-actions>
@@ -111,18 +99,6 @@
               <md-textarea v-model="storedItem.description"></md-textarea>
             </md-input-container>
 
-            <multiselect :options="allTags | keys"
-                         v-model="storedItem.tags"
-                         :multiple="true"
-                         :searchable="true"
-                         :taggable="true"
-                         :allow-empty="false"
-                         :hide-selected="true"
-                         :close-on-select="false"
-                         @tag="addTag"
-                         :max="3"
-                         tag-placeholder="Add this as new tag"
-                         placeholder="Type to search or add tag"></multiselect>
           </md-dialog-content>
           <md-dialog-actions>
             <md-button class="md-raised md-primary"
@@ -174,7 +150,7 @@
       </md-sidenav>
     </template>
 
-    <cards :list="allItems" :filters="['name','created_by']">
+    <cards :list="items || allItems" :filters="filters || ['name','created_by']">
       <template scope="props">
         <md-toolbar class="md-accent md-large">
           <div class="md-toolbar-container">
@@ -224,16 +200,6 @@
             <span style="font-weight: bold">Updated: </span>{{props.data.updated_date | moment("from")}}
           </span>
         </md-card-media-actions>
-        <md-card-actions>
-          Tags:
-          <span v-for="tag in props.data.tags" style="margin: 1rem;">
-                <router-link :to="{name: 'tag',params: {tag: tag}}"> {{tag}} </router-link>
-              </span>
-
-          <span style="flex: 1"></span>
-
-
-        </md-card-actions>
       </template>
     </cards>
 
@@ -245,12 +211,10 @@
   import {mapState, mapGetters, mapActions} from 'vuex';
   export default {
     name: 'items',
+    props: ['items','filters','authManager','authCustomer'],
     computed: {
       ...mapGetters([
         'allItems',
-        'authManager',
-        'allTags',
-        'authCustomer',
         'storedItem',
         'storedItemStocks',
         'allStores',
@@ -263,6 +227,7 @@
       },
       openEditItem(item) {
         this.storeItem(item);
+        console.log(this.storedItem);
         this.$refs.editItemDialog.open();
       },
       openAddItem(){
@@ -273,7 +238,6 @@
         'addItem',
         'updateItem',
         'addStock',
-        'addTag',
         'storeItem',
         'addItemToCart'
       ]),
