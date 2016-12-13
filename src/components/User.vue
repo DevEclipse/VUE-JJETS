@@ -63,7 +63,6 @@
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
               <div class="md-title" style="flex: 1;">{{currentUser.username | capitalize}}</div>
-              <div class="md-subhead">Status: {{currentUser.status}}</div>
             </div>
           </md-toolbar>
           <md-card-media-cover md-solid>

@@ -6,12 +6,11 @@ const state = {
 
 const getters = {
   currentItem(state,getters) {
-    if(!getters.allItems) return;
     return _.find(getters.allItems,['.key',getters.routeParams.item]);
   },
   currentItemStocks(state,getters) {
     if(!getters.currentItem) return;
-      return _.filter(getters.allStocks,['item',getters.currentItem['.key']]);
+    return _.filter(getters.allStocks,['item',getters.currentItem['.key']]);
   },
   storedItem(state) {
     if(!state.storedItem) return;
@@ -45,7 +44,7 @@ const actions = {
         description: '',
         created_by: getters.authManager['username'],
         rating: 0,
-        tags: ['item'],
+        category: '',
       });
   },
   findItem({commit,getters},key) {

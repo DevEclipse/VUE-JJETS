@@ -1,5 +1,5 @@
 <template>
-  <div v-if="authUser">
+  <div v-if="authUser && $route.name != 'home'">
 
     <md-dialog ref="signOut">
       <md-toolbar>

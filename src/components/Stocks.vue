@@ -1,7 +1,7 @@
 <template>
   <display v-if="!currentStore" message="No Stocks Yet"/>
   <div v-else-if="authManager">
-    <template v-if="authManager['.key'] == currentStore.manager">
+    <template v-if="sameManagerStore">
 
       <md-dialog ref="editStock">
         <template v-if="storedStock">
@@ -172,7 +172,8 @@
         'authManager',
         'serverTime',
         'allItems',
-        'storedStock'
+        'storedStock',
+        'sameManagerStore'
       ])
     },
     data() {

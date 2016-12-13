@@ -13,7 +13,6 @@ const getters = {
   },
   authManager(state,getters) {
     if(!getters.authUser) return;
-    console.log(getters.authUser);
     return _.find(getters.allManagers,['username',getters.authUser.username])
   },
   authManagerStores(state, getters) {
@@ -37,16 +36,19 @@ const getters = {
     return _.find(getters.allCustomers,['username',getters.authUser.username])
   },
   sameUser(state,getters) {
-    if(!getters.authUser && !getters.currentUser) return;
+    if(!getters.authUser) return;
+    if(!getters.currentUser) return;
     return getters.authUser.username == getters.currentUser.username;
   },
   sameEmployeeManagerStore(state,getters) {
-    if(!getters.authEmployee && !getters.currentStore) return;
+    if(!getters.authEmployee) return;
+    if(!getters.currentStore) return;
     return getters.authEmployee.manager == getters.currentStore.manager;
   },
   sameManagerStore(state,getters) {
-    if(!getters.authManager && !getters.currentStore) return;
-    return getters.authManager['username'] == getters.currentStore.manager;
+    if(!getters.authManager) return;
+    if(!getters.currentStore) return;
+    return getters.authManager.username == getters.currentStore.manager;
 
   }
 };

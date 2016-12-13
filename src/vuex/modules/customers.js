@@ -8,7 +8,7 @@ const state = {
 const getters = {
   currentCustomer(state, getters) {
     if (!getters.routeParams) return;
-    return _.find(getters.allCustomers, ['username', getters.routeParams.username]);
+    return _.find(getters.allCustomers, ['.key', getters.routeParams.username]);
   },
   storedCartItems(state) {
     return state.cartItems;

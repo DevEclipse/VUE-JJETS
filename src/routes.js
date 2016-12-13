@@ -48,7 +48,7 @@ const routes = [
   },
   {
     path: '/pos/:transaction',
-    component: resolve => require(['./components/Transaction.vue'],resolve),
+    component: resolve => require(['./components/PointOfSale.vue'],resolve),
     name: 'pos',
   },
   {

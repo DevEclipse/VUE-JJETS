@@ -10,7 +10,37 @@ import auth from './modules/auth'
 import stocks from './modules/stocks'
 import firebase from 'firebase'
 
+const generateGetters = function (refs) {
+  let refKeys = Object.keys(refs);
+  let getters = [];
+  _.forEach(refKeys,key => {
+    let capKey = _.upperFirst(key);
+    getters[`all${capKey}`] = function(state) {
+      return state[`b${key}`];
+    };
+    getters[`ref${capKey}`] = function(state) {
+      return state['refs'][`b${key}`];
+    }
+  });
+  return getters;
+};
+const generateActions = function (refs) {
+  let refKeys = Object.keys(refs);
+  let actions = [];
+  let aud = ['add','update','delete'];
+  _.forEach(refKeys,key => {
+    let capKey = _.upperFirst(key);
+    let singularCapKey = capKey.slice(0, -1);
+    let ref = `ref${capKey}`;
+    _.forEach(aud, a => {
+      actions[`${a}${singularCapKey}`] = function({dispatch},payload) {
+        dispatch(`${a}RefObject`,{ref, payload});
+      };
+    });
 
+  });
+  return actions;
+};
 
 const state = {
   refs: null,
@@ -31,38 +61,6 @@ const state = {
   main: null,
 };
 
-const generateGetters = function (refs) {
-  let refKeys = Object.keys(refs);
-  let getters = [];
-  _.forEach(refKeys,key => {
-    let capKey = key.charAt(0).toUpperCase() + key.slice(1);
-    getters[`all${capKey}`] = function(state) {
-      return state[`b${key}`];
-    };
-    getters[`ref${capKey}`] = function(state) {
-      return state['refs'][`b${key}`];
-    }
-  });
-  return getters;
-};
-const generateActions = function (refs) {
-  let refKeys = Object.keys(refs);
-  let actions = [];
-  let aud = ['add','update','delete'];
-  _.forEach(refKeys,key => {
-    let capKey = key.charAt(0).toUpperCase() + key.slice(1);
-    let singularCapKey = capKey.slice(0, -1);
-    let ref = `ref${capKey}`;
-    _.forEach(aud, a => {
-      actions[`${a}${singularCapKey}`] = function({dispatch},payload) {
-        console.log(payload);
-        dispatch(`${a}RefObject`,{ref, payload});
-      };
-    });
-
-  });
-  return actions;
-};
 
 const modules = {
   users,
@@ -138,7 +136,7 @@ const actions = {
   },
   addRefObject({dispatch, getters}, {ref, payload}){
     dispatch('newObject', payload);
-    getters[ref].push(getters.getNewObject);
+    getters.getNewObject['.key'] = getters[ref].push(getters.getNewObject).key;
   },
   updateRefObject({dispatch, getters}, {ref, payload}){
     dispatch('updateObject', payload);

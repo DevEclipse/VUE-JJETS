@@ -49,7 +49,7 @@ Vue.filter('date', value => {
 });
 
 Vue.filter('capitalize', value => {
-  return value.charAt(0).toUpperCase() + value.slice(1);
+  return _.upperFirst(value);
 });
 Vue.filter('keys', value => {
   let keys = [];
@@ -174,5 +174,3 @@ firebase.auth().onAuthStateChanged(function (user) {
     store.dispatch('setUID', user.uid);
     store.dispatch('setAuth');
 });
-
-console.log(app);

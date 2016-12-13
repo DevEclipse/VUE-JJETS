@@ -47,7 +47,7 @@
       ]),
       createTransaction() {
         this.storeTransaction();
-        this.addTransaction();
+        this.addTransaction(this.storedTransaction);
       },
     },
   }

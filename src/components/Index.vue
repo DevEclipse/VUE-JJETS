@@ -74,9 +74,12 @@
         <div class="col-xs" style="color: white; font-size: 15vh; font-weight: bold;">
           <div class="row middle-xs center-xs">JJETS</div>
           <div class="row middle-xs center-xs" style="padding: 5rem;">
-          <md-button class="md-accent md-raised" @click="openDialog('getStarted')">
+          <md-button v-if="!$store.getters.authUser" class="md-accent md-raised" @click="openDialog('getStarted')">
             Get Started
           </md-button>
+            <md-button v-else class="md-accent md-raised" @click="$root.toDashboard">
+              To Your Dashboard
+            </md-button>
           </div>
         </div>
       </div>

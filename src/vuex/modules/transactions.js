@@ -3,16 +3,29 @@ const state = {
 };
 const getters = {
   currentTransaction(state, getters) {
-    if (!getters.routeParams) return;
+    if(!getters.routeParams) return;
     return _.find(getters.allTransactions, ['.key', getters.routeParams.transaction]);
   },
   currentTransactionStore(state, getters) {
-    if (!getters.currentTransaction) return;
+    if(!getters.currentTransaction) return;
     return _.find(getters.allStores, ['.key', getters.currentTransaction.store]);
   },
-  currentTransactionStocks(state, getters) {
-    if (!getters.currentTransactionStore) return;
-    return _.filter(getters.allStocks, ['store', getters.currentTransactionStore['.key']]);
+  currentTransactionStoreStocks(state, getters) {
+    if (!getters.currentTransactionStore) return ;
+    let stocks = _.filter(getters.allStocks, ['store', getters.currentTransactionStore['.key']]);
+    return _.map(stocks, stock => {
+      let item = _.find(getters.allItems,['.key',stock.item]);
+      return {stock,item};
+    });
+  },
+  currentTransactionItemStocks(state,getters) {
+    if(!getters.currentTransaction) return;
+    if(!getters.currentTransaction.items) return;
+    if(!getters.currentTransactionStoreStocks.length) return ;
+    return _.map(getters.currentTransaction.items, (transactionItem,key) => {
+        let found = _.find(getters.currentTransactionStoreStocks,[`stock['.key']`,key]);
+        return {transactionItem,...found,key};
+    });
   },
   storedTransaction(state) {
     if(!state.storedTransaction) return;
@@ -49,3 +62,4 @@ export default {
   mutations,
   actions
 }
+
