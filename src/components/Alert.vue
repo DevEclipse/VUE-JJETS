@@ -1,27 +1,36 @@
 <template>
-  <div class="md-card alert">
-    <slot>
-      {{message}}
-    </slot>
-  </div>
+  <md-card md-with-hover style="margin: 1rem;">
+    <md-toolbar style="padding-right: 1rem;" :class="{'md-warn': alert.warn, 'md-accent': !alert.warn}">
+      <div class="md-toolbar-container">
+        <div class="md-title" style="flex: 1;">
+          {{alert.message}}
+        </div>
+        <md-button v-if="alert.important" class="md-icon-button" @click="deleteAlert(alert)">
+          <md-icon>close</md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+  </md-card>
 </template>
 
 <script>
+  import {mapActions} from 'vuex';
   export default {
-      props: ['message'],
+    name: 'alert',
+    props: ['alert'],
+    mounted() {
+      if(this.alert.important) return;
+      _.delay(() => {
+        this.deleteAlert(this.alert);
+      }, this.alert.duration || 3000);
+    },
+    methods: {
+      ...mapActions([
+        'deleteAlert',
+      ]),
+      dummy() {
 
-      mounted() {
-        setTimeout(() => {
-          this.$destroy();
-        },3000).bind(this);
-      },
+      }
+    }
   }
 </script>
-
-<style scoped>
-  .alert {
-    position: fixed;
-    top: 0;
-    right: 0;
-  }
-</style>

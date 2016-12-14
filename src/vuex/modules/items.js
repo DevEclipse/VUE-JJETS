@@ -1,17 +1,9 @@
 
 const state = {
   storedItem: null,
-  foundItem: null,
 };
 
 const getters = {
-  currentItem(state,getters) {
-    return _.find(getters.allItems,['.key',getters.routeParams.item]);
-  },
-  currentItemStocks(state,getters) {
-    if(!getters.currentItem) return;
-    return _.filter(getters.allStocks,['item',getters.currentItem['.key']]);
-  },
   storedItem(state) {
     if(!state.storedItem) return;
     return state.storedItem;
@@ -20,19 +12,20 @@ const getters = {
     if(!getters.storedItem) return;
     return _.filter(getters.allStocks,['item',getters.storedItem['.key']]);
   },
-  foundItem(state) {
-    if(!state.foundItem) return;
-    return state.foundItem;
-  }
+
+  storedItemStocksStores(state,getters) {
+    if(!getters.storedItemStocks) return;
+    return _.map(getters.storedItemStocks,stock => {
+        let store = _.find(getters.allStores,['.key',stock.store]);
+        return {stock,store};
+    })
+  },
 };
 
 const mutations = {
   ['STORE_ITEM'](state,item) {
     state.storedItem = item;
   },
-  ['STORE_FOUND_ITEM'](state,item) {
-    state.foundItem = item;
-  }
 };
 
 const actions = {
@@ -42,14 +35,11 @@ const actions = {
         cost_price: 0,
         image_url: '',
         description: '',
-        created_by: getters.authManager['username'],
+        created_by: getters.authManager.username,
         rating: 0,
         category: '',
       });
   },
-  findItem({commit,getters},key) {
-    commit('STORE_FOUND_ITEM',_.find(getters.allItems,['username',key]));
-  }
 };
 
 export default {

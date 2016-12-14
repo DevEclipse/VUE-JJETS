@@ -8,6 +8,13 @@ const getters = {
     if(!getters.currentStore) return;
     return _.filter(getters.allStocks,['store',getters.currentStore['.key']]);
   },
+  currentStocksItems(state,getters) {
+    if(!getters.currentStocks) return;
+    return _.map(getters.currentStocks,stock => {
+      let item = _.find(getters.allItems,['.key',stock.item]);
+      return {stock,item};
+    })
+  },
   storedStock(state) {
     if(!state.storedStock) return;
     return state.storedStock;
@@ -16,10 +23,6 @@ const getters = {
     if(!getters.storedStock) return;
     return _.find(getters.allItems,['.key',getters.storedStock.item]);
   },
-  foundStock(state) {
-    if(!state.foundStock) return;
-    return state.foundStock;
-  }
 };
 
 const mutations = {

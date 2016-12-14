@@ -14,6 +14,7 @@
     <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight" mode="out-in">
         <component :is="currentView"
                    :authManager="authManager"
+                   :authCustomer="authCustomer"
                    :employees="currentManagerEmployees"
                    :manager="currentManager"
                    :items="currentManagerItems"
@@ -30,7 +31,7 @@
   import Employees from './Employees.vue';
   export default {
     name: 'manager',
-    props: ['authManager'],
+    props: ['authManager','authCustomer'],
     components: {
       Stores,
       Items,

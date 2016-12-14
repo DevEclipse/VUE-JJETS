@@ -1,8 +1,16 @@
 <template>
-  <div id="app" v-md-theme="'default'" >
+  <div id="app" v-md-theme="'default'">
+
+
+    <transition-group style="position: fixed; right: 0; z-index: 9999;  " enter-active-class="animated bounceInRight"
+                leave-active-class="animated bounceOutRight"
+                mode="out-in">
+      <alert v-for="alert in getAlerts" :alert="alert" :key="alert.id"></alert>
+    </transition-group>
 
     <dashboard>
-      <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight" mode="out-in">
+      <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight"
+                  mode="out-in">
         <router-view :authUser="authUser"
                      :authManager="authManager"
                      :authEmployee="authEmployee"
@@ -13,16 +21,22 @@
     <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight" mode="out-in">
       <router-view name="index"></router-view>
     </transition>
+
   </div>
 </template>
-"
+
 <script>
   import Dashboard from './components/Dashboard.vue';
   import {mapGetters, mapActions} from 'vuex';
-export default {
+  export default {
     name: 'app',
     components: {
-        Dashboard
+      Dashboard
+    },
+    data() {
+      return {
+        alerts: [],
+      }
     },
     computed: {
       ...mapGetters([
@@ -30,6 +44,13 @@ export default {
         'authManager',
         'authEmployee',
         'authCustomer',
+        'getAlerts'
+      ])
+    },
+    methods: {
+      ...mapActions([
+        'addAlert',
+        'deleteAlert',
       ])
     },
   }
@@ -38,12 +59,15 @@ export default {
 <style>
   @import url('//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic');
   @import url('//fonts.googleapis.com/icon?family=Material+Icons');
-  html,body {
+
+  html, body {
     overflow-x: hidden;
   }
+
   .h-100 {
     height: 100%;
   }
+
   .w-100 {
     width: 100%;
   }

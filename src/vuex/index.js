@@ -42,6 +42,22 @@ const generateActions = function (refs) {
   return actions;
 };
 
+const makeid = () =>
+{
+  let text = "";
+  let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < 5; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+};
+
+const speakMessage = (message) => {
+  let msg = new SpeechSynthesisUtterance(message);
+  window.speechSynthesis.speak(msg);
+};
+
 const state = {
   refs: null,
   busers: null,
@@ -58,9 +74,11 @@ const state = {
   updateObject: null,
   newObject: null,
   deleteObject: null,
-  main: null,
+  alerts: [],
+  test: {
+    test: '',
+  }
 };
-
 
 const modules = {
   users,
@@ -87,11 +105,24 @@ const mutations = {
   ['SET_DELETE_OBJECT'](state, object) {
     state.deleteObject = object;
   },
+  ['ADD_ALERT'](state,alert) {
+    state.alerts.push(alert);
+  },
+  ['DELETE_ALERT'](state,alert) {
+    state.alerts.splice(state.alerts.findIndex(a => a.id == alert.id),1);
+  },
   ...VuexFire.mutations
 };
 
 
 const getters = {
+  getAlerts(state) {
+    if(!state.alerts) return;
+    return state.alerts;
+  },
+  getTest(state) {
+    return state.test;
+  },
   getNewObject(state) {
     return state.newObject;
   },
@@ -107,6 +138,9 @@ const getters = {
   routeQuery(state) {
     return state.route.query;
   },
+  routeName(state) {
+    return state.route.name;
+  },
   ...generateGetters({
     users,
     managers,
@@ -121,6 +155,17 @@ const getters = {
 
 console.log(getters);
 const actions = {
+  addAlert({commit,dispatch},alert) {
+    alert.id = makeid();
+    commit('ADD_ALERT',alert);
+    dispatch('speakMessage',alert.message);
+  },
+  deleteAlert({commit},alert) {
+    commit('DELETE_ALERT',alert);
+  },
+  speakMessage({state},message) {
+    speakMessage(message);
+  },
   newObject({commit, getters}, object) {
     let resultObject = _.clone(object);
     resultObject['created_date'] = resultObject['updated_date'] = getters.serverTime;

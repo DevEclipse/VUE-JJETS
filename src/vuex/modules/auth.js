@@ -5,6 +5,7 @@ const state = {
 
 const getters = {
   authUID(state) {
+    if(!state.uid) return;
     return state.uid;
   },
   authUser(state,getters) {
@@ -49,8 +50,7 @@ const getters = {
     if(!getters.authManager) return;
     if(!getters.currentStore) return;
     return getters.authManager.username == getters.currentStore.manager;
-
-  }
+  },
 };
 
 const mutations = {
@@ -69,13 +69,6 @@ const actions = {
   setUID({commit},uid) {
     commit('SET_UID',uid);
   },
-  setAuthUserStatus({getters,dispatch},status) {
-    // let user = getters.authUser;
-    // if(user) {
-    //   user.status = status;
-    //   dispatch('updateUser',user);
-    // }
-  }
 };
 
 //called by this.$store.dispatch('addUser')

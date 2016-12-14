@@ -115,6 +115,10 @@
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
               <span class="md-title" style="flex: 1;"> Manager Profile </span>
+              <md-button class="md-icon-button" @click="speakMessage(`This profile is used for making stores and items, as a manager you are required to hire
+                  employees to create and validate transactions for you.`)">
+                <md-icon>help</md-icon>
+              </md-button>
               <md-button v-if="!authManager" @click="addManager({username: authUser.username,void_code: authUser.username})">
                 <md-icon>add</md-icon> Add Manager Profile
               </md-button>
@@ -150,6 +154,10 @@
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
               <span class="md-title" style="flex: 1;"> Employee Profile </span>
+              <md-button class="md-icon-button" @click="speakMessage(`This profile is used for working with managers from their stores, your primary role for this profile
+                    is to create or validate transactions from customers and stores of your manager.`)">
+                <md-icon>help</md-icon>
+              </md-button>
               <md-button v-if="!authEmployee" @click="addEmployee({username: authUser.username,manager: authUser.username})">
                 <md-icon>add</md-icon> Add Employee Profile
               </md-button>
@@ -172,8 +180,8 @@
                     Description:
                   </div>
                   <div class="md-subhead">
-                    This profile is used for making stores and items, as a manager you are required to hire
-                    employees to create and validate transactions for you.
+                    This profile is used for working with managers from their stores, your primary role for this profile
+                    is to create or validate transactions from customers and stores of your manager.
                   </div>
                 </md-card-header-text>
               </md-card-header>
@@ -184,6 +192,10 @@
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
               <span class="md-title" style="flex: 1;"> Customer Profile </span>
+              <md-button class="md-icon-button" @click="speakMessage(`This profile is used for buying items from stores and creating orders to be soon delivered
+                    by the store of your choice.`)">
+                <md-icon>help</md-icon>
+              </md-button>
               <md-button v-if="!authCustomer" @click="addCustomer({username: authUser.username,balance: 0})">
                 <md-icon>add</md-icon> Add Customer Profile
               </md-button>
@@ -207,8 +219,8 @@
                     Description:
                   </div>
                   <div class="md-subhead">
-                    This profile is used for making stores and items, as a manager you are required to hire
-                    employees to create and validate transactions for you.
+                    This profile is used for buying items from stores and creating orders to be soon delivered
+                    by the store of your choice.
                   </div>
                 </md-card-header-text>
               </md-card-header>
@@ -256,12 +268,15 @@
       editUser() {
         this.user = _.clone(this.currentUser);
         this.$refs.editUser.open();
+        this.addAlert({message:`Editing Account: ${this.currentUser.username}`});
       },
       ...mapActions([
         'addManager',
         'addEmployee',
         'addCustomer',
         'updateUser',
+        'speakMessage',
+        'addAlert'
       ])
     }
   }

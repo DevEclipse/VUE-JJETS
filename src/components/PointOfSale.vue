@@ -5,11 +5,12 @@
         <div class="md-title" style="flex: 1;">Transaction: <span class="md-caption">
           {{currentTransaction['.key']}}
         </span></div>
-        <md-button v-if="currentTransaction.items && (currentTransaction.status == 'Processing' || currentTransaction.status == 'Editing')">
+        <md-button
+          v-if="currentTransaction.items && (currentTransaction.status == 'Processing' || currentTransaction.status == 'Editing')">
           <md-icon>payment</md-icon>
           Check Out
         </md-button>
-        <md-button v-if="!currentTransaction.items" >
+        <md-button v-if="!currentTransaction.items">
           <md-icon>block</md-icon>
           Cancel Transaction
         </md-button>
@@ -28,7 +29,7 @@
           </div>
         </div>
       </md-toolbar>
-      <md-input-container>
+      <md-input-container style="margin: 1rem;">
         <label>
           <md-icon>search</md-icon>
           Search Store Item
@@ -37,11 +38,11 @@
       </md-input-container>
       <md-list>
 
-        <div v-if="currentTransactionStoreStocks.length">
+        <div v-if="filterStocks.length">
           <transition-group enter-active-class="animated bounceInRight"
                             leave-active-class="animated bounceOutRight">
 
-            <md-list-item v-for="{stock,item} in currentTransactionStoreStocks" :key="stock['.key']">
+            <md-list-item v-for="{stock,item} in filterStocks" :key="stock['.key']">
               <md-avatar>
                 <vue-image :image="item.image_url" alt="No Stock Image"/>
               </md-avatar>
@@ -54,12 +55,6 @@
 
               <md-button v-if="stock.quantity"
                          @click="addItemToTransaction(stock)"
-                         class="md-icon-button md-list-action">
-                <md-icon>add</md-icon>
-              </md-button>
-
-              <md-button v-if="stock.quantity"
-                         @click="addItemToTransaction(stock,true)"
                          class="md-icon-button md-list-action">
                 <md-icon>send</md-icon>
               </md-button>
@@ -93,42 +88,51 @@
   export default {
     name: 'pos',
     computed: {
+      filterStocks() {
+        let stockItems = this.currentTransactionStoreStocks;
+        if (stockItems && this.search) {
+          let regExp = new RegExp(`${this.search}`, 'i');
+          stockItems = _.filter(stockItems, ({item}) => {
+            return regExp.test(item['name'])
+          });
+        }
+        return stockItems;
+      },
       ...mapGetters([
+        'authEmployee',
         'currentTransaction',
         'currentTransactionStoreStocks',
-        'authEmployee',
         'currentTransactionStore'
       ])
     },
     data() {
-        return {
-            search: '',
-        }
+      return {
+        search: '',
+      }
     },
     methods: {
-      addItemToTransaction(stock,all) {
-          if(!this.currentTransaction.items) {
-              this.currentTransaction.items = {}
-          }
-          if(!this.currentTransaction.items[stock['.key']]) {
-            stock.quantity--;
-            this.currentTransaction.items[stock['.key']] = {
-              stock: stock['.key'],
-              quantity: 1,
-            }
-          } else {
-            if(all) {
-              this.currentTransaction.items[stock['.key']].quantity = stock.quantity;
-              stock.quantity = 0;
-            } else {
-              stock.quantity--;
-              this.currentTransaction.items[stock['.key']].quantity++;
-            }
-          }
+      addItemToTransaction(stock) {
+        if (!this.currentTransaction.items) {
+          this.currentTransaction.items = {}
+        }
+        if (!this.currentTransaction.items[stock['.key']]) {
+          stock.quantity--;
+          this.currentTransaction.items[stock['.key']] = {
+            stock: stock['.key'],
+            quantity: 1,
+            subtotal: stock.retail_price,
+            tax: stock.taxed
+              ? _.round(stock.retail_price * this.currentTransactionStore.tax_rate, 2)
+              : 0,
+            discount: stock.discounted
+              ? _.round(stock.retail_price * this.currentTransactionStore.discount_rate,2)
+              : 0,
+          };
           this.updateTransaction(this.currentTransaction);
+        }
       },
       ...mapActions([
-          'updateTransaction'
+        'updateTransaction'
       ])
     }
   }

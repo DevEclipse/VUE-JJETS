@@ -26,10 +26,14 @@
                                 :transactionItem="transactionItem"
                                 :transactionKey="key"
                                 :transaction="currentTransaction"
+                                :store="currentTransactionStore"
+                                @reUpdateTransaction="reUpdateTransaction"
                                 v-for="{item,stock,transactionItem,key} in currentTransactionItemStocks">
 
               </transaction-item>
               <md-table-row>
+                <md-table-cell></md-table-cell>
+                <md-table-cell></md-table-cell>
                 <md-table-cell></md-table-cell>
                 <md-table-cell></md-table-cell>
                 <md-table-cell>Sub Total:</md-table-cell>
@@ -39,6 +43,8 @@
               <md-table-row>
                 <md-table-cell></md-table-cell>
                 <md-table-cell></md-table-cell>
+                <md-table-cell></md-table-cell>
+                <md-table-cell></md-table-cell>
                 <md-table-cell>Tax:</md-table-cell>
                 <md-table-cell>&#8369;{{currentTransaction.tax}}</md-table-cell>
                 <md-table-cell>Amount: &#8369;{{currentTransaction.amount}}</md-table-cell>
@@ -46,7 +52,9 @@
               <md-table-row>
                 <md-table-cell></md-table-cell>
                 <md-table-cell></md-table-cell>
-                <md-table-cell>Discoun t:</md-table-cell>
+                <md-table-cell></md-table-cell>
+                <md-table-cell></md-table-cell>
+                <md-table-cell>Discount:</md-table-cell>
                 <md-table-cell>&#8369;{{currentTransaction.discount}}</md-table-cell>
                 <md-table-cell>Change: &#8369;{{currentTransaction.change}}</md-table-cell>
               </md-table-row>
@@ -71,9 +79,24 @@
     computed: {
       ...mapGetters([
         'currentTransaction',
+        'currentTransactionStore',
         'currentTransactionItemStocks',
         'authEmployee'
       ])
     },
+    methods: {
+        reUpdateTransaction() {
+          this.currentTransaction.subtotal = 0;
+          this.currentTransaction.tax = 0;
+          this.currentTransaction.discount = 0;
+          _.forEach(this.currentTransactionItemStocks,({transactionItem}) => {
+            this.currentTransaction.subtotal += transactionItem.subtotal;
+            this.currentTransaction.tax += transactionItem.tax;
+            this.currentTransaction.discount += transactionItem.discount;
+          });
+            this.currentTransaction.total = (this.currentTransaction.subtotal + this.currentTransaction.tax) - this.currentTransaction.discount;
+            this.updateTransaction(this.currentTransaction);
+        }
+    }
   }
 </script>

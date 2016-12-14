@@ -25,14 +25,15 @@ Vue.use(VueRouter);
 Vue.use(VuexFire);
 Vue.use(VueMaterial);
 Vue.use(VueMoment);
-Vue.config.debug = true;
 
+Vue.component('alert', require('./components/Alert.vue'));
+Vue.component('main-dialog', require('./components/MainDialog.vue'));
 Vue.component('vue-image', require('./components/VueImage.vue'));
 Vue.component('employees',require('./components/Employees.vue'));
 Vue.component('transaction',require('./components/Transaction.vue'));
 Vue.component('transaction',require('./components/Transaction.vue'));
 Vue.component('transactions',require('./components/Transactions.vue'));
-Vue.component('cards',require('./components/Cards.vue'));
+Vue.component('chunked-rows',require('./components/ChunkedRows.vue'));
 Vue.component('multiselect',MultiSelect);
 Vue.component('display',require('./components/Display.vue'));
 
@@ -149,7 +150,7 @@ const app = new Vue({
           // self.$store.dispatch('setAuthUserStatus','Online');
         })
         .catch(function (error) {
-          alert(error.message);
+          self.$store.dispatch('addAlert',{message: error.message,important: true});
         })
     },
     signOut() {
@@ -159,12 +160,8 @@ const app = new Vue({
         // self.$store.dispatch('setAuthUserStatus','Offline');
         self.$router.push('/');
       }, function (error) {
-        alert(error.message);
+        self.addAlert(error.message);
       });
-    },
-    speakMessage(message) {
-      let msg = new SpeechSynthesisUtterance(message);
-      window.speechSynthesis.speak(msg);
     },
   }
 }).$mount('#app');

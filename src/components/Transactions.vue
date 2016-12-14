@@ -38,6 +38,7 @@
     computed: {
       ...mapGetters([
         'storedTransaction',
+        'getNewObject'
       ])
     },
     methods: {
@@ -48,6 +49,7 @@
       createTransaction() {
         this.storeTransaction();
         this.addTransaction(this.storedTransaction);
+        this.$router.push({name: 'pos', params: {transaction: this.getNewObject['.key']}});
       },
     },
   }

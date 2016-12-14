@@ -15,7 +15,7 @@ const getters = {
     let stocks = _.filter(getters.allStocks, ['store', getters.currentTransactionStore['.key']]);
     return _.map(stocks, stock => {
       let item = _.find(getters.allItems,['.key',stock.item]);
-      return {stock,item};
+      return _.clone({stock,item});
     });
   },
   currentTransactionItemStocks(state,getters) {
@@ -24,7 +24,7 @@ const getters = {
     if(!getters.currentTransactionStoreStocks.length) return ;
     return _.map(getters.currentTransaction.items, (transactionItem,key) => {
         let found = _.find(getters.currentTransactionStoreStocks,[`stock['.key']`,key]);
-        return {transactionItem,...found,key};
+        return {transactionItem,key,...found};
     });
   },
   storedTransaction(state) {
@@ -49,8 +49,8 @@ const actions = {
       change: 0,
       status: 'Processing',
       store: getters.currentStore ? getters.currentStore['.key'] : '',
-      employee: getters.authEmployee['.key'],
-      updated_by: getters.authEmployee['.key'],
+      employee: getters.authEmployee.username,
+      updated_by: getters.authEmployee.username,
     };
     let data = _.clone(transaction) || defaultData;
     commit('STORE_TRANSACTION',data);
