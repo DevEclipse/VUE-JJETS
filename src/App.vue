@@ -1,8 +1,8 @@
 <template>
-  <div id="app" v-md-theme="'default'">
+  <div id="app">
 
 
-    <transition-group style="position: fixed; right: 0; z-index: 9999;  " enter-active-class="animated bounceInRight"
+    <transition-group style="position: fixed; z-index: 9999;" enter-active-class="animated bounceInRight"
                 leave-active-class="animated bounceOutRight"
                 mode="out-in">
       <alert v-for="alert in getAlerts" :alert="alert" :key="alert.id"></alert>
@@ -21,11 +21,32 @@
     <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight" mode="out-in">
       <router-view name="index"></router-view>
     </transition>
-
+    <md-button @click="scrollToTop" class="md-button md-fab md-mini md-fab-bottom-center" style="z-index: 999">
+      <md-icon>backup</md-icon>
+    </md-button>
   </div>
 </template>
 
+
 <script>
+
+  function scrollWindowToTop(scrollDuration) {
+    let cosParameter = window.scrollY / 2,
+      scrollCount = 0,
+      oldTimestamp = performance.now();
+
+    function step(newTimestamp) {
+      scrollCount += Math.PI / (scrollDuration / (newTimestamp - oldTimestamp));
+      if (scrollCount >= Math.PI) window.scrollTo(0, 0);
+      if (window.scrollY === 0) return;
+      window.scrollTo(0, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
+      oldTimestamp = newTimestamp;
+      window.requestAnimationFrame(step);
+    }
+
+    window.requestAnimationFrame(step);
+  }
+
   import Dashboard from './components/Dashboard.vue';
   import {mapGetters, mapActions} from 'vuex';
   export default {
@@ -48,6 +69,9 @@
       ])
     },
     methods: {
+      scrollToTop() {
+        scrollWindowToTop(1000);
+      },
       ...mapActions([
         'addAlert',
         'deleteAlert',
@@ -58,7 +82,7 @@
 
 <style>
   @import url('//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic');
-  @import url('//fonts.googleapis.com/icon?family=Material+Icons');
+
 
   html, body {
     overflow-x: hidden;
@@ -71,4 +95,5 @@
   .w-100 {
     width: 100%;
   }
+
 </style>

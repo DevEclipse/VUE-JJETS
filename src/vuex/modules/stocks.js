@@ -1,20 +1,8 @@
 const state = {
   storedStock: null,
-  foundStock: null,
 };
 
 const getters = {
-  currentStocks(state,getters) {
-    if(!getters.currentStore) return;
-    return _.filter(getters.allStocks,['store',getters.currentStore['.key']]);
-  },
-  currentStocksItems(state,getters) {
-    if(!getters.currentStocks) return;
-    return _.map(getters.currentStocks,stock => {
-      let item = _.find(getters.allItems,['.key',stock.item]);
-      return {stock,item};
-    })
-  },
   storedStock(state) {
     if(!state.storedStock) return;
     return state.storedStock;
@@ -40,8 +28,6 @@ const actions = {
         store: getters.currentStore['.key'],
         taxed: true,
         discounted: false,
-        returns: '',
-        times_bought: '',
       });
   },
   findStock({commit,getters},key) {

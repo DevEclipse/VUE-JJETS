@@ -1,56 +1,26 @@
 <template>
-  <display v-if="!transactions" message="No Transactions Yet"/>
-  <div v-else>
-    <md-button class="md-fab md-mini md-fab-bottom-right" style="position: fixed; z-index: 3;" @click="createTransaction">
-      <md-icon>add</md-icon>
-    </md-button>
-    <cards :list="transactions" :filters="['customer','employee']">
-      <template scope="props">
 
-        <md-toolbar class="md-accent">
-          <div class="md-toolbar-container">
-            <div class="md-title" style="flex: 1;">{{props.data.status}}</div>
-            <div v-if="authEmployee">
-              <router-link tag="md-button" :to="{name: 'pos', params: {transaction: props.data['.key']}}" class="md-icon-button">
-                <md-icon>edit</md-icon>
-              </router-link>
-            </div>
-          </div>
-        </md-toolbar>
+  <layout :list="transactions" :searchKey="'name'">
+    <template scope="props">
+      <transaction v-for="transaction in props" :transaction="transaction">
+        <template slot="buttons">
+          <slot name="buttons" :transaction="transaction">
 
-        <md-card-header>
-          <md-card-header-text>
-            <div class="md-title">{{props.data['.key']}}</div>
-            <div class="md-subhead">Transaction Id</div>
-          </md-card-header-text>
+          </slot>
+        </template>
+      </transaction>
+    </template>
+  </layout>
 
-        </md-card-header>
-      </template>
-    </cards>
-  </div>
 </template>
 
 <script>
-  import {mapGetters,mapActions} from 'vuex';
+  import Transaction from './Transaction.vue';
   export default {
     name: 'transactions',
     props: ['transactions','authEmployee'],
-    computed: {
-      ...mapGetters([
-        'storedTransaction',
-        'getNewObject'
-      ])
-    },
-    methods: {
-      ...mapActions([
-        'addTransaction',
-        'storeTransaction'
-      ]),
-      createTransaction() {
-        this.storeTransaction();
-        this.addTransaction(this.storedTransaction);
-        this.$router.push({name: 'pos', params: {transaction: this.getNewObject['.key']}});
-      },
-    },
+    components: {
+        Transaction
+    }
   }
 </script>

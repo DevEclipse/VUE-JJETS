@@ -41,6 +41,11 @@ const getters = {
     if(!getters.currentUser) return;
     return getters.authUser.username == getters.currentUser.username;
   },
+  sameManager(state,getters) {
+    if(!getters.authUser) return;
+    if(!getters.currentManager) return;
+    return getters.authUser.username == getters.currentManager.username;
+  },
   sameEmployeeManagerStore(state,getters) {
     if(!getters.authEmployee) return;
     if(!getters.currentStore) return;

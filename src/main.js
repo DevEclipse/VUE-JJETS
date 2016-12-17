@@ -26,6 +26,7 @@ Vue.use(VuexFire);
 Vue.use(VueMaterial);
 Vue.use(VueMoment);
 
+Vue.component('reg-exp-input',require('./components/RegExpInput.vue'));
 Vue.component('alert', require('./components/Alert.vue'));
 Vue.component('main-dialog', require('./components/MainDialog.vue'));
 Vue.component('vue-image', require('./components/VueImage.vue'));
@@ -33,16 +34,16 @@ Vue.component('employees',require('./components/Employees.vue'));
 Vue.component('transaction',require('./components/Transaction.vue'));
 Vue.component('transaction',require('./components/Transaction.vue'));
 Vue.component('transactions',require('./components/Transactions.vue'));
-Vue.component('chunked-rows',require('./components/ChunkedRows.vue'));
+Vue.component('layout',require('./components/Layout.vue'));
 Vue.component('multiselect',MultiSelect);
 Vue.component('display',require('./components/Display.vue'));
+Vue.component('max-input',require('./components/MaxInput.vue'));
 
-Vue.material.theme.registerAll({
-  default: {
-    primary: 'blue',
-    accent: 'teal',
-    warn: 'red'
-  },
+Vue.material.registerTheme('default', {
+  primary: 'blue',
+  accent: 'teal',
+  warn: 'red',
+  background: 'grey'
 });
 
 Vue.filter('date', value => {
@@ -96,18 +97,18 @@ const app = new Vue({
   router,
   store,
   firebase: {
-    busers: db.ref('users'),
-    bitems: db.ref('items'),
-    bstores: db.ref('stores'),
-    bmanagers: db.ref('managers'),
-    bemployees: db.ref('employees'),
-    bcustomers: db.ref('customers'),
-    btransactions: db.ref('transactions'),
-    bstocks: db.ref('stocks'),
+    refUsers: db.ref('users'),
+    refItems: db.ref('items'),
+    refStores: db.ref('stores'),
+    refManagers: db.ref('managers'),
+    refEmployees: db.ref('employees'),
+    refCustomers: db.ref('customers'),
+    refTransactions: db.ref('transactions'),
+    refStocks: db.ref('stocks'),
+    refProducts: db.ref('products')
   },
   render: h => h(App),
   beforeCreate() {
-    let self = this;
     this.$store.commit('SET_REFS', this.$firebaseRefs);
   },
   methods: {

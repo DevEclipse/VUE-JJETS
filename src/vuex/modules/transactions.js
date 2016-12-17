@@ -1,35 +1,19 @@
 const state = {
   storedTransaction: null,
+  storedProducts: [],
 };
 const getters = {
-  currentTransaction(state, getters) {
-    if(!getters.routeParams) return;
-    return _.find(getters.allTransactions, ['.key', getters.routeParams.transaction]);
-  },
-  currentTransactionStore(state, getters) {
-    if(!getters.currentTransaction) return;
-    return _.find(getters.allStores, ['.key', getters.currentTransaction.store]);
-  },
-  currentTransactionStoreStocks(state, getters) {
-    if (!getters.currentTransactionStore) return ;
-    let stocks = _.filter(getters.allStocks, ['store', getters.currentTransactionStore['.key']]);
-    return _.map(stocks, stock => {
-      let item = _.find(getters.allItems,['.key',stock.item]);
-      return _.clone({stock,item});
-    });
-  },
-  currentTransactionItemStocks(state,getters) {
-    if(!getters.currentTransaction) return;
-    if(!getters.currentTransaction.items) return;
-    if(!getters.currentTransactionStoreStocks.length) return ;
-    return _.map(getters.currentTransaction.items, (transactionItem,key) => {
-        let found = _.find(getters.currentTransactionStoreStocks,[`stock['.key']`,key]);
-        return {transactionItem,key,...found};
-    });
-  },
   storedTransaction(state) {
     if(!state.storedTransaction) return;
     return state.storedTransaction;
+  },
+  storedProducts(state) {
+    if(!state.storedProducts) return;
+    state.storedProducts;
+  }
+  storedTransactionProducts(state,getters) {
+    if(!getters.storedTransaction) return;
+    return _.filter(getters.allProducts,['transaction',getters.storedTransaction.id]);
   },
 };
 const mutations = {

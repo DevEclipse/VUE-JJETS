@@ -19,8 +19,11 @@
     name: 'alert',
     props: ['alert'],
     mounted() {
-      if(this.alert.important) return;
+      if (this.alert.important) return;
       _.delay(() => {
+        if (this.alert.callback) {
+          this.alert.callback();
+        }
         this.deleteAlert(this.alert);
       }, this.alert.duration || 3000);
     },

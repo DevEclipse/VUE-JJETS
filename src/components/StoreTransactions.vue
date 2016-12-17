@@ -1,6 +1,6 @@
 <template>
 
-    <transactions :authManager="authManager" :authEmployee="authEmployee"  :transactions="currentStoreTransactions"/>
+    <transactions :authEmployee="authEmployee" :transactions="currentStoreTransactions" />
 
 </template>
 

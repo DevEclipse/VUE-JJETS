@@ -1,12 +1,9 @@
 <template>
-  <display v-if="!allEmployees.length" message="No Employees Yet"/>
-  <div v-else>
-    <cards :list="employees || allEmployees">
-      <template scope="props">
-        {{props}}
-      </template>
-    </cards>
-  </div>
+
+  <layout :list="employees || allEmployees" searchKey="name">
+
+  </layout>
+
 </template>
 
 <script>

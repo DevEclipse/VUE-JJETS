@@ -21,7 +21,7 @@ const getters = {
   },
   currentManagerEmployees(state, getters) {
     if(!getters.currentManager) return;
-    return _.filter(getters.allEmployees, ['username', getters.currentManager['username']]);
+    return _.filter(getters.allEmployees, ['manager', getters.currentManager['username']]);
   },
   storedManager(state) {
     if(!state.storedManager) return;

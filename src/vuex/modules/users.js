@@ -24,7 +24,7 @@ const getters = {
   },
   storedUsernameValid(state, getters) {
     if (!getters.storedUser) return;
-    let regEx = /^[A-Za-z][A-Za-z0-9 -]*$/
+    let regEx = /^[A-Za-z][A-Za-z0-9 -]*$/;
     return regEx.test(getters.storedUser.username);
   },
   storedEmailValid(state, getters) {
@@ -57,7 +57,7 @@ const mutations = {
 
 const actions = {
   storeUser({commit}, user) {
-    commit('STORE_USER', user || {
+    commit('STORE_USER', _.clone(user) || {
         username: '',
         email: '',
         name: '',

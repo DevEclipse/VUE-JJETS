@@ -1,102 +1,41 @@
 <template>
-  <display v-if="!currentTransaction" message="No Transaction In Process"/>
-  <div v-else>
-    <div v-if="authEmployee">
-      <md-card md-with-hover>
-        <md-table-card>
-          <md-table>
-            <md-table-header>
-              <md-table-row>
-                <md-table-head>Transaction Item Key</md-table-head>
-                <md-table-head>Stock Key</md-table-head>
-                <md-table-head>Item</md-table-head>
-                <md-table-head>Retail Price</md-table-head>
-                <md-table-head>Quantity</md-table-head>
-                <md-table-head>Item Total</md-table-head>
-                <md-table-head>
-                  Configuration
-                </md-table-head>
-              </md-table-row>
-            </md-table-header>
+  <md-card md-with-hover>
+    <md-toolbar class="md-large">
+      <div class="md-toolbar-container">
+        <div class="md-title" style="flex: 1;">{{transaction.status | capitalize}}
+          <div class="md-subhead">
+              Transaction: {{transaction.id}}
+          </div>
+        </div>
+        <slot name="buttons"></slot>
+      </div>
+      <div class="md-toolbar-container">
+        <span  style="flex: 1;"></span>
+        <div class="md-subheading">
+          Total: &#8369;{{transaction.total}}
+        </div>
+        <span  style="flex: 1;"></span>
+      </div>
+    </md-toolbar>
 
-            <md-table-body>
+    <md-card-content>
 
-              <transaction-item :item="item"
-                                :stock="stock"
-                                :transactionItem="transactionItem"
-                                :transactionKey="key"
-                                :transaction="currentTransaction"
-                                :store="currentTransactionStore"
-                                @reUpdateTransaction="reUpdateTransaction"
-                                v-for="{item,stock,transactionItem,key} in currentTransactionItemStocks">
+      <md-card-media-actions>
+        <div class="md-subheading">
+          Created: <span class="md-caption"> {{transaction.created_date | moment("from")}} </span>
+        </div>
+        <div class="md-subheading">
+          Updated: <span class="md-caption"> {{transaction.updated_date | moment("from")}} </span>
+        </div>
+      </md-card-media-actions>
 
-              </transaction-item>
-              <md-table-row>
-                <md-table-cell></md-table-cell>
-                <md-table-cell></md-table-cell>
-                <md-table-cell></md-table-cell>
-                <md-table-cell></md-table-cell>
-                <md-table-cell>Sub Total:</md-table-cell>
-                <md-table-cell>&#8369;{{currentTransaction.subtotal}}</md-table-cell>
-                <md-table-cell>Total: &#8369;{{currentTransaction.total}}</md-table-cell>
-              </md-table-row>
-              <md-table-row>
-                <md-table-cell></md-table-cell>
-                <md-table-cell></md-table-cell>
-                <md-table-cell></md-table-cell>
-                <md-table-cell></md-table-cell>
-                <md-table-cell>Tax:</md-table-cell>
-                <md-table-cell>&#8369;{{currentTransaction.tax}}</md-table-cell>
-                <md-table-cell>Amount: &#8369;{{currentTransaction.amount}}</md-table-cell>
-              </md-table-row>
-              <md-table-row>
-                <md-table-cell></md-table-cell>
-                <md-table-cell></md-table-cell>
-                <md-table-cell></md-table-cell>
-                <md-table-cell></md-table-cell>
-                <md-table-cell>Discount:</md-table-cell>
-                <md-table-cell>&#8369;{{currentTransaction.discount}}</md-table-cell>
-                <md-table-cell>Change: &#8369;{{currentTransaction.change}}</md-table-cell>
-              </md-table-row>
-            </md-table-body>
-          </md-table>
-        </md-table-card>
-      </md-card>
-
-    </div>
-  </div>
-
+    </md-card-content>
+  </md-card>
 </template>
 
 <script>
-  import {mapGetters, mapActions} from 'vuex';
-  import TransactionItem from './TransactionItem.vue';
   export default {
     name: 'transaction',
-    components: {
-      TransactionItem
-    },
-    computed: {
-      ...mapGetters([
-        'currentTransaction',
-        'currentTransactionStore',
-        'currentTransactionItemStocks',
-        'authEmployee'
-      ])
-    },
-    methods: {
-        reUpdateTransaction() {
-          this.currentTransaction.subtotal = 0;
-          this.currentTransaction.tax = 0;
-          this.currentTransaction.discount = 0;
-          _.forEach(this.currentTransactionItemStocks,({transactionItem}) => {
-            this.currentTransaction.subtotal += transactionItem.subtotal;
-            this.currentTransaction.tax += transactionItem.tax;
-            this.currentTransaction.discount += transactionItem.discount;
-          });
-            this.currentTransaction.total = (this.currentTransaction.subtotal + this.currentTransaction.tax) - this.currentTransaction.discount;
-            this.updateTransaction(this.currentTransaction);
-        }
-    }
+    props: ['transaction'],
   }
 </script>

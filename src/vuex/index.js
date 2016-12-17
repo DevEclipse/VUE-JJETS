@@ -8,76 +8,82 @@ import customers from './modules/customers'
 import transactions from './modules/transactions'
 import auth from './modules/auth'
 import stocks from './modules/stocks'
+import products from './modules/products'
 import firebase from 'firebase'
 
-const generateGetters = function (refs) {
+function generateGetters(refs) {
   let refKeys = Object.keys(refs);
   let getters = [];
-  _.forEach(refKeys,key => {
+  _.forEach(refKeys, key => {
     let capKey = _.upperFirst(key);
-    getters[`all${capKey}`] = function(state) {
-      return state[`b${key}`];
+    getters[`all${capKey}`] = function (state) {
+      return state[`ref${capKey}`];
     };
-    getters[`ref${capKey}`] = function(state) {
-      return state['refs'][`b${key}`];
+    getters[`ref${capKey}`] = function (state) {
+      return state['refs'][`ref${capKey}`];
     }
   });
   return getters;
 };
-const generateActions = function (refs) {
+
+function generateActions(refs) {
   let refKeys = Object.keys(refs);
   let actions = [];
-  let aud = ['add','update','delete'];
-  _.forEach(refKeys,key => {
+  let aud = ['add', 'update', 'delete'];
+  _.forEach(refKeys, key => {
     let capKey = _.upperFirst(key);
     let singularCapKey = capKey.slice(0, -1);
     let ref = `ref${capKey}`;
     _.forEach(aud, a => {
-      actions[`${a}${singularCapKey}`] = function({dispatch},payload) {
-        dispatch(`${a}RefObject`,{ref, payload});
+      actions[`${a}${singularCapKey}`] = function ({dispatch}, payload) {
+        dispatch(`${a}RefObject`, {ref, payload});
       };
     });
 
   });
   return actions;
-};
+}
 
-const makeid = () =>
-{
+function makeId(length = 5) {
   let text = "";
   let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-  for (let i = 0; i < 5; i++)
+  for (let i = 0; i < length; i++)
     text += possible.charAt(Math.floor(Math.random() * possible.length));
 
   return text;
-};
+}
+function makeIdNo(length = 5) {
+  let text = "";
+  let possible = "0123456789";
 
-const speakMessage = (message) => {
-  let msg = new SpeechSynthesisUtterance(message);
-  window.speechSynthesis.speak(msg);
-};
+  for (let i = 0; i < length; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+  return text;
+}
+async function speakMessage(message) {
+  let msg = await new SpeechSynthesisUtterance(message);
+  await window.speechSynthesis.speak(msg);
+}
 
 const state = {
   refs: null,
-  busers: null,
-  bitems: null,
-  bstores: null,
-  bmanagers: null,
-  bemployees: null,
-  bcustomers: null,
-  btransactions: null,
-  btags: null,
-  bstocks: null,
-  bnotifier: null,
+  refUsers: null,
+  refItems: null,
+  refStores: null,
+  refManagers: null,
+  refEmployees: null,
+  refCustomers: null,
+  refTransactions: null,
+  refStocks: null,
+  refProducts: null,
   server_time: null,
   updateObject: null,
   newObject: null,
   deleteObject: null,
   alerts: [],
-  test: {
-    test: '',
-  }
+  itemCategories: ['Appliances', 'Groceries', 'Fashion', 'Accessories', 'Toys', 'Gadgets', 'Others']
 };
 
 const modules = {
@@ -89,6 +95,7 @@ const modules = {
   stocks,
   items,
   transactions,
+  products,
   auth,
 };
 
@@ -105,11 +112,11 @@ const mutations = {
   ['SET_DELETE_OBJECT'](state, object) {
     state.deleteObject = object;
   },
-  ['ADD_ALERT'](state,alert) {
+  ['ADD_ALERT'](state, alert) {
     state.alerts.push(alert);
   },
-  ['DELETE_ALERT'](state,alert) {
-    state.alerts.splice(state.alerts.findIndex(a => a.id == alert.id),1);
+  ['DELETE_ALERT'](state, alert) {
+    state.alerts.splice(state.alerts.findIndex(a => a.id == alert.id), 1);
   },
   ...VuexFire.mutations
 };
@@ -117,14 +124,14 @@ const mutations = {
 
 const getters = {
   getAlerts(state) {
-    if(!state.alerts) return;
+    if (!state.alerts) return;
     return state.alerts;
-  },
-  getTest(state) {
-    return state.test;
   },
   getNewObject(state) {
     return state.newObject;
+  },
+  itemCategories(state) {
+    return state.itemCategories;
   },
   getUpdatedObject(state) {
     return state.updateObject;
@@ -150,24 +157,27 @@ const getters = {
     stocks,
     items,
     transactions,
+    products
   })
 };
 
-console.log(getters);
 const actions = {
-  addAlert({commit,dispatch},alert) {
-    alert.id = makeid();
-    commit('ADD_ALERT',alert);
-    dispatch('speakMessage',alert.message);
+  async addAlert({commit, dispatch}, alert) {
+    alert.id = await makeId();
+    await commit('ADD_ALERT', alert);
+    await dispatch('speakMessage', alert.message);
   },
-  deleteAlert({commit},alert) {
-    commit('DELETE_ALERT',alert);
+  async deleteAlert({commit}, alert) {
+    await commit('DELETE_ALERT', alert);
   },
-  speakMessage({state},message) {
-    speakMessage(message);
+  async speakMessage({state}, message) {
+    await speakMessage(message);
   },
   newObject({commit, getters}, object) {
     let resultObject = _.clone(object);
+    if(resultObject['.key']) {
+      delete resultObject['.key'];
+    }
     resultObject['created_date'] = resultObject['updated_date'] = getters.serverTime;
     commit('SET_NEW_OBJECT', resultObject);
   },
@@ -181,7 +191,10 @@ const actions = {
   },
   addRefObject({dispatch, getters}, {ref, payload}){
     dispatch('newObject', payload);
-    getters.getNewObject['.key'] = getters[ref].push(getters.getNewObject).key;
+    let cloneRef = ref.replace('ref','');
+    let singularCloneRef = cloneRef.slice(0, -1);
+    let count = getters[`all${cloneRef}`].length;
+    getters.getNewObject['.key'] = getters[ref].child(`JJETS${singularCloneRef}${count}${makeIdNo(3)}`).set(getters.getNewObject).key;
   },
   updateRefObject({dispatch, getters}, {ref, payload}){
     dispatch('updateObject', payload);
@@ -200,10 +213,11 @@ const actions = {
     stocks,
     items,
     transactions,
+    products
   })
 };
 
-console.log(actions);
+
 export default {
   state,
   mutations,
