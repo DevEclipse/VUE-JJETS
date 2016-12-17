@@ -7,10 +7,6 @@ const getters = {
     if(!state.storedTransaction) return;
     return state.storedTransaction;
   },
-  storedProducts(state) {
-    if(!state.storedProducts) return;
-    state.storedProducts;
-  }
   storedTransactionProducts(state,getters) {
     if(!getters.storedTransaction) return;
     return _.filter(getters.allProducts,['transaction',getters.storedTransaction.id]);

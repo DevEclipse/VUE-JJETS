@@ -2,58 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b60fc628-db22-44ba-b3ed-b9a10a3138a6" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/Admin.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/CustomerItems.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/CustomerStores.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/Layout.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/ManagerEmployees.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/ManagerItems.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/ManagerStores.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/MaxInput.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/RegExpInput.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/StoreStocks.vue" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/vuex/modules/products.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/components/ChunkedRows.vue" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/components/TransactionItem.vue" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/dev-client.js" afterPath="$PROJECT_DIR$/build/dev-client.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/dev-server.js" afterPath="$PROJECT_DIR$/build/dev-server.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/index.js" afterPath="$PROJECT_DIR$/config/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.vue" afterPath="$PROJECT_DIR$/src/App.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Alert.vue" afterPath="$PROJECT_DIR$/src/components/Alert.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Customer.vue" afterPath="$PROJECT_DIR$/src/components/Customer.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Dashboard.vue" afterPath="$PROJECT_DIR$/src/components/Dashboard.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Display.vue" afterPath="$PROJECT_DIR$/src/components/Display.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Employee.vue" afterPath="$PROJECT_DIR$/src/components/Employee.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Employees.vue" afterPath="$PROJECT_DIR$/src/components/Employees.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Index.vue" afterPath="$PROJECT_DIR$/src/components/Index.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Item.vue" afterPath="$PROJECT_DIR$/src/components/Item.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Items.vue" afterPath="$PROJECT_DIR$/src/components/Items.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/MainDialog.vue" afterPath="$PROJECT_DIR$/src/components/MainDialog.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Manager.vue" afterPath="$PROJECT_DIR$/src/components/Manager.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/PointOfSale.vue" afterPath="$PROJECT_DIR$/src/components/PointOfSale.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Stocks.vue" afterPath="$PROJECT_DIR$/src/components/Stocks.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Store.vue" afterPath="$PROJECT_DIR$/src/components/Store.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/StoreTransactions.vue" afterPath="$PROJECT_DIR$/src/components/StoreTransactions.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Stores.vue" afterPath="$PROJECT_DIR$/src/components/Stores.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Transaction.vue" afterPath="$PROJECT_DIR$/src/components/Transaction.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/Transactions.vue" afterPath="$PROJECT_DIR$/src/components/Transactions.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/User.vue" afterPath="$PROJECT_DIR$/src/components/User.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/VueImage.vue" afterPath="$PROJECT_DIR$/src/components/VueImage.vue" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.js" afterPath="$PROJECT_DIR$/src/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes.js" afterPath="$PROJECT_DIR$/src/routes.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/vuex/index.js" afterPath="$PROJECT_DIR$/src/vuex/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/vuex/modules/auth.js" afterPath="$PROJECT_DIR$/src/vuex/modules/auth.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/vuex/modules/customers.js" afterPath="$PROJECT_DIR$/src/vuex/modules/customers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/vuex/modules/items.js" afterPath="$PROJECT_DIR$/src/vuex/modules/items.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/vuex/modules/managers.js" afterPath="$PROJECT_DIR$/src/vuex/modules/managers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/vuex/modules/stocks.js" afterPath="$PROJECT_DIR$/src/vuex/modules/stocks.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/vuex/modules/stores.js" afterPath="$PROJECT_DIR$/src/vuex/modules/stores.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/vuex/modules/transactions.js" afterPath="$PROJECT_DIR$/src/vuex/modules/transactions.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/vuex/modules/users.js" afterPath="$PROJECT_DIR$/src/vuex/modules/users.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/components/StockItem.vue" afterPath="$PROJECT_DIR$/src/components/Stock.vue" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -162,8 +112,8 @@
       <file leaf-file-name="transactions.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/vuex/modules/transactions.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="25" lean-forward="false" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
+            <state relative-caret-position="136">
+              <caret line="8" column="4" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -568,12 +518,12 @@
       <workItem from="1481805540838" duration="2790000" />
       <workItem from="1481825089757" duration="37274000" />
       <workItem from="1481868963976" duration="27750000" />
-      <workItem from="1481932728667" duration="47355000" />
+      <workItem from="1481932728667" duration="47421000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="799022000" />
+    <option name="totallyTimeSpent" value="799088000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="0" width="1284" height="1028" extended-state="0" />
@@ -1063,8 +1013,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/vuex/modules/transactions.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="25" lean-forward="false" selection-start-line="11" selection-start-column="25" selection-end-line="11" selection-end-column="25" />
+        <state relative-caret-position="136">
+          <caret line="8" column="4" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
           <folding />
         </state>
       </provider>
