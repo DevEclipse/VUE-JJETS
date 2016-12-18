@@ -23,16 +23,24 @@ const getters = {
     if(!getters.currentManager) return;
     return _.filter(getters.allEmployees, ['manager', getters.currentManager['username']]);
   },
+  currentManagerEmployeesUsers(state, getters) {
+    if(!getters.currentManagerEmployees) return;
+    return _.map(getters.currentManagerEmployees, employee => {
+      let user = _.find(getters.allUsers,['username',employee.username]);
+      return {user,employee};
+    });
+  },
   currentManagerApplicationMessages(state,getters) {
     if(!getters.currentManager) return;
-    if(!getters.currentManager.app_messages.length) return;
-    let employee,message;
-    let applications;
+    if(!getters.currentManager.app_messages) return;
+    let employee,message,user;
+    let applications = [];
     _.forEach(getters.currentManager.app_messages,(appMessage,index) => {
         employee = _.find(getters.allEmployees,['username',appMessage.employee]);
+        user = _.find(getters.allUsers,['username',appMessage.employee]);
         message = appMessage.message;
         if(employee) {
-          applications.push({employee, message});
+          applications.push({employee, message,user});
         }
     });
     return applications;

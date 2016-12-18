@@ -26,8 +26,8 @@
         </template>
         <md-whiteframe align="center" md-elevation="24" style="z-index: 20">
           <div class="md-display-1" align="center" style="padding: 1rem;">Filters</div>
-          <div class="row center-xs middle-xs">
-            <div class="col-xs-6 col-md-4" v-if="transactionsStores.length != 0">
+          <div class="row center-xs middle-xs" style="padding: 1rem;">
+            <div class="col-xs-6 col-md-4" v-if="transactionsStores.length != 0 && $route.name != 'storeTransactions'">
               <multiselect :options="transactionsStores"
                            v-model="store"
                            :searchable="true"
@@ -35,7 +35,7 @@
                            name="storeName"
                            placeholder="Select A Store"></multiselect>
             </div>
-            <div class="col-xs-6 col-md-4" v-if="transactionsCustomers.length != 0">
+            <div class="col-xs-6 col-md-4" v-if="transactionsCustomers.length != 0 && $route.name != 'transactions'">
               <multiselect :options="transactionsCustomers"
                            v-model="customer"
                            :searchable="true"
@@ -89,13 +89,12 @@
       <template scope="props">
         <transaction v-for="transaction in props" :transaction="transaction">
           <template slot="buttons">
-            <slot name="buttons">
+            <slot name="buttons" :transaction="transaction">
 
             </slot>
           </template>
         </transaction>
       </template>
-
     </layout>
   </div>
 </template>

@@ -1,7 +1,53 @@
 <template>
   <display v-if="!currentUser" message="Loading... User"></display>
   <div v-else style="margin: 1rem;">
-    <md-dialog ref="selectManager">
+
+    <md-dialog ref="managerSecretCodesDialog">
+      <template v-if="authManager">
+        <md-toolbar>
+          <div class="md-toolbar-container">
+            <div class="md-title">
+             {{authManager.username | capitalize}} Secret Info
+            </div>
+          </div>
+        </md-toolbar>
+      <md-dialog-content style="padding-top: 3rem; padding-bottom: 3rem;">
+       <div style="margin: 2rem">
+        <div class="md-title">
+          Void Code: {{authManager.void_code}}
+        </div>
+         <div class="md-subheader">
+           This void code is used for deleting transactions from your stores.
+         </div>
+        <div class="md-subhead" v-if="voidCode">
+          Generated Void Code: {{voidCode}}
+        </div>
+        <md-button class="md-raised md-warn" @click="() => {generateId(); voidCode = getGeneratedId}">Generate Void Code</md-button>
+       </div>
+        <div style="margin: 2rem">
+        <div class="md-title">
+          Hire Code: {{authManager.hire_code}}
+        </div>
+        <div class="md-subheader">
+          Give this to an employee and he/she must enter this code to apply on your stores.
+        </div>
+        <div class="md-subhead" v-if="hireCode">
+          Generated Hire Code: {{hireCode}}
+        </div>
+          <md-button class="md-raised md-warn" @click="() => {generateId(); hireCode = getGeneratedId}">Generate Hire Code</md-button>
+
+        </div>
+
+
+      </md-dialog-content>
+      <md-dialog-actions>
+        <md-button class="md-raised md-primary" @click="updateSecretManagerInfo"> Save </md-button>
+        <md-button class="md-raised md-warn" @click="closeSecretManagerInfo"> Cancel</md-button>
+      </md-dialog-actions>
+      </template>
+    </md-dialog>
+
+    <md-dialog ref="hireCodeManager">
 
       <md-toolbar style="margin-bottom: 1rem;">
         <div class="md-toolbar-container">
@@ -23,7 +69,7 @@
       </md-dialog-content>
       <md-dialog-actions>
         <md-button class="md-raised md-primary" @click="addEmployeeManager"> Work</md-button>
-        <md-button class="md-raised md-warn" @click="$refs.selectManager.close()"> Cancel</md-button>
+        <md-button class="md-raised md-warn" @click="$refs.hireCodeManager.close()"> Cancel</md-button>
       </md-dialog-actions>
 
     </md-dialog>
@@ -94,11 +140,11 @@
           </md-card-media-cover>
         </md-card>
         <div class="md-display-1 center-xs middle-xs">
-          New Profiles Coming Soon.
+          More Profiles Coming Soon.
         </div>
       </div>
       <div class="col-xs">
-        <md-card style="margin-bottom: 1rem;">
+        <md-card style="margin-bottom: 1rem;" v-if="sameUser || currentManager">
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
               <span class="md-title" style="flex: 1;"> Manager Profile </span>
@@ -107,17 +153,18 @@
                 <md-icon>help</md-icon>
                 <md-tooltip>Help</md-tooltip>
               </md-button>
+
               <md-button v-if="!authManager"
                          @click="addProfile('manager')">
                 <md-icon>add</md-icon>
                 Add Manager Profile
               </md-button>
 
-              <router-link v-else :to="{name: 'manager'}" tag="md-button" class="md-icon-button">
+              <router-link v-else-if="sameUser"  :to="{name: 'manager'}" tag="md-button" class="md-icon-button">
                 <md-icon>supervisor_account</md-icon>
                 <md-tooltip>Start Managing</md-tooltip>
               </router-link>
-              <md-button v-if="sameUser" class="md-icon-button">
+              <md-button v-if="sameUser" class="md-icon-button" @click="openSecretManagerInfo">
                 <md-icon>info</md-icon>
                 <md-tooltip>View Secret Info</md-tooltip>
               </md-button>
@@ -143,7 +190,7 @@
             </md-card-area>
           </md-card-media-cover>
         </md-card>
-        <md-card style="margin-bottom: 1rem;">
+        <md-card style="margin-bottom: 1rem;" v-if="sameUser || currentEmployee">
 
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
@@ -158,7 +205,7 @@
                 <md-icon>add</md-icon>
                 Add Employee Profile
               </md-button>
-              <router-link v-else :to="{name: 'employee'}" tag="md-button" class="md-icon-button">
+              <router-link v-else-if="sameUser" :to="{name: 'employee'}" tag="md-button" class="md-icon-button">
                 <md-icon>work</md-icon>
                 <md-tooltip>Start Working</md-tooltip>
               </router-link>
@@ -184,7 +231,7 @@
             </md-card-area>
           </md-card-media-cover>
         </md-card>
-        <md-card style="margin-bottom: 1rem;">
+        <md-card style="margin-bottom: 1rem;" v-if="sameUser || currentCustomer">
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
               <span class="md-title" style="flex: 1;"> Customer Profile </span>
@@ -197,7 +244,7 @@
                 <md-icon>add</md-icon>
                 Add Customer Profile
               </md-button>
-              <router-link v-else :to="{name: 'customer'}" tag="md-button" class="md-icon-button">
+              <router-link v-else-if="sameUser"  :to="{name: 'customer'}" tag="md-button" class="md-icon-button">
                 <md-icon>shopping_cart</md-icon>
                 <md-tooltip>Start Shopping</md-tooltip>
               </router-link>
@@ -236,7 +283,8 @@
     props: ['authUser', 'authManager', 'authEmployee', 'authCustomer'],
     data() {
       return {
-        hireCode: ''
+        hireCode: '',
+        voidCode: ''
       }
     },
     computed: {
@@ -265,6 +313,24 @@
       ])
     },
     methods: {
+      updateSecretManagerInfo() {
+        this.addAlert({message: 'You updated your manager profile secret information'});
+        this.authManager.void_code = this.voidCode;
+        this.authManager.hire_code = this.hireCode;
+        this.updateManager(this.authManager);
+        this.closeSecretManagerInfo();
+
+      },
+      openSecretManagerInfo() {
+        this.hireCode = '';
+        this.voidCode = '';
+        this.$refs.managerSecretCodesDialog.open();
+      },
+      closeSecretManagerInfo() {
+        this.hireCode = '';
+        this.voidCode = '';
+        this.$refs.managerSecretCodesDialog.close();
+      },
       editUser() {
         this.storeUser(this.currentUser);
         this.$refs.editUser.open();
@@ -278,6 +344,7 @@
       addProfile(profile) {
         switch (profile) {
           case 'manager':
+            this.generateId();
             this.addManager({
               username: this.authUser.username,
               void_code: _.shuffle(this.getGeneratedId.split('')).reverse().join(''),
@@ -285,7 +352,7 @@
             });
             break;
           case 'employee':
-            this.$refs.selectManager.open();
+            this.$refs.hireCodeManager.open();
             break;
           case 'customer':
             this.addCustomer({username: this.authUser.username, balance: 0});
@@ -306,12 +373,13 @@
             ? this.foundManagerByHireCode.username
             : (this.authManager ? this.authManager.username : '')
         });
-        this.$refs.selectManager.close();
+        this.$refs.hireCodeManager.close();
         this.addAlert({
           message: this.foundManagerByHireCode ? `Added Employee profile and assigned to Manager: ${this.foundManagerByHireCode.username}`
             : `Added Employee profile to your account`, callback: () => {
             if (this.foundManagerByHireCode) {
-              let manager = _.clone(this.foundManagerByHireCode);
+              let manager = this.foundManagerByHireCode;
+              this.generateId();
               manager.hire_code =  _.shuffle(this.getGeneratedId.split('')).reverse().join('');
 
               this.updateManager(manager);
@@ -328,7 +396,8 @@
         'updateManager',
         'speakMessage',
         'addAlert',
-        'storeUser'
+        'storeUser',
+        'generateId'
       ])
     }
   }

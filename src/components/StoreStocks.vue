@@ -71,7 +71,7 @@
                        placeholder="Select One Store"></multiselect>
 
           (Stock: {{storedStock['.key']}})
-          <max-input v-model="quantityToSend" label="Quantity To Send" min="0" :max="storedStock.quantity">
+          <max-input ref="mergeStoreQuantity" v-model="quantityToSend" label="Quantity To Send" min="0" :max="storedStock.quantity">
 
           </max-input>
 
@@ -213,12 +213,12 @@
         let regExp;
         let items = this.ownItems ? this.authManagerItems : this.sharedItems;
         let itemStocks = _.filter(items, item => {
-          return _.find(this.currentStoreStocks, ['item', item['.key']]) == null;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+          return _.find(this.currentStoreStocks, ['item', item['.key']]) == null;
       })
         if (items && this.search) {
           regExp = new RegExp(`${this.search}`, 'i');
           itemStocks = _.filter(itemStocks, itemStock => {
-            console.log(itemStock);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+            console.log(itemStock);
             return regExp.test(itemStock.name);
           }
         )
@@ -228,7 +228,7 @@
       otherStores() {
         if(!this.currentStore) return this.authManagerStores;
         return _.filter(this.authManagerStores,store => {
-          return store['.key'] != this.currentStore['.key'];;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+          return store['.key'] != this.currentStore['.key'];
         }
       )
       },

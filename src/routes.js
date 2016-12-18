@@ -55,11 +55,6 @@ const routes = [
     ]
   },
   {
-    path: 'pos',
-    component: resolve => require(['./components/PointOfSale.vue'],resolve),
-    name: 'pos',
-  },
-  {
     path: '/employee/:username',
     component: resolve => require(['./components/Employee.vue'],resolve),
     children: [
@@ -71,6 +66,11 @@ const routes = [
         path: 'transactions',
         component: resolve => require(['./components/EmployeeTransactions.vue'], resolve),
         name: 'employeeTransactions',
+      },
+      {
+        path: 'pos',
+        component: resolve => require(['./components/PointOfSale.vue'],resolve),
+        name: 'pos',
       },
     ]
   },

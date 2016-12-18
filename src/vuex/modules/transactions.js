@@ -52,7 +52,7 @@ const actions = {
       store: '',
       store_name:  '',
       store_location: '',
-      employee: getters.authEmployee.username,
+      employee: '',
     };
     let data = _.clone(transaction) || defaultData;
     commit('STORE_TRANSACTION',data);

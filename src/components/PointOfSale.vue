@@ -1,12 +1,6 @@
 <template>
-  <div v-if="authEmployee && authEmployeeStores">
-    <div class="md-title">Select Store to Create Transaction</div>
-    <multiselect :options="authEmployeeStores"
-                 v-model="storedItem.category"
-                 :searchable="true"
-                 placeholder="Select A Store">
+  <div v-if="authEmployee">
 
-    </multiselect>
 
     <md-table v-if="storedTransaction">
       <md-table-header>
@@ -35,7 +29,8 @@
     computed: {
       ...mapGetters([
         'storedTransaction',
-        'authEmployeeStores'
+
+        'authEmployee'
       ])
     },
     data() {

@@ -10,7 +10,7 @@
         <div>
           Are you sure that you wanted to Check out from {{storeCart.store.name}}?
           <div class="md-title">
-            Checkout Data:
+            Cart Data:
           </div>
           <md-list class="md-triple-line">
             <md-list-item v-for="{stock,product,item} in storeCart.cartItems" :key="stock['.key']">
@@ -124,8 +124,9 @@
                     <md-subheader>Store Items</md-subheader>
                     <md-list-item>
                       Check Out ({{cartItems | count}})
-                      <md-button @click="openDialog('payment',{store,cartItems})" class="md-icon-button">
+                      <md-button @click="openDialog('payment',{store,cartItems})" class="md-icon-button md-raised md-accent">
                       <md-icon>payment</md-icon>
+                        <md-tooltip>Check Out this store cart</md-tooltip>
                     </md-button>
                       <span style="flex: 1;"></span>
                       Total: (&#8369;{{totalPrice(cartItems)}})

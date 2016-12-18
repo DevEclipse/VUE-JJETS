@@ -1,7 +1,14 @@
 <template>
+  <div>
   <transactions :transactions="currentEmployeeManagerStoresTransactions">
-
+    <template slot="buttons" scope="{transaction}">
+      <md-button class="md-icon-button md-raised">
+        <md-icon>assignment_ind</md-icon>
+        <md-tooltip>Evaluate this Order</md-tooltip>
+      </md-button>
+    </template>
   </transactions>
+  </div>
 </template>
 
 <script>
@@ -13,6 +20,9 @@
       ...mapGetters([
           'currentEmployeeManagerStoresTransactions'
       ])
+    },
+    components: {
+        Transactions
     }
   }
 </script>

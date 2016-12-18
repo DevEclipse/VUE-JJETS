@@ -36,8 +36,8 @@ function generateActions(refs) {
     let ref = `ref${capKey}`;
     _.forEach(aud, a => {
       actions[`${a}${singularCapKey}`] = function ({dispatch}, payload) {
-
-        dispatch(`${a}RefObject`, {ref, payload});
+        let clone = _.clone(payload);
+        dispatch(`${a}RefObject`, {ref, payload: clone});
       };
     });
 
@@ -81,6 +81,7 @@ const state = {
   deleteObject: null,
   alerts: [],
   key: null,
+  generatedId: null,
   speech: {
     voices: [],
     enabled: true,
@@ -130,6 +131,9 @@ const mutations = {
   ['SET_VOICES'](state,voices) {
     state.utterance.voices = voices;
   },
+  ['SET_ID'](state,id) {
+    state.generatedId = id;
+  },
   ...VuexFire.mutations
 };
 
@@ -139,8 +143,8 @@ const getters = {
     if (!state.alerts) return;
     return state.alerts;
   },
-  getGeneratedId() {
-    return makeId(10);
+  getGeneratedId(state) {
+    return state.generatedId;
   },
   speechEnabled(state) {
     return state.speech.enabled;
@@ -235,6 +239,9 @@ const actions = {
   deleteRefObject({commit, getters}, {ref, payload}){
    getters[ref].child(payload['.key']).remove();
    commit('SET_DELETE_OBJECT', payload);
+  },
+  generateId({commit}) {
+    commit('SET_ID',makeId(20));
   },
   ...generateActions({
     users,

@@ -1,9 +1,7 @@
 <template>
   <div v-if="sameManager">
     <transactions :transactions="currentManagerStoresTransactions">
-      <template slot="buttons">
 
-      </template>
     </transactions>
   </div>
   <display v-else message="You are not the manager of the stores transactions" :noloader="true">

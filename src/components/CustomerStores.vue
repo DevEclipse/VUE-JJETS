@@ -141,7 +141,6 @@
           if(foundStore) {
             if(!foundStore.cartItems) return true;
             foundStock = _.find(foundStore.cartItems,({stock}) => {
-              console.log(stock);
               return stock['.key'] == storedStock.stock['.key'];
             })
           }
@@ -209,7 +208,8 @@
       },
       ...mapActions([
         'addToCart',
-        'storeStore'
+        'storeStore',
+        'addAlert'
       ])
     }
   }

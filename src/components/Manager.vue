@@ -16,6 +16,7 @@
       </router-link>
       <router-link tag="md-button" :to="{name: 'managerEmployees'}">
         <md-icon>people</md-icon> Employees ({{currentManagerEmployees | count}})
+        ({{currentManagerApplicationMessages | count}})
       </router-link>
       <router-link tag="md-button" :to="{name: 'managerTransactions'}">
         <md-icon>receipt</md-icon> Transactions ({{currentManagerStoresTransactions | count}})
@@ -34,6 +35,7 @@
         <md-icon>people</md-icon>
       </router-link>
          ({{currentManagerEmployees | count}})
+                ({{currentManagerApplicationMessages | count}})
               <router-link tag="md-button" class="md-icon-button" :to="{name: 'managerTransactions'}">
         <md-icon>receipt</md-icon>
       </router-link>
@@ -78,7 +80,8 @@
         'currentManagerItems',
         'currentManagerStores',
         'currentManagerEmployees',
-        'currentManagerStoresTransactions'
+        'currentManagerStoresTransactions',
+        'currentManagerApplicationMessages'
       ])
     },
   }

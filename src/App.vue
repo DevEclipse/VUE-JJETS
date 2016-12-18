@@ -18,7 +18,8 @@
         </router-view>
       </transition>
     </dashboard>
-    <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight" mode="out-in">
+    <transition enter-active-class="animated bounceInRight"
+                leave-active-class="animated bounceOutRight" mode="out-in">
       <router-view name="index"></router-view>
     </transition>
 
