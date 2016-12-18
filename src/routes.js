@@ -20,16 +20,6 @@ const routes = [
     name: 'itemStocks',
   },
   {
-    path: '/pos/:transaction',
-    component: resolve => require(['./components/PointOfSale.vue'],resolve),
-    name: 'pos',
-  },
-  {
-    path: '/receipt/:transaction',
-    component: resolve => require(['./components/Receipt.vue'],resolve),
-    name: 'receipt',
-  },
-  {
     path: '/user/:username',
     component: resolve => require(['./components/User.vue'],resolve),
     name: 'user',
@@ -57,12 +47,32 @@ const routes = [
         component: resolve => require(['./components/ManagerEmployees.vue'],resolve),
         name: 'managerEmployees',
       },
+      {
+        path: 'transactions',
+        component: resolve => require(['./components/ManagerTransactions.vue'],resolve),
+        name: 'managerTransactions',
+      },
     ]
+  },
+  {
+    path: 'pos',
+    component: resolve => require(['./components/PointOfSale.vue'],resolve),
+    name: 'pos',
   },
   {
     path: '/employee/:username',
     component: resolve => require(['./components/Employee.vue'],resolve),
-    name: 'employee',
+    children: [
+      { path: '',
+        redirect: { name: 'employeeTransactions' },
+        name: 'employee',
+      },
+      {
+        path: 'transactions',
+        component: resolve => require(['./components/EmployeeTransactions.vue'], resolve),
+        name: 'employeeTransactions',
+      },
+    ]
   },
   {
     path: '/customer/:username',
@@ -82,7 +92,15 @@ const routes = [
         component: resolve => require(['./components/CustomerStores.vue'], resolve),
         name: 'stores',
       },
+      {
+        path: 'transactions',
+        component: resolve => require(['./components/CustomerTransactions.vue'], resolve),
+        name: 'transactions',
+      },
     ]
+  },
+  { path: '/*',
+    redirect: { name: 'home' },
   },
 
 

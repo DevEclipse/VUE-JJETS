@@ -15,6 +15,14 @@ const getters = {
     if(!getters.currentEmployee) return;
     return _.filter(getters.allStores,['manager',getters.currentEmployee.manager]);
   },
+  currentEmployeeManagerStoresTransactions(state,getters) {
+    if(!getters.currentEmployeeManagerStores.length) return;
+    let transactions = [];
+    _.forEach(getters.currentEmployeeManagerStores,store => {
+      transactions.push(_.filter(getters.allTransactions, ['store',store['.key']]));
+    });
+    return _.flatten(transactions);
+  },
   currentEmployeeTransactions(state,getters) {
     if(!getters.currentEmployee) return;
     return _.filter(getters.allTransactions,['employee',getters.currentEmployee['username']])

@@ -1,14 +1,14 @@
 <template>
   <md-input-container :class="{'md-input-invalid': !valid}">
     <label>
-      {{label}}
+      <md-icon v-if="icon">{{icon}}</md-icon> {{label}}
     </label>
     <md-input :required="required" :value="value" @change="regExpCheck"></md-input>
 
-    <span v-if="!validRequired" class="md-error">
+    <span v-if="!validRequired && required" class="md-error">
         {{label}} must not be empty
       </span>
-    <span v-else-if="!validLength" class="md-error">
+    <span v-else-if="!validLength && length" class="md-error">
         {{label}} must be {{length}} characters long
       </span>
     <span v-else-if="!validRegExp" class="md-error">
@@ -23,7 +23,7 @@
 <script>
   export default {
     name: 'reg-ex-input',
-    props: ['value', 'label', 'regExp', 'length', 'regExpMessage', 'required'],
+    props: ['value', 'label', 'regExp', 'length', 'regExpMessage', 'required','icon'],
     computed: {
       valid() {
         return this.validRegExp && this.validLength && this.validRequired;

@@ -4,7 +4,7 @@
     <md-toolbar>
       <div class="md-title" style="flex: 1;">
         <md-icon>{{type}}</md-icon>
-        {{type | capitalize}}
+        {{(type == 'payment' ? 'Check Out' : type) | capitalize}}
       </div>
     </md-toolbar>
 
@@ -35,7 +35,13 @@
       getDialogType() {
         return this.type == 'edit'
           ? 'Update'
-          : (this.type == 'delete' ? 'Delete' : (this.type == 'send' ? 'Send' : 'Create'));
+          : (this.type == 'delete'
+            ? 'Delete'
+            : (this.type == 'send'
+              ? 'Send'
+              : (this.type == 'payment'
+                ? 'Check Out'
+                :  'Create')));
       },
     },
     methods: {
@@ -49,7 +55,7 @@
       cancelDialog() {
         this.$refs.dialog.close();
         this.$emit('cancel');
-      },
+      }
     }
   }
 </script>

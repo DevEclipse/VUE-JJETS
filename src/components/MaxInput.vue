@@ -1,12 +1,13 @@
 <template>
   <md-input-container>
     <label v-if="label">
-      {{label}}
-      <slot></slot>
+       <md-icon v-if="icon">{{icon}}</md-icon> {{label}}
+      <slot name="label"></slot>
     </label>
     <md-input type="number" min="0" :max="max" :step="step || 1" :value="value"
               @input.native="sendMaxInput">
     </md-input>
+      <slot name="extra"></slot>
   </md-input-container>
 </template>
 
@@ -14,7 +15,7 @@
 
   export default {
     name: 'max-input',
-    props: ['value', 'max', 'label', 'float', 'step'],
+    props: ['value', 'max', 'label', 'float', 'step','icon'],
     computed: {
       maxInput() {
         return this.input ? (this.input >= this.max ? this.max : this.input) : 0;

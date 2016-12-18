@@ -1,7 +1,5 @@
 <template>
-  <md-table>
 
-  </md-table>
 </template>
 
 <script>

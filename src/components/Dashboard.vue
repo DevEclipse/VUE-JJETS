@@ -3,7 +3,9 @@
 
     <md-dialog ref="signOut">
       <md-toolbar>
-        <div class="md-title">Sign Out</div>
+        <div class="md-title">
+         <md-icon>power_settings_new</md-icon> Sign Out
+        </div>
       </md-toolbar>
 
       <md-dialog-content style="margin: 2rem;">Are you sure you want to sign out?</md-dialog-content>
@@ -22,7 +24,7 @@
         <span class="visible-xs">
 
         <md-button class="md-icon-button" @click="$router.back()">
-          <md-icon>undo</md-icon>
+          <md-icon>arrow_back</md-icon>
         </md-button>
 
         <md-button class="md-icon-button" @click="toggleDashboard">
@@ -33,7 +35,7 @@
 
         <span class="hidden-xs">
           <md-button @click="$router.back()">
-          <md-icon>undo</md-icon> Back
+          <md-icon>arrow_back</md-icon> Back
         </md-button>
 
 
@@ -54,14 +56,15 @@
 
             </router-link>
             </md-menu-item>
+            <md-subheader>Profiles</md-subheader>
             <md-menu-item v-if="authCustomer"
                           @click="navigateToRoute({name: 'customer', params: {username: authCustomer.username}},true)">
-              <md-icon>shopping cart</md-icon>
+              <md-icon>shopping_cart</md-icon>
                 Customer
             </md-menu-item>
             <md-menu-item v-if="authManager"
                           @click="navigateToRoute({name: 'manager', params: {username: authManager.username}},true)">
-              <md-icon>assignment ind</md-icon>
+              <md-icon>supervisor_account</md-icon>
 
                 Manager
             </md-menu-item>
@@ -72,7 +75,11 @@
             </md-menu-item>
 
             <md-menu-item @click="signingOut">
-              <md-icon>cancel</md-icon>Sign Out
+              <md-icon>power_settings_new</md-icon> Sign Out
+            </md-menu-item>
+            <md-subheader><md-icon>settings</md-icon> Settings</md-subheader>
+            <md-menu-item @click="enableSpeech(speechEnabled ? false : true)">
+               {{speechEnabled ? 'Turn Off Speech' : 'Turn On Speech'}}
             </md-menu-item>
           </md-menu-content>
         </md-menu>
@@ -88,6 +95,10 @@
             <md-avatar class="md-large">
               <img :src="authUser.image_url || 'https://placeimg.com/64/64/people/8'" alt="People">
             </md-avatar>
+            <span style="flex: 1;"></span>
+            <md-button @click="toggleDashboard" class="md-icon-button">
+              <md-icon>close</md-icon>
+            </md-button>
           </md-list-item>
           <md-list-item>
             <div class="md-list-text-container">
@@ -130,6 +141,8 @@
             Customer
           </span>
         </md-list-item>
+        <md-subheader>Settings</md-subheader>
+        <md-list-item @click="enableSpeech(speechEnabled ? false : true)">{{speechEnabled ? 'Turn Off Speech' : 'Turn On Speech'}}</md-list-item>
       </md-list>
     </md-sidenav>
     <slot></slot>
@@ -157,6 +170,7 @@
         'authManager',
         'authEmployee',
         'authCustomer',
+        'speechEnabled',
       ])
     },
     methods: {
@@ -184,7 +198,8 @@
       },
       ...mapActions([
         'speakMessage',
-        'addAlert'
+        'addAlert',
+        'enableSpeech',
       ])
     },
   }

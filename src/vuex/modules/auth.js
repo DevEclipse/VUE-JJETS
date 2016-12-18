@@ -46,6 +46,11 @@ const getters = {
     if(!getters.currentManager) return;
     return getters.authUser.username == getters.currentManager.username;
   },
+  sameEmployee(state,getters) {
+    if(!getters.authEmployee) return;
+    if(!getters.currentEmployee) return;
+    return getters.authEmployee.username == getters.currentEmployee.username;
+  },
   sameEmployeeManagerStore(state,getters) {
     if(!getters.authEmployee) return;
     if(!getters.currentStore) return;
@@ -56,6 +61,11 @@ const getters = {
     if(!getters.currentStore) return;
     return getters.authManager.username == getters.currentStore.manager;
   },
+  selfEmployed(state,getters) {
+    if(!getters.authManager) return;
+    if(!getters.authEmployee) return;
+    return getters.authManager.username == getters.authEmployee.manager;
+  }
 };
 
 const mutations = {

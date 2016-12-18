@@ -30,8 +30,6 @@ Vue.component('reg-exp-input',require('./components/RegExpInput.vue'));
 Vue.component('alert', require('./components/Alert.vue'));
 Vue.component('main-dialog', require('./components/MainDialog.vue'));
 Vue.component('vue-image', require('./components/VueImage.vue'));
-Vue.component('employees',require('./components/Employees.vue'));
-Vue.component('transaction',require('./components/Transaction.vue'));
 Vue.component('transaction',require('./components/Transaction.vue'));
 Vue.component('transactions',require('./components/Transactions.vue'));
 Vue.component('layout',require('./components/Layout.vue'));

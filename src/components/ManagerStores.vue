@@ -10,6 +10,7 @@
         <template v-if="dialogType != 'delete'">
 
           <reg-exp-input label="Name"
+                         icon="edit"
                          v-model="storedStore.name"
                          :regExp="/^[A-Za-z][A-Za-z0-9 -]*$/"
                          @validated="validation => storeNameValid = validation"
@@ -18,6 +19,7 @@
                          regExpMessage="Name must not contain symbols"/>
 
           <reg-exp-input label="Location"
+                         icon="location_on"
                          v-model="storedStore.location"
                          :regExp="/^[A-Za-z0-9 -]*$/"
                          @validated="validation => storeLocationValid = validation"
@@ -25,17 +27,17 @@
                          :length="3"
                          regExpMessage="Location must not contain symbols"/>
 
-          <max-input v-model="storedStore.tax_rate" label="Tax Rate" :max="1" :step="0.01" :float="true">
+          <max-input icon="trending_up" v-model="storedStore.tax_rate" label="Tax Rate" :max="1" :step="0.01" :float="true">
             ({{storedStore.tax_rate | percent}})
           </max-input>
 
-          <max-input v-model="storedStore.discount_rate" label="Discount Rate" :max="1" :step="0.01" :float="true">
+          <max-input icon="trending_down" v-model="storedStore.discount_rate" label="Discount Rate" :max="1" :step="0.01" :float="true">
             ({{storedStore.discount_rate | percent}})
           </max-input>
 
           <md-input-container>
             <label>
-              <md-icon>timeline</md-icon>
+              <md-icon>photo</md-icon>
               Image Url
             </label>
             <md-input type="url" v-model="storedStore.image_url">
@@ -44,7 +46,7 @@
 
           <md-input-container>
             <label>
-              <md-icon>timeline</md-icon>
+              <md-icon>content_paste</md-icon>
               Description
             </label>
             <md-textarea v-model="storedStore.description">
@@ -84,17 +86,21 @@
 
     <stores :stores="currentManagerStores">
       <template slot="buttons" scope="{store}">
-        <md-button class="md-icon-button" v-if="!loadingStocks" @click="showStocks(store)">
-        <md-icon>add</md-icon>
+        <md-button class="md-icon-button md-raised md-accent" v-if="!loadingStocks" @click="showStocks(store)">
+        <md-icon>shopping_basket</md-icon>
+        <md-tooltip>Show Store Stocks</md-tooltip>
       </md-button>
-        <md-button class="md-icon-button" v-if="!loadingStocks" @click="showTransactions(store)">
+        <md-button class="md-icon-button md-raised md-accent" v-if="!loadingStocks" @click="showTransactions(store)">
           <md-icon>receipt</md-icon>
+          <md-tooltip>Show Store Transactions</md-tooltip>
         </md-button>
-        <md-button class="md-icon-button"  @click="openDialog('edit',store)">
+        <md-button class="md-icon-button md-raised md-accent"  @click="openDialog('edit',store)">
           <md-icon>edit</md-icon>
+          <md-tooltip>Edit Store Information</md-tooltip>
         </md-button>
-        <md-button class="md-icon-button" @click="openDialog('delete',store)">
+        <md-button class="md-icon-button md-raised md-accent" @click="openDialog('delete',store)">
           <md-icon>delete</md-icon>
+          <md-tooltip>Delete this Store </md-tooltip>
         </md-button>
       </template>
       <template scope="{store}">

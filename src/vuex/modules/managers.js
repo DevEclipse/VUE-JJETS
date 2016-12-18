@@ -1,9 +1,9 @@
-import firebase from 'firebase'
 
 const state = {
   storedManager: {
     void_code: '',
-  }
+    hire_code: '',
+  },
 };
 
 const getters = {
@@ -23,9 +23,40 @@ const getters = {
     if(!getters.currentManager) return;
     return _.filter(getters.allEmployees, ['manager', getters.currentManager['username']]);
   },
+  currentManagerApplicationMessages(state,getters) {
+    if(!getters.currentManager) return;
+    if(!getters.currentManager.app_messages.length) return;
+    let employee,message;
+    let applications;
+    _.forEach(getters.currentManager.app_messages,(appMessage,index) => {
+        employee = _.find(getters.allEmployees,['username',appMessage.employee]);
+        message = appMessage.message;
+        if(employee) {
+          applications.push({employee, message});
+        }
+    });
+    return applications;
+  },
+  currentManagerStoresTransactions(state,getters) {
+    if(!getters.currentManagerStores) return;
+      let transactions = [];
+      _.forEach(getters.currentManagerStores,store => {
+        transactions.push(_.filter(getters.allTransactions, ['store',store['.key']]));
+      });
+      return _.flatten(transactions);
+  },
   storedManager(state) {
     if(!state.storedManager) return;
     return state.storedManager;
+  },
+  allManagersAssets(state,getters) {
+    if(!getters.allManagers) return;
+    return _.map(getters.allManagers,manager => {
+        let user = _.find(getters.allUsers,['username',manager.username]);
+        let stores = _.filter(getters.allStores,['manager',manager.username]);
+        let employees = _.filter(getters.allEmployees,['manager',manager.username]);
+        return {user,manager,storeCount: stores.length,employeeCount: employees.length};
+    })
   },
 };
 

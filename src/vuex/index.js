@@ -36,6 +36,7 @@ function generateActions(refs) {
     let ref = `ref${capKey}`;
     _.forEach(aud, a => {
       actions[`${a}${singularCapKey}`] = function ({dispatch}, payload) {
+
         dispatch(`${a}RefObject`, {ref, payload});
       };
     });
@@ -62,10 +63,6 @@ function makeIdNo(length = 5) {
 
   return text;
 }
-async function speakMessage(message) {
-  let msg = await new SpeechSynthesisUtterance(message);
-  await window.speechSynthesis.speak(msg);
-}
 
 const state = {
   refs: null,
@@ -83,6 +80,12 @@ const state = {
   newObject: null,
   deleteObject: null,
   alerts: [],
+  key: null,
+  speech: {
+    voices: [],
+    enabled: true,
+    speaker:  new SpeechSynthesisUtterance(),
+  },
   itemCategories: ['Appliances', 'Groceries', 'Fashion', 'Accessories', 'Toys', 'Gadgets', 'Others']
 };
 
@@ -118,6 +121,15 @@ const mutations = {
   ['DELETE_ALERT'](state, alert) {
     state.alerts.splice(state.alerts.findIndex(a => a.id == alert.id), 1);
   },
+  ['SET_KEY'](state,key) {
+    state.key = key;
+  },
+  ['SET_SPEECH'](state,payload) {
+    state.speech.enabled = payload;
+  },
+  ['SET_VOICES'](state,voices) {
+    state.utterance.voices = voices;
+  },
   ...VuexFire.mutations
 };
 
@@ -126,6 +138,12 @@ const getters = {
   getAlerts(state) {
     if (!state.alerts) return;
     return state.alerts;
+  },
+  getGeneratedId() {
+    return makeId(10);
+  },
+  speechEnabled(state) {
+    return state.speech.enabled;
   },
   getNewObject(state) {
     return state.newObject;
@@ -148,6 +166,9 @@ const getters = {
   routeName(state) {
     return state.route.name;
   },
+  getKey(state) {
+    return state.key;
+  },
   ...generateGetters({
     users,
     managers,
@@ -162,16 +183,21 @@ const getters = {
 };
 
 const actions = {
-  async addAlert({commit, dispatch}, alert) {
-    alert.id = await makeId();
-    await commit('ADD_ALERT', alert);
-    await dispatch('speakMessage', alert.message);
+  enableSpeech({commit},payload) {
+    commit('SET_SPEECH',payload);
   },
-  async deleteAlert({commit}, alert) {
-    await commit('DELETE_ALERT', alert);
+  addAlert({getters,commit, dispatch}, alert) {
+    alert.id = makeId();
+    commit('ADD_ALERT', alert);
+    if(!getters.speechEnabled) return;
+    dispatch('speakMessage', alert.message);
   },
-  async speakMessage({state}, message) {
-    await speakMessage(message);
+  deleteAlert({commit}, alert) {
+    commit('DELETE_ALERT', alert);
+  },
+  speakMessage({state}, message) {
+    state.speech.speaker.text = message;
+    window.speechSynthesis.speak(state.speech.speaker);
   },
   newObject({commit, getters}, object) {
     let resultObject = _.clone(object);
@@ -189,20 +215,26 @@ const actions = {
     }
     commit('SET_UPDATE_OBJECT', resultObject);
   },
+  setKey({commit},key) {
+    commit('SET_KEY',key);
+  },
   addRefObject({dispatch, getters}, {ref, payload}){
-    dispatch('newObject', payload);
     let cloneRef = ref.replace('ref','');
     let singularCloneRef = cloneRef.slice(0, -1);
     let count = getters[`all${cloneRef}`].length;
-    getters.getNewObject['.key'] = getters[ref].child(`JJETS${singularCloneRef}${count}${makeIdNo(3)}`).set(getters.getNewObject).key;
+
+    dispatch('newObject', payload);
+    dispatch('setKey',`JJETS${singularCloneRef}${count}${makeIdNo(3)}`);
+    console.log(getters.getKey);
+    getters[ref].child(getters.getKey).set(getters.getNewObject);
   },
   updateRefObject({dispatch, getters}, {ref, payload}){
     dispatch('updateObject', payload);
     getters[ref].child(payload['.key']).update(getters.getUpdatedObject);
   },
   deleteRefObject({commit, getters}, {ref, payload}){
-    getters[ref].child(payload['.key']).remove();
-    commit('SET_DELETE_OBJECT', payload);
+   getters[ref].child(payload['.key']).remove();
+   commit('SET_DELETE_OBJECT', payload);
   },
   ...generateActions({
     users,

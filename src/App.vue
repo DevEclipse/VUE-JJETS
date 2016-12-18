@@ -21,9 +21,12 @@
     <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight" mode="out-in">
       <router-view name="index"></router-view>
     </transition>
-    <md-button @click="scrollToTop" class="md-button md-fab md-mini md-fab-bottom-center" style="z-index: 999">
-      <md-icon>backup</md-icon>
+
+    <md-button @click="scrollToTop" class="md-fab md-mini md-fab-bottom-left"
+               style="position: fixed;z-index: 999;">
+      <md-icon>keyboard_arrow_up</md-icon>
     </md-button>
+
   </div>
 </template>
 

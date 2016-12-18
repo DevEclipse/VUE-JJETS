@@ -1,7 +1,32 @@
 <template>
   <display v-if="!currentUser" message="Loading... User"></display>
   <div v-else style="margin: 1rem;">
+    <md-dialog ref="selectManager">
 
+      <md-toolbar style="margin-bottom: 1rem;">
+        <div class="md-toolbar-container">
+          <div class="md-title">
+            Apply By Hire Code
+          </div>
+        </div>
+      </md-toolbar>
+      <md-dialog-content style="padding-top: 3rem; padding-bottom: 3rem;">
+        <div class="md-title">
+          Found Manager: {{(foundManagerByHireCode ? foundManagerByHireCode.username : 'No Manager') | capitalize}}
+        </div>
+        <reg-exp-input label="Hire Code (Optional)"
+                       icon="content_paste"
+                       v-model="hireCode"
+                       :regExp="/^[A-Za-z0-9 -]*$/"
+                       regExpMessage="Hire code doesn't contain symbols"></reg-exp-input>
+
+      </md-dialog-content>
+      <md-dialog-actions>
+        <md-button class="md-raised md-primary" @click="addEmployeeManager"> Work</md-button>
+        <md-button class="md-raised md-warn" @click="$refs.selectManager.close()"> Cancel</md-button>
+      </md-dialog-actions>
+
+    </md-dialog>
     <md-dialog ref="editUser">
       <span v-if="storedUser">
 
@@ -37,6 +62,7 @@
               <div class="md-title" style="flex: 1;">{{currentUser.username | capitalize}}</div>
               <md-button v-if="sameUser" @click="editUser" class="md-icon-button">
                 <md-icon>edit</md-icon>
+                <md-tooltip>Edit your account</md-tooltip>
               </md-button>
             </div>
 
@@ -67,6 +93,11 @@
             </md-card-area>
           </md-card-media-cover>
         </md-card>
+        <div class="md-display-1 center-xs middle-xs">
+          New Profiles Coming Soon.
+        </div>
+      </div>
+      <div class="col-xs">
         <md-card style="margin-bottom: 1rem;">
           <md-toolbar class="md-accent">
             <div class="md-toolbar-container">
@@ -74,15 +105,22 @@
               <md-button class="md-icon-button" @click="speakMessage(`This profile is used for making stores and items, as a manager you are required to hire
                   employees to create and validate transactions for you.`)">
                 <md-icon>help</md-icon>
+                <md-tooltip>Help</md-tooltip>
               </md-button>
               <md-button v-if="!authManager"
                          @click="addProfile('manager')">
                 <md-icon>add</md-icon>
                 Add Manager Profile
               </md-button>
+
               <router-link v-else :to="{name: 'manager'}" tag="md-button" class="md-icon-button">
-                <md-icon>info</md-icon>
+                <md-icon>supervisor_account</md-icon>
+                <md-tooltip>Start Managing</md-tooltip>
               </router-link>
+              <md-button v-if="sameUser" class="md-icon-button">
+                <md-icon>info</md-icon>
+                <md-tooltip>View Secret Info</md-tooltip>
+              </md-button>
             </div>
           </md-toolbar>
           <md-card-media-cover md-solid>
@@ -113,6 +151,7 @@
               <md-button class="md-icon-button" @click="speakMessage(`This profile is used for working with managers from their stores, your primary role for this profile
                     is to create or validate transactions from customers and stores of your manager.`)">
                 <md-icon>help</md-icon>
+                <md-tooltip>Help</md-tooltip>
               </md-button>
               <md-button v-if="!authEmployee"
                          @click="addProfile('employee')">
@@ -120,7 +159,8 @@
                 Add Employee Profile
               </md-button>
               <router-link v-else :to="{name: 'employee'}" tag="md-button" class="md-icon-button">
-                <md-icon>info</md-icon>
+                <md-icon>work</md-icon>
+                <md-tooltip>Start Working</md-tooltip>
               </router-link>
             </div>
           </md-toolbar>
@@ -151,13 +191,15 @@
               <md-button class="md-icon-button" @click="speakMessage(`This profile is used for buying items from stores and creating orders to be soon delivered
                     by the store of your choice.`)">
                 <md-icon>help</md-icon>
+                <md-tooltip>Help</md-tooltip>
               </md-button>
               <md-button v-if="!authCustomer" @click="addProfile('customer')">
                 <md-icon>add</md-icon>
                 Add Customer Profile
               </md-button>
               <router-link v-else :to="{name: 'customer'}" tag="md-button" class="md-icon-button">
-                <md-icon>info</md-icon>
+                <md-icon>shopping_cart</md-icon>
+                <md-tooltip>Start Shopping</md-tooltip>
               </router-link>
             </div>
 
@@ -188,12 +230,19 @@
 </template>
 
 <script>
-  let urlRegEx = /(http)?s?:?(\/\/[^"']*\.(?:png|jpg|jpeg|gif|png|svg))/i;
   import {mapGetters, mapActions} from 'vuex';
   export default {
     name: 'user',
     props: ['authUser', 'authManager', 'authEmployee', 'authCustomer'],
+    data() {
+      return {
+        hireCode: ''
+      }
+    },
     computed: {
+      foundManagerByHireCode() {
+        return _.find(this.allManagers, ['hire_code', this.hireCode]);
+      },
       filterUsers() {
         let users = this.allUsers;
         if (users && this.search) {
@@ -210,7 +259,9 @@
         'currentEmployee',
         'currentManager',
         'currentCustomer',
-        'storedUser'
+        'storedUser',
+        'allManagers',
+        'getGeneratedId'
       ])
     },
     methods: {
@@ -227,18 +278,45 @@
       addProfile(profile) {
         switch (profile) {
           case 'manager':
-            this.addManager({username: this.authUser.username, void_code: this.authUser.username});
+            this.addManager({
+              username: this.authUser.username,
+              void_code: _.shuffle(this.getGeneratedId.split('')).reverse().join(''),
+              hire_code: _.shuffle(this.getGeneratedId.split('')).reverse().join('')
+            });
             break;
           case 'employee':
-            this.addEmployee({username: this.authUser.username,manager: this.authUser.username});
+            this.$refs.selectManager.open();
             break;
           case 'customer':
-            this.addCustomer({username: this.authUser.username,balance: 0});
+            this.addCustomer({username: this.authUser.username, balance: 0});
             break;
         }
+        if (!profile == 'employee') {
+          this.addAlert({
+            message: `Added ${_.upperFirst(profile)} profile to your account`, callback: () => {
+              this.$router.push({name: profile, params: {username: this.authUser.username}});
+            }
+          });
+        }
+      },
+      addEmployeeManager() {
+        this.addEmployee({
+          username: this.authUser.username,
+          manager: this.foundManagerByHireCode
+            ? this.foundManagerByHireCode.username
+            : (this.authManager ? this.authManager.username : '')
+        });
+        this.$refs.selectManager.close();
         this.addAlert({
-          message: `Added ${profile} profile to your account`, callback: () => {
-            this.$router.push({name: profile, params: {username: this.authUser.username}});
+          message: this.foundManagerByHireCode ? `Added Employee profile and assigned to Manager: ${this.foundManagerByHireCode.username}`
+            : `Added Employee profile to your account`, callback: () => {
+            if (this.foundManagerByHireCode) {
+              let manager = _.clone(this.foundManagerByHireCode);
+              manager.hire_code =  _.shuffle(this.getGeneratedId.split('')).reverse().join('');
+
+              this.updateManager(manager);
+            }
+            this.$router.push({name: 'employee', params: {username: this.authUser.username}});
           }
         });
       },
@@ -247,6 +325,7 @@
         'addEmployee',
         'addCustomer',
         'updateUser',
+        'updateManager',
         'speakMessage',
         'addAlert',
         'storeUser'

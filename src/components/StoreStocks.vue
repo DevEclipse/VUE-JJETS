@@ -11,7 +11,7 @@
 
           <md-input-container>
             <label>
-              &#8369; Retail Price ({{storedStockItem.cost_price}})
+             <md-icon>payment</md-icon> &#8369; Retail Price ({{storedStockItem.cost_price}})
             </label>
             <md-input v-model="storedStock.retail_price"
                       type="number" :min="storedStockItem.cost_price">
@@ -24,27 +24,32 @@
             </span>
           </md-input-container>
 
-          <md-input-container>
-            <label>
-              Quantity ({{stockCostPriceTotal(storedStock,storedStockItem.cost_price)}})
-            </label>
-            <md-input v-model="storedStock.quantity"
-                      type="number" min="0">
-            </md-input>
-            <span class="md-caption" style="color: blue;">
+          <max-input v-model="storedStock.quantity" icon="equalizer" label="Quantity" :max="999999999">
+            <template slot="label">
+              ({{stockCostPriceTotal(storedStock,storedStockItem.cost_price)}})
+            </template>
+            <template slot="extra">
+                          <span class="md-caption" style="color: blue;">
              ({{stockTotal(storedStock)}})
             </span>
-            <span v-if="storedStock.taxed" class="md-caption" style="color: teal;">
+              <span v-if="storedStock.taxed" class="md-caption" style="color: teal;">
               (+{{stockTotalTax(storedStock)}})
             </span>
-            <span v-if="storedStock.discounted" class="md-caption" style="color: red;">
+              <span v-if="storedStock.discounted" class="md-caption" style="color: red;">
               (-{{stockTotalDiscount(storedStock)}})
             </span>
-          </md-input-container>
+            </template>
+          </max-input>
 
-          <md-checkbox v-model="storedStock.taxed">Taxed</md-checkbox>
 
-          <md-checkbox v-model="storedStock.discounted">Discounted
+          <md-checkbox v-model="storedStock.taxed">
+           <md-icon>trending_up</md-icon>
+            Taxed
+          </md-checkbox>
+
+          <md-checkbox v-model="storedStock.discounted">
+            <md-icon>trending_down</md-icon>
+            Discounted
 
           </md-checkbox>
 
@@ -81,16 +86,15 @@
         </div>
       </div>
     </md-toolbar>
-
     <stocks :stocks="currentStoreStocksItems">
-      <template v-if="sameManagerStore" slot="buttons" scope="{stock}">
-        <md-button class="md-icon-button" @click="openDialog('edit',stock)">
+      <template  slot="buttons" scope="{stock}">
+        <md-button v-if="sameManagerStore" class="md-icon-button" @click="openDialog('edit',stock)">
           <md-icon>edit</md-icon>
         </md-button>
-        <md-button class="md-icon-button" @click="openDialog('delete',stock)">
+        <md-button v-if="sameManagerStore" class="md-icon-button" @click="openDialog('delete',stock)">
           <md-icon>delete</md-icon>
         </md-button>
-        <md-button v-if="stock.quantity >= 1 && authManagerStores.length > 1" class="md-icon-button" @click="openDialog('send',stock)">
+        <md-button v-if="sameManagerStore && stock.quantity >= 1 && authManagerStores.length > 1" class="md-icon-button" @click="openDialog('send',stock)">
           <md-icon>send</md-icon>
         </md-button>
       </template>
@@ -102,7 +106,7 @@
     </md-button>
 
     <md-sidenav class="md-right md-fixed" ref="itemsMenu">
-      <div class="md-toolbar">
+      <md-toolbar>
         <div class="md-toolbar-container">
           <div class="md-title" style="flex: 1;">
             {{ownItems ? 'Owned Items' : 'Public Items'}} ({{itemsNotOnStoreStocks | count}})
@@ -111,7 +115,7 @@
             <md-icon>close</md-icon>
           </md-button>
         </div>
-      </div>
+      </md-toolbar>
 
       <md-input-container style="margin: 1rem;">
         <label>
@@ -132,20 +136,25 @@
       <transition mode="out-in"
                   enter-active-class="animated bounceInRight"
                   leave-active-class="animated bounceOutRight">
-        <div v-if="!ownItems" key="owned">
+        <div v-if="!ownItems">
           <md-button style="width: 95%" class="md-raised md-primary" @click="ownItems = true">
             Own Items
           </md-button>
         </div>
-        <div v-else key="notOwned">
+        <div v-else>
           <md-button style="width: 95%" class="md-raised md-accent" @click="ownItems = false">
             Public Items
           </md-button>
         </div>
       </transition>
       <md-list>
-        <template v-if="itemsNotOnStoreStocks.length">
-          <transition-group enter-active-class="animated bounceInRight"
+        <transition mode="out-in"
+                          enter-active-class="animated bounceInRight"
+                          leave-active-class="animated bounceOutRight">
+
+
+          <transition-group  v-if="itemsNotOnStoreStocks.length" mode="out-in"
+                            enter-active-class="animated bounceInRight"
                             leave-active-class="animated bounceOutRight">
 
             <md-list-item v-for="item in itemsNotOnStoreStocks" :key="item['.key']">
@@ -167,12 +176,13 @@
             </md-list-item>
 
           </transition-group>
-        </template>
 
-        <template v-else>
-          <span class="md-title row middle-xs center-xs">No Items</span>
-        </template>
+
+
+          <md-list-item v-else class="md-title row middle-xs center-xs">No Items</md-list-item>
+        </transition>
       </md-list>
+
     </md-sidenav>
 
   </div>
@@ -183,7 +193,6 @@
   import Stocks from './Stocks.vue';
   export default {
     name: 'store-stocks',
-    props: ['authManager'],
     components: {
       Stocks
     },
@@ -204,21 +213,24 @@
         let regExp;
         let items = this.ownItems ? this.authManagerItems : this.sharedItems;
         let itemStocks = _.filter(items, item => {
-          return _.find(this.currentStoreStocks, ['item', item['.key']]) == null;
-        });
+          return _.find(this.currentStoreStocks, ['item', item['.key']]) == null;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      })
         if (items && this.search) {
           regExp = new RegExp(`${this.search}`, 'i');
           itemStocks = _.filter(itemStocks, itemStock => {
-            console.log(itemStock);
+            console.log(itemStock);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
             return regExp.test(itemStock.name);
-          });
+          }
+        )
         }
         return itemStocks;
       },
       otherStores() {
+        if(!this.currentStore) return this.authManagerStores;
         return _.filter(this.authManagerStores,store => {
-          return store['.key'] != this.currentStore['.key'];
-        });
+          return store['.key'] != this.currentStore['.key'];;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        }
+      )
       },
       ...mapGetters([
         'currentStoreStocksItems',
@@ -250,7 +262,7 @@
       closeDialog() {
         if (this.dialogType == 'edit') {
           this.updateStock(this.storedStock);
-          this.addAlert({message: ` ${this.storedStock['.key']} Stock Updated `})
+          this.addAlert({message: ` ${this.storedStockItem.name} Stock Updated `})
         } else if (this.dialogType == 'send') {
           let sendQuantity = this.quantityToSend > this.storedStock.quantity ? this.storedStock.quantity : this.quantityToSend;
             this.moveStockToStore({stock: this.storedStock,store: this.selectedStore,quantity: sendQuantity});

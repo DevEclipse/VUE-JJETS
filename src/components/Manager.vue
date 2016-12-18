@@ -5,7 +5,7 @@
 
     <md-toolbar class="md-accent">
       <div class="md-title" style="flex: 1">
-        Manager | {{currentManager.username | capitalize}}
+       {{currentManager.username | capitalize}}
       </div>
       <span class="hidden-xs">
       <router-link tag="md-button" :to="{name: 'managerItems'}">
@@ -15,26 +15,36 @@
         <md-icon>store</md-icon> Stores ({{currentManagerStores | count}})
       </router-link>
       <router-link tag="md-button" :to="{name: 'managerEmployees'}">
-        <md-icon>face</md-icon> Employees ({{currentManagerEmployees | count}})
+        <md-icon>people</md-icon> Employees ({{currentManagerEmployees | count}})
+      </router-link>
+      <router-link tag="md-button" :to="{name: 'managerTransactions'}">
+        <md-icon>receipt</md-icon> Transactions ({{currentManagerStoresTransactions | count}})
       </router-link>
         </span>
       <span class="visible-xs">
       <router-link tag="md-button" class="md-icon-button" :to="{name: 'managerItems'}">
-       <md-icon>shop</md-icon> ({{currentManagerItems | count}})
+       <md-icon>shop</md-icon>
       </router-link>
+        ({{currentManagerItems | count}})
       <router-link tag="md-button" class="md-icon-button" :to="{name: 'managerStores'}">
-        <md-icon>store</md-icon> ({{currentManagerStores | count}})
+        <md-icon>store</md-icon>
       </router-link>
+         ({{currentManagerStores | count}})
       <router-link tag="md-button" class="md-icon-button" :to="{name: 'managerEmployees'}">
-        <md-icon>face</md-icon> ({{currentManagerEmployees | count}})
+        <md-icon>people</md-icon>
       </router-link>
+         ({{currentManagerEmployees | count}})
+              <router-link tag="md-button" class="md-icon-button" :to="{name: 'managerTransactions'}">
+        <md-icon>receipt</md-icon>
+      </router-link>
+         ({{currentManagerStoresTransactions | count}})
         </span>
     </md-toolbar>
     <transition enter-active-class="animated bounceInRight" leave-active-class="animated bounceOutRight" mode="out-in">
       <router-view></router-view>
     </transition>
   </div>
-  <display v-else message="You dont own this profile">
+  <display v-else message="You dont own this profile" :noloader="true">
     <template v-if="authManager">
       <router-link tag="md-button" class="md-raised md-accent"
                    :to="{name: 'manager', params: {username: authManager.username}}">
@@ -67,7 +77,8 @@
         'sameManager',
         'currentManagerItems',
         'currentManagerStores',
-        'currentManagerEmployees'
+        'currentManagerEmployees',
+        'currentManagerStoresTransactions'
       ])
     },
   }

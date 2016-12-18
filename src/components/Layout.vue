@@ -16,7 +16,7 @@
             <md-icon>search</md-icon>
             Search
           </label>
-          <md-input v-model="searchValue"></md-input>
+          <md-input ref="searchInput" v-model="searchValue"></md-input>
         </md-input-container>
       </md-dialog-content>
       <md-dialog-actions>
@@ -36,6 +36,7 @@
       <md-button v-if="search" class="md-fab md-mini md-fab-bottom-right"
                  style="position: fixed; z-index: 10; margin-right: 7.5rem;" @click="search = searchValue = ''">
         <md-icon>undo</md-icon>
+        <md-tooltip md-direction="left">Undo the search</md-tooltip>
       </md-button>
 
     </transition>
@@ -43,25 +44,23 @@
     <transition mode="out-in"
                 enter-active-class="animated bounceInLeft"
                 leave-active-class="animated bounceOutLeft">
-      <md-button v-if="!search" class="md-fab md-mini md-fab-bottom-right" @click="$refs.searchDialog.open()"
+      <md-button v-if="!search && searchKey" class="md-fab md-mini md-fab-bottom-right" @click="$refs.searchDialog.open()"
                  style="position: fixed; z-index: 10; margin-right: 4rem;">
         <md-icon>search</md-icon>
+        <md-tooltip md-direction="left">Search</md-tooltip>
       </md-button>
     </transition>
+    <template v-if="dataList">
 
     <transition mode="out-in"
                 enter-active-class="animated bounceInRight"
                 leave-active-class="animated bounceOutRight">
-      <display v-if="!dataList" key="display" noloader="true" message="No Results"/>
-
-    </transition>
-    <transition mode="out-in"
-                enter-active-class="animated bounceInRight"
-                leave-active-class="animated bounceOutRight">
-      <template v-if="dataList">
+      <template v-if="dataList.length">
 
 
-        <transition-group style="margin: 0.1rem;" class="md-layout md-gutter" mode="out-in"
+        <transition-group style="margin: 0.1rem;" class="md-layout md-gutter"
+                          mode="out-in"
+                          name="layout-list"
                           enter-active-class="animated bounceInRight"
                           leave-active-class="animated bounceOutRight">
 
@@ -78,8 +77,13 @@
 
 
       </template>
-    </transition>
 
+      <display v-else key="display" noloader="true" message="No Results">
+      </display>
+
+
+    </transition>
+    </template>
   </div>
 
 
@@ -118,20 +122,25 @@
     },
     methods: {
       searchDataList() {
+        let regExp = /^[A-Za-z0-9 -]*$/i;
         if (this.searchValue == '') {
           this.addAlert({message: `Search input must not be empty`});
           this.$refs.searchDialog.close();
-          return;
+        } else if(!regExp.test(this.searchValue)) {
+          this.addAlert({message: `Search input must not contain symbols`});
+          this.$refs.searchDialog.close();
+          this.searchValue = '';
+          this.$refs.searchInput.$el.value = '';
+        } else {
+          this.$refs.searchDialog.close();
+          this.addAlert({
+            message: `Searching... ${this.searchValue}`, callback: () => {
+              this.search = this.searchValue;
+              this.searchValue = '';
+              this.searched = true;
+            }
+          });
         }
-        this.$refs.searchDialog.close();
-        this.addAlert({
-          message: `Searching... ${this.searchValue}`, callback: () => {
-            this.search = this.searchValue;
-            this.searchValue = '';
-            this.searched = true;
-          }
-        });
-
       },
       ...mapActions([
         'addAlert'
@@ -139,3 +148,9 @@
     }
   }
 </script>
+
+<style>
+  .layout-list-move {
+    transition: all 1s;
+  }
+</style>

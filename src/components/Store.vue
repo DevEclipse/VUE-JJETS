@@ -1,12 +1,14 @@
 <template>
-  <md-card md-with-hover class="md-primary">
+  <md-card>
     <md-toolbar class="md-large">
       <div class="md-toolbar-container">
-        <div class="md-title" style="flex: 1;">{{store.name | capitalize}}
+        <div class="md-title">{{store.name | capitalize}}
+          <md-icon v-if="isNew" style="font-size: 2rem;">fiber_new</md-icon>
           <div class="md-subhead">
             {{store['.key']}}
           </div>
         </div>
+
       </div>
       <div class="md-toolbar-container">
         <span style="flex: 1;"></span>
@@ -39,8 +41,7 @@
         Location: {{store.location}}
       </div>
       <span style="flex: 1;"></span>
-      Manager:
-      <router-link tag="md-button" :to="{name: 'user', params: {username: store.manager}}">
+      <router-link tag="md-button" class="md-raised md-accent" :to="{name: 'user', params: {username: store.manager}}">
         {{store.manager}}
       </router-link>
     </md-card-actions>
@@ -51,5 +52,12 @@
   export default {
     name: 'store',
     props: ['store'],
+    computed: {
+      isNew() {
+        let today = new Date();
+        let created = new Date(this.store.created_date);
+        return today.toDateString() === created.toDateString();
+      },
+    }
   }
 </script>
