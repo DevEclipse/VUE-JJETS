@@ -4,14 +4,18 @@
     <md-dialog ref="transactionCreateDialog">
       <template v-if="storedTransaction">
       <md-toolbar>
-        <div class="md-toolbar-content" >
+        <div class="md-toolbar-content">
           <div class="md-title">Point of Sale</div>
         </div>
       </md-toolbar>
-      <div class="md-title" align="center" >
-        Store
-      </div>
+
       <md-dialog-content align="center" style="padding: 2rem">
+        <div class="md-title">
+          Create Transaction: ({{currentEmployee.username | capitalize}})
+        </div>
+        <div class="md-title" align="center" style="padding: 1rem;">
+          Store
+        </div>
         <multiselect :options="authEmployeeStores"
                      v-model="store"
                      :searchable="true"
@@ -34,11 +38,14 @@
         </multiselect>
 
       </md-dialog-content>
-        <md-button class="md-accent md-raised">
-          asd
-        </md-button>
-      <md-dialog-actions>
 
+      <md-dialog-actions>
+        <md-button class="md-accent md-raised" v-if="store">
+          Create
+        </md-button>
+        <md-button class="md-warn md-raised" >
+          Cancel
+        </md-button>
       </md-dialog-actions>
       </template>
     </md-dialog>

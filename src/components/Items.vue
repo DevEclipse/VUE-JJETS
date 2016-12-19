@@ -2,10 +2,10 @@
 
   <layout :list="sortByDate" searchKey="name">
     <template slot="extra">
-      <md-whiteframe md-elevation="24" style="z-index: 20">
-        <div class="md-display-1" align="center" style="padding: 1rem;">
-          Filters
-        </div>
+      <transition enter-active-class="animated bounceInRight"
+                  leave-active-class="animated bounceOutRight" mode="out-in">
+        <md-whiteframe align="center" md-elevation="24" style="z-index: 20" v-if="showFilters">
+
       <div class="row center-xs middle-xs">
         <div class="col-xs">
           <multiselect  :options="itemCategories"
@@ -19,14 +19,22 @@
           </md-button>
         </div>
 
-          <md-button class="md-fab md-mini md-fab-bottom-left" style="z-index: 1000; position: fixed;"
-                     @click="() => {order = order == 'desc' ? 'asc' : 'desc'; sorted = true;}">
-            <md-icon>sort</md-icon>
-          </md-button>
-
       </div>
       </md-whiteframe>
+      </transition>
+      <md-button class="md-fab md-mini md-fab-bottom-right"
+                 style="margin-right: 15rem;z-index: 1000; position: fixed;"
+                 @click="showFilters = !showFilters">
+        <md-icon>filter_list</md-icon>
+        <md-tooltip md-direction="left">{{showFilters ? 'Hide Filters' : 'Show Filters'}}</md-tooltip>
+      </md-button>
 
+      <md-button class="md-fab md-mini md-fab-bottom-right"
+                 style="margin-right: 12rem;z-index: 1000; position: fixed;"
+                 @click="() => {order = order == 'desc' ? 'asc' : 'desc'; sorted = true;}">
+        <md-icon>sort</md-icon>
+        <md-tooltip md-direction="right">Sort By Newest or Oldest</md-tooltip>
+      </md-button>
     </template>
     <template scope="props">
       <item v-for="item in props" :item="item">
@@ -57,6 +65,7 @@
           category: '',
           order: 'desc',
           sorted: false,
+          showFilters: true
       }
     },
     computed: {

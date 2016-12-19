@@ -19,6 +19,6 @@
         'sameManager',
         'currentManagerStores'
       ])
-    }
+    },
   }
 </script>

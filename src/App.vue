@@ -26,6 +26,7 @@
     <md-button @click="scrollToTop" class="md-fab md-mini md-fab-bottom-left"
                style="position: fixed;z-index: 999;">
       <md-icon>keyboard_arrow_up</md-icon>
+      <md-tooltip md-direction="right">Back to Top</md-tooltip>
     </md-button>
 
   </div>

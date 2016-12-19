@@ -25,13 +25,13 @@ Vue.use(VueRouter);
 Vue.use(VuexFire);
 Vue.use(VueMaterial);
 Vue.use(VueMoment);
-
+Vue.component('transactions',require('./components/Transactions.vue'));
 Vue.component('reg-exp-input',require('./components/RegExpInput.vue'));
 Vue.component('alert', require('./components/Alert.vue'));
 Vue.component('main-dialog', require('./components/MainDialog.vue'));
 Vue.component('vue-image', require('./components/VueImage.vue'));
 Vue.component('transaction',require('./components/Transaction.vue'));
-Vue.component('transactions',require('./components/Transactions.vue'));
+
 Vue.component('layout',require('./components/Layout.vue'));
 Vue.component('multiselect',MultiSelect);
 Vue.component('display',require('./components/Display.vue'));

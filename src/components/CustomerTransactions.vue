@@ -1,8 +1,6 @@
 <template>
   <transactions :transactions="currentCustomerTransactions">
-    <template slot="buttons">
 
-    </template>
   </transactions>
 </template>
 
@@ -14,6 +12,6 @@
       ...mapGetters([
         'currentCustomerTransactions'
       ])
-    }
+    },
   }
 </script>

@@ -24,9 +24,10 @@
             </div>
           </md-toolbar>
         </template>
-        <md-whiteframe align="center" md-elevation="24" style="z-index: 20">
-          <div class="md-display-1" align="center" style="padding: 1rem;">Filters</div>
-          <div class="row center-xs middle-xs" style="padding: 1rem;">
+        <transition enter-active-class="animated bounceInRight"
+                    leave-active-class="animated bounceOutRight" mode="out-in">
+        <md-whiteframe align="center" md-elevation="24" style="z-index: 20" v-if="showFilters">
+          <div class="row center-xs middle-xs" style="padding: 0.25rem;">
             <div class="col-xs-6 col-md-4" v-if="transactionsStores.length != 0 && $route.name != 'storeTransactions'">
               <multiselect :options="transactionsStores"
                            v-model="store"
@@ -75,24 +76,27 @@
               </md-button>
             </div>
 
-
           </div>
         </md-whiteframe>
+        </transition>
+
+        <md-button class="md-fab md-mini md-fab-bottom-right"
+                   style="margin-right: 15rem;z-index: 1000; position: fixed;"
+                   @click="showFilters = !showFilters">
+          <md-icon>filter_list</md-icon>
+          <md-tooltip md-direction="left">{{showFilters ? 'Hide Filters' : 'Show Filters'}}</md-tooltip>
+        </md-button>
 
         <md-button class="md-fab md-mini md-fab-bottom-right"
                    style="margin-right: 12rem;z-index: 1000; position: fixed;"
                    @click="() => {order = order == 'desc' ? 'asc' : 'desc'; sorted = true;}">
           <md-icon>sort</md-icon>
-          <md-tooltip md-direction="left">Sort By Newest or Oldest</md-tooltip>
+          <md-tooltip md-direction="right">Sort By Newest or Oldest</md-tooltip>
         </md-button>
       </template>
       <template scope="props">
         <transaction v-for="transaction in props" :transaction="transaction">
-          <template slot="buttons">
-            <slot name="buttons" :transaction="transaction">
 
-            </slot>
-          </template>
         </transaction>
       </template>
     </layout>
@@ -263,6 +267,9 @@
         sorted: false,
         startDate: null,
         endDate: null,
+        transaction: null,
+        products: [],
+        showFilters: true
       }
     },
     components: {

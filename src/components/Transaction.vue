@@ -1,4 +1,5 @@
 <template>
+
   <md-whiteframe  align="center" md-elevation="10">
   <md-card style="padding: 4rem;">
     <md-card-content>
@@ -79,7 +80,9 @@
         Updated: <span class="md-subheader"> {{transaction.updated_date | moment("from")}} </span>
       </div>
     </md-card-media-actions>
-
+    <md-card-actions>
+      <md-button class="md-raised md-accent" @click="$emit('viewProducts',transaction)">View Transaction Products</md-button>
+    </md-card-actions>
   </md-card>
   </md-whiteframe>
 </template>
