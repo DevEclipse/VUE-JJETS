@@ -13,5 +13,14 @@
         'currentCustomerTransactions'
       ])
     },
+    methods: {
+      transactionClaimed(transaction) {
+        transaction.status = "Claimed";
+        this.updateTransaction(transaction);
+      },
+      ...mapActions([
+          'updateTransaction'
+        ])
+    }
   }
 </script>

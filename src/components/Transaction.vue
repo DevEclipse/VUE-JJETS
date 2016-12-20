@@ -11,9 +11,7 @@
           </div>
         </div>
     </md-card-content>
-    <md-card-actions>
-      <slot name="buttons"></slot>
-    </md-card-actions>
+
     <md-card-content>
       <div class="md-subheading">
         Store: {{transaction.store}}
@@ -81,7 +79,7 @@
       </div>
     </md-card-media-actions>
     <md-card-actions>
-      <md-button class="md-raised md-accent" @click="$emit('viewProducts',transaction )">View Transaction Products</md-button>
+      <slot name="buttons"></slot>
     </md-card-actions>
   </md-card>
   </md-whiteframe>

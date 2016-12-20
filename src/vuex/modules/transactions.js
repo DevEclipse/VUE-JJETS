@@ -81,6 +81,8 @@ const actions = {
 
     let processedStocks = [];
     let processedProducts = [];
+    transaction.status = "Completed";
+    transaction.employee = getters.authEmployee.username;
     await _.forEach(products, ({stock, product, item}) => {
 
       product.price = stock.retail_price;

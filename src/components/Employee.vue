@@ -64,14 +64,15 @@
             Apply Using Code
           </md-button>
         </template>
-
-        <md-button v-if="currentEmployee.manager" @click="resignEmployee">
+        <template v-if="sameEmployee && currentEmployee.manager">
+        <md-button @click="resignEmployee">
           Resign
         </md-button>
         <md-button @click="createTransaction">
           <md-icon>receipt</md-icon>
           Point of Sales
         </md-button>
+        </template>
       </template>
     </md-toolbar>
     <transition v-if="sameEmployee && currentEmployee.manager" enter-active-class="animated bounceInRight"
@@ -249,7 +250,10 @@
         'serverTime',
         'storedTransaction',
         'authEmployeeStores',
-        'allCustomers'
+        'allCustomers',
+        'sameEmployee',
+        'key',
+        'allTransactions'
       ])
     },
     data() {
@@ -271,13 +275,18 @@
     },
     methods: {
       createTransaction() {
+        this.resetEverything();
         this.storeTransaction();
         this.$refs.transactionCreateDialog.open();
       },
       createTransactionToPos() {
         this.storeStore(this.store);
         this.$refs.transactionCreateDialog.close();
-        this.$router.push({name: 'pos'});
+        this.storedTransaction.status = "Processing";
+        this.addTransaction(this.storedTransaction);
+        let transaction = _.find(this.allTransactions,['.key',key]);
+        this.storeTransaction(transaction);
+        this.$router.push({name: 'pos', params: {transaction: this.key}});
       },
       resignEmployee() {
         this.addAlert({message: `You have resigned from the management of ${this.authEmployee.manager}`});
@@ -323,7 +332,9 @@
         'updateManager',
         'generateId',
         'storeTransaction',
-        'storeStore'
+        'storeStore',
+        'resetEverything',
+        'addTransaction'
       ])
     }
   }

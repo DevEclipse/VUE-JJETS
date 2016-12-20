@@ -128,9 +128,10 @@
       <template scope="props">
         <transaction v-for="transaction in props" :transaction="transaction" @viewProducts="viewProducts">
           <template slot="buttons" :transaction="transaction">
-            <md-button class="md-raised md-accent" @click="showTransactionProducts">
+            <md-button class="md-raised md-accent" @click="showTransactionProducts(transaction)">
               Show Transaction Products
             </md-button>
+            <slot name="buttons" :transaction="transaction"></slot>
           </template>
         </transaction>
       </template>
@@ -149,11 +150,15 @@
       },
       showTransactionProducts(transaction) {
         this.storeTransaction(transaction);
+        let store = _.find(this.allStores,['.key',transaction.store]);
+        console.log(store);
+        this.storeStore(store);
         this.$refs.transactionProductsDialog.open();
       },
       ...mapActions([
         'addAlert',
-        'storeTransaction'
+        'storeTransaction',
+        'storeStore'
       ]),
       resetToAllTransactions() {
         this.store = '';
@@ -167,7 +172,8 @@
     },
     computed: {
       ...mapGetters([
-        'storedProducts'
+        'storedProducts',
+        'allStores'
       ]),
       totalSales() {
         return _.sumBy(this.sortByDate, transaction => {

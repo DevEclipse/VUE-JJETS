@@ -5,7 +5,6 @@ const state = {
 const getters = {
   storedProducts(state,getters) {
     if(!getters.storedTransaction) return;
-    console.log(getters.storedTransaction);
     return _.filter(getters.allProducts,['transaction',getters.storedTransaction['.key']]);
   },
 };

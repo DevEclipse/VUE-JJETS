@@ -1,5 +1,14 @@
 <template>
   <div v-if="authEmployee && storedTransaction">
+    <md-dialog ref="voidTransaction">
+      <md-dialog-content>
+        Enter Void Code To delete this transaction
+        <md-input-container>
+          <label>Void Code</label>
+          <md-input></md-input>
+        </md-input-container>
+      </md-dialog-content>
+    </md-dialog>
     <div class="row">
       <div class="col-xs-4">
         <template v-if="storedStore">
@@ -100,7 +109,8 @@
               Total: {{storedTransaction.total}}
             </div>
           <div class="col-xs">
-            <md-button @click="pay">Pay</md-button>
+            <md-button v-if="storedTransactionProducts.length" @click="pay">Pay</md-button>
+            <md-button v-if="storedTransactionProducts.length" @click="voidTransaction">Cancel</md-button>
           </div>
         </div>
         <md-table v-if="storedTransaction">
@@ -207,6 +217,9 @@
           transaction: this.storedTransaction}));
         this.$router.push({name: 'employee', params: {username: this.authEmployee.username}});
         this.resetEverything();
+      },
+      voidTransaction() {
+        
       },
       productSubTotal(product,stock) {
         return product.quantity * stock.retail_price;
