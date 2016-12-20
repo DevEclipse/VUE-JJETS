@@ -9,47 +9,16 @@
           <md-table-head>Item</md-table-head>
           <md-table-head>Retail Price</md-table-head>
           <md-table-head>Quantity</md-table-head>
-          <md-table-head>Item Sub Total</md-table-head>
           <md-table-head>Item Total</md-table-head>
         </md-table-row>
       </md-table-header>
 
       <md-table-body>
-        <md-table-row v-for="({product,stock,item}, index) in storedTransactionProducts" :key="index">
-          <md-table-cell>{{stock['.key']}}</md-table-cell>
-          <md-table-cell>{{item.name}}</md-table-cell>
-          <md-table-cell>
-            {{stock.retail_price}}
-            <span v-if="stock.taxed" style="color: red;">
-              (+{{(stock.retail_price * storedTransaction.store.tax_rate) | estimate}})
-            </span>
-            <span v-if="stock.discount" style="color: teal;">
-              (+{{(stock.retail_price * storedTransaction.store.discount_rate) | estimate}})
-            </span>
-          </md-table-cell>
-          <md-table-cell>
-            {{product.quantity}}
-          </md-table-cell>
-          <md-table-cell>
-            {{(stock.retail_price * product.quantity) | estimate}}
-            <span v-if="stock.taxed" style="color: red;">
-              (+{{(stock.retail_price * storedTransaction.store.tax_rate * product.quantity) | estimate}})
-            </span>
-            <span v-if="stock.discount" style="color: teal;">
-              (+{{(stock.retail_price * storedTransaction.store.discount_rate * product.quantity) | estimate}})
-            </span>
-          </md-table-cell>
-          <md-table-cell>
-            {{(stock.retail_price * product.quantity) | estimate}}
-            <span v-if="stock.taxed" style="color: red;">
-              (+{{(stock.retail_price * storedTransaction.store.tax_rate * product.quantity) | estimate}})
-            </span>
-            <span v-if="stock.discount" style="color: teal;">
-              (+{{(stock.retail_price * storedTransaction.store.discount_rate * product.quantity) | estimate}})
-            </span>
-          </md-table-cell>
+        <transaction-product
+        v-for="({product,stock,item}, index) in storedTransactionProducts" 
+        :key="index">
 
-        </md-table-row>
+        </transaction-product>
       </md-table-body>
     </md-table>
   </div>
@@ -57,6 +26,7 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex';
+  import TransactionProduct from './TransactionProduct.vue'
   export default {
     name: 'pos',
     computed: {
@@ -69,7 +39,7 @@
     data() {
       return {
         search: '',
-        store: null,
+        store: null
       }
     },
     methods: {

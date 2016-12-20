@@ -4,32 +4,23 @@
     <md-table-cell>{{item.name}}</md-table-cell>
     <md-table-cell>
       {{stock.retail_price}}
-      <span v-if="stock.taxed" style="color: red;">
-              (+{{(stock.retail_price * storedTransaction.store.tax_rate) | estimate}})
+      <span v-if="stock.taxed" style="color: teal;">
+              (+{{productUnitTax}})
             </span>
-      <span v-if="stock.discount" style="color: teal;">
-              (+{{(stock.retail_price * storedTransaction.store.discount_rate) | estimate}})
+      <span v-if="stock.discount" style="color: red;">
+              (-{{productUnitDiscount}})
             </span>
     </md-table-cell>
     <md-table-cell>
       {{product.quantity}}
     </md-table-cell>
     <md-table-cell>
-      {{(stock.retail_price * product.quantity) | estimate}}
-      <span v-if="stock.taxed" style="color: red;">
-              (+{{(stock.retail_price * storedTransaction.store.tax_rate * product.quantity) | estimate}})
+      {{productTotal}} = {{productSubTotal}}
+      <span style="color: teal">
+              (+{{productTax}})
             </span>
-      <span v-if="stock.discount" style="color: teal;">
-              (+{{(stock.retail_price * storedTransaction.store.discount_rate * product.quantity) | estimate}})
-            </span>
-    </md-table-cell>
-    <md-table-cell>
-      {{(stock.retail_price * product.quantity) | estimate}}
-      <span v-if="stock.taxed" style="color: red;">
-              (+{{(stock.retail_price * storedTransaction.store.tax_rate * product.quantity) | estimate}})
-            </span>
-      <span v-if="stock.discount" style="color: teal;">
-              (+{{(stock.retail_price * storedTransaction.store.discount_rate * product.quantity) | estimate}})
+      <span style="color: red;">
+              (-{{productDiscount}})
             </span>
     </md-table-cell>
 
@@ -45,17 +36,28 @@
         return this.product.quantity * this.stock.retail_price;
       },
       productUnitTax() {
-        return this.product.quantity * this.stock.retail_price;
+        return this.stock.taxed 
+        ? _.round(this.stock.retail_price
+        * this.store.tax_rate) 
+        : 0;
       },
       productUnitDiscount() {
-        return this.product.quantity * this.stock.retail_price;
+        return this.stock.discounted 
+        ? _.round(this.stock.retail_price 
+        * this.store.discount_rate)
+        : 0;
       },
       productTax() {
-        return this.product.quantity * this.stock.retail_price;
+        return _.round(this.product.quantity * this.productUnitTax);
       },
       productDiscount() {
-        return this.product.quantity * this.stock.retail_price;
+        return _.round(this.product.quantity * this.productUnitDiscount);
       },
+      productTotal() {
+        return _.round((this.productSubTotal
+        + (this.stock.taxed ? this.productTax : 0)) 
+        - (this.stock.discounted ? this.productDiscount : 0))
+      }
     }
   }
 </script>
