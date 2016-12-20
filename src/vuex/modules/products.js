@@ -3,6 +3,11 @@ const state = {
 };
 
 const getters = {
+  storedProducts(state,getters) {
+    if(!getters.storedTransaction) return;
+    console.log(getters.storedTransaction);
+    return _.filter(getters.allProducts,['transaction',getters.storedTransaction['.key']]);
+  },
 };
 
 const mutations = {
@@ -11,16 +16,7 @@ const mutations = {
 
 const actions = {
   storeProduct({commit,getters},item) {
-    commit('STORE_ITEM',_.clone(item) || {
-        name: '',
-        cost_price: 0,
-        image_url: '',
-        description: '',
-        created_by: getters.authManager.username,
-        rating: 0,
-        category: '',
-        shared: false,
-      });
+    commit('STORE_ITEM',payload);
   },
 };
 

@@ -36,14 +36,14 @@
         return this.product.quantity * this.stock.retail_price;
       },
       productUnitTax() {
-        return this.stock.taxed 
+        return this.stock.taxed
         ? _.round(this.stock.retail_price
-        * this.store.tax_rate) 
+        * this.store.tax_rate)
         : 0;
       },
       productUnitDiscount() {
-        return this.stock.discounted 
-        ? _.round(this.stock.retail_price 
+        return this.stock.discounted
+        ? _.round(this.stock.retail_price
         * this.store.discount_rate)
         : 0;
       },
@@ -54,9 +54,11 @@
         return _.round(this.product.quantity * this.productUnitDiscount);
       },
       productTotal() {
-        return _.round((this.productSubTotal
-        + (this.stock.taxed ? this.productTax : 0)) 
+        let total = _.round((this.productSubTotal
+        + (this.stock.taxed ? this.productTax : 0))
         - (this.stock.discounted ? this.productDiscount : 0))
+        this.$emit('updateTransaction');
+        return total;
       }
     }
   }

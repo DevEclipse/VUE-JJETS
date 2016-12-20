@@ -1,7 +1,37 @@
 <template>
   <div>
     <md-dialog ref="transactionProductsDialog">
+      <template v-if="storedProducts">
+        <md-dialog-content>
+          <transition-group v-if="storedProducts.length" name="items"
+                            enter-active-class="animated bounceInRight"
+                            leave-active-class="animated bounceOutRight">
 
+            <md-list-item class="md-triple-line"
+                          v-for="product in storedProducts"
+                          :key="product['.key']">
+              <md-avatar>
+                <vue-image :image="product.image_url" alt="Product"/>
+              </md-avatar>
+
+              <div class="md-list-text-container">
+                <span>{{product.name | capitalize }}</span>
+                <span>
+                      &#8369;{{product.price}}
+                   <span style="color: red;" v-if="product.tax">(+{{product.tax | estimate}})</span>
+                   <span style="color: teal;" v-if="product.discount">(-{{product.discount | estimate}} )</span>
+                </span>
+                <span>
+                      {{product.created_date | moment('from')}}
+                  <span></span>
+                    </span>
+              </div>
+            </md-list-item>
+
+          </transition-group>
+
+        </md-dialog-content>
+      </template>
     </md-dialog>
 
     <layout :list="filterByStartToEndDate" :searchKey="searchKey">
@@ -26,58 +56,59 @@
         </template>
         <transition enter-active-class="animated bounceInRight"
                     leave-active-class="animated bounceOutRight" mode="out-in">
-        <md-whiteframe align="center" md-elevation="24" style="z-index: 20" v-if="showFilters">
-          <div class="row center-xs middle-xs" style="padding: 0.25rem;">
-            <div class="col-xs-6 col-md-4" v-if="transactionsStores.length != 0 && $route.name != 'storeTransactions'">
-              <multiselect :options="transactionsStores"
-                           v-model="store"
-                           :searchable="true"
-                           label="storeName"
-                           name="storeName"
-                           placeholder="Select A Store"></multiselect>
-            </div>
-            <div class="col-xs-6 col-md-4" v-if="transactionsCustomers.length != 0 && $route.name != 'transactions'">
-              <multiselect :options="transactionsCustomers"
-                           v-model="customer"
-                           :searchable="true"
-                           placeholder="Select A Customer"></multiselect>
-            </div>
-            <template v-if="$route.name == 'managerTransactions'">
-
-              <div class="col-xs-6 col-md-4" v-if="transactionsEmployees.length != 0">
-                <multiselect :options="transactionsEmployees"
-                             v-model="employee"
+          <md-whiteframe align="center" md-elevation="24" style="z-index: 20" v-if="showFilters">
+            <div class="row center-xs middle-xs" style="padding: 0.25rem;">
+              <div class="col-xs-6 col-md-4"
+                   v-if="transactionsStores.length != 0 && $route.name != 'storeTransactions'">
+                <multiselect :options="transactionsStores"
+                             v-model="store"
                              :searchable="true"
-                             placeholder="Select An Employee"></multiselect>
+                             label="storeName"
+                             name="storeName"
+                             placeholder="Select A Store"></multiselect>
               </div>
-            </template>
-            <div class="col-xs-6 col-md-4">
-              <multiselect :options="['Order','Processed','Returned','Pending','Voided','Completed','Delivered']"
-                           v-model="status"
-                           :searchable="true"
-                           placeholder="Select Status"></multiselect>
-            </div>
-            <div class="col-xs-6 col-md">
-              <md-input-container>
-                <label>Start Date</label>
-                <md-input :max="endDate ? endDate : ''" v-model="startDate" type="date"></md-input>
-              </md-input-container>
-            </div>
-            <div class="col-xs-6 col-md" v-if="startDate">
-              <md-input-container>
-                <label>End Date</label>
-                <md-input v-model="endDate" :min="startDate" type="date"></md-input>
-              </md-input-container>
-            </div>
-            <div class="col-xs-12 col-md-2">
-              <md-button class="md-raised md-accent" @click="resetToAllTransactions">
-                <md-icon>clear_all</md-icon>
-                All
-              </md-button>
-            </div>
+              <div class="col-xs-6 col-md-4" v-if="transactionsCustomers.length != 0 && $route.name != 'transactions'">
+                <multiselect :options="transactionsCustomers"
+                             v-model="customer"
+                             :searchable="true"
+                             placeholder="Select A Customer"></multiselect>
+              </div>
+              <template v-if="$route.name == 'managerTransactions'">
 
-          </div>
-        </md-whiteframe>
+                <div class="col-xs-6 col-md-4" v-if="transactionsEmployees.length != 0">
+                  <multiselect :options="transactionsEmployees"
+                               v-model="employee"
+                               :searchable="true"
+                               placeholder="Select An Employee"></multiselect>
+                </div>
+              </template>
+              <div class="col-xs-6 col-md-4">
+                <multiselect :options="['Order','Processed','Returned','Pending','Voided','Completed','Delivered']"
+                             v-model="status"
+                             :searchable="true"
+                             placeholder="Select Status"></multiselect>
+              </div>
+              <div class="col-xs-6 col-md">
+                <md-input-container>
+                  <label>Start Date</label>
+                  <md-input :max="endDate ? endDate : ''" v-model="startDate" type="date"></md-input>
+                </md-input-container>
+              </div>
+              <div class="col-xs-6 col-md" v-if="startDate">
+                <md-input-container>
+                  <label>End Date</label>
+                  <md-input v-model="endDate" :min="startDate" type="date"></md-input>
+                </md-input-container>
+              </div>
+              <div class="col-xs-12 col-md-2">
+                <md-button class="md-raised md-accent" @click="resetToAllTransactions">
+                  <md-icon>clear_all</md-icon>
+                  All
+                </md-button>
+              </div>
+
+            </div>
+          </md-whiteframe>
         </transition>
 
         <md-button class="md-fab md-mini md-fab-bottom-right"
@@ -95,8 +126,12 @@
         </md-button>
       </template>
       <template scope="props">
-        <transaction v-for="transaction in props" :transaction="transaction">
-
+        <transaction v-for="transaction in props" :transaction="transaction" @viewProducts="viewProducts">
+          <template slot="buttons" :transaction="transaction">
+            <md-button class="md-raised md-accent" @click="showTransactionProducts">
+              Show Transaction Products
+            </md-button>
+          </template>
         </transaction>
       </template>
     </layout>
@@ -105,13 +140,20 @@
 
 <script>
   import {mapGetters, mapActions} from 'vuex';
-  import Transaction from './Transaction.vue';
   export default {
     name: 'transactions',
     props: ['transactions', 'authEmployee', 'searchKey'],
     methods: {
+      viewProducts(transaction) {
+        console.log(transaction);
+      },
+      showTransactionProducts(transaction) {
+        this.storeTransaction(transaction);
+        this.$refs.transactionProductsDialog.open();
+      },
       ...mapActions([
-        'addAlert'
+        'addAlert',
+        'storeTransaction'
       ]),
       resetToAllTransactions() {
         this.store = '';
@@ -124,6 +166,9 @@
       }
     },
     computed: {
+      ...mapGetters([
+        'storedProducts'
+      ]),
       totalSales() {
         return _.sumBy(this.sortByDate, transaction => {
           return transaction.total;
@@ -272,8 +317,5 @@
         showFilters: true
       }
     },
-    components: {
-      Transaction
-    }
   }
 </script>

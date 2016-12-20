@@ -40,7 +40,7 @@
       </md-dialog-content>
 
       <md-dialog-actions>
-        <md-button class="md-accent md-raised" v-if="store">
+        <md-button class="md-accent md-raised" v-if="store" @click="createTransactionToPos">
           Create
         </md-button>
         <md-button class="md-warn md-raised" >
@@ -274,6 +274,11 @@
         this.storeTransaction();
         this.$refs.transactionCreateDialog.open();
       },
+      createTransactionToPos() {
+        this.storeStore(this.store);
+        this.$refs.transactionCreateDialog.close();
+        this.$router.push({name: 'pos'});
+      },
       resignEmployee() {
         this.addAlert({message: `You have resigned from the management of ${this.authEmployee.manager}`});
         this.authEmployee.manager = '';
@@ -317,7 +322,8 @@
         'addAlert',
         'updateManager',
         'generateId',
-        'storeTransaction'
+        'storeTransaction',
+        'storeStore'
       ])
     }
   }

@@ -81,7 +81,7 @@
       </div>
     </md-card-media-actions>
     <md-card-actions>
-      <md-button class="md-raised md-accent" @click="$emit('viewProducts',transaction)">View Transaction Products</md-button>
+      <md-button class="md-raised md-accent" @click="$emit('viewProducts',transaction )">View Transaction Products</md-button>
     </md-card-actions>
   </md-card>
   </md-whiteframe>
